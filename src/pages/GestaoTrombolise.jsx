@@ -323,19 +323,19 @@ export default function GestaoTrombolise() {
     setGerandoPDF(false);
   };
 
+  if (!user) return <div className="min-h-screen flex items-center justify-center"><Activity className="w-8 h-8 text-red-600 animate-spin" /></div>;
+
+  const isAdmin = user.role === 'ADMINISTRADOR_CARDIOLOGIA' || user.role === 'DESENVOLVEDOR' || user.role === 'admin' || user.email?.toLowerCase() === "wfrazaojr@gmail.com";
+
+  const registrosPorUnidade = isAdmin
+    ? registros
+    : registros.filter((r) => r.unidade_saude && user.unidade_saude && r.unidade_saude === user.unidade_saude);
+
   const registrosFiltrados = registrosPorUnidade.filter((r) => {
     const matchBusca = !busca.trim() || r.paciente_nome?.toLowerCase().includes(busca.toLowerCase()) || r.unidade_saude?.toLowerCase().includes(busca.toLowerCase());
     const matchIndicacao = filtroIndicacao === "todas" || r.indicacao === filtroIndicacao;
     return matchBusca && matchIndicacao;
   });
-
-  if (!user) return <div className="min-h-screen flex items-center justify-center"><Activity className="w-8 h-8 text-red-600 animate-spin" /></div>;
-
-  const isAdmin = user?.role === 'ADMINISTRADOR_CARDIOLOGIA' || user?.role === 'DESENVOLVEDOR' || user?.role === 'admin' || user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
-
-  const registrosPorUnidade = isAdmin
-    ? registros
-    : registros.filter((r) => r.unidade_saude && user?.unidade_saude && r.unidade_saude === user.unidade_saude);
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
