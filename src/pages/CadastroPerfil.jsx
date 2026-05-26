@@ -142,11 +142,10 @@ export default function CadastroPerfil() {
     };
 
     await base44.auth.updateMe({
-      full_name: form.nome_completo,
+      nome_completo: form.nome_completo,
       cpf: form.cpf,
       perfil: form.perfil,
       funcao: form.funcao,
-
       equipe: equipeMap[form.perfil] || "unidade_saude",
       registro_profissional_tipo: precisaRegistro ? registroTipoPorFuncao[form.funcao] : null,
       registro_profissional_numero: precisaRegistro ? form.registro_numero : null,
