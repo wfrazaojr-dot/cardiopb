@@ -88,6 +88,13 @@ export default function GerenciarAcessos() {
   const isDev = currentUser?.email?.toLowerCase() === "wfrazaojr@gmail.com";
   const isManager = currentUser?.role === "ADMINISTRADOR_MANAGER" || currentUser?.role === "admin" || isDev;
 
+  // Apenas o desenvolvedor pode aprovar/ativar/bloquear/excluir ADMINISTRADOR_MANAGER
+  const podeGerenciarUsuario = (usuario) => {
+    if (isDev) return true; // desenvolvedor pode tudo
+    if (usuario.role === "ADMINISTRADOR_MANAGER") return false; // apenas dev pode gerenciar MANAGER
+    return isManager;
+  };
+
   if (!isManager) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -334,52 +341,58 @@ export default function GerenciarAcessos() {
 
                     {/* Ações */}
                     <div className="flex gap-2 flex-wrap">
-                      {statusAtual !== "ATIVO" && (
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                          onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "ATIVO" })}
-                          disabled={updateStatusMutation.isPending}
-                        >
-                          <CheckCircle2 className="w-4 h-4" />
-                          Ativar
-                        </Button>
+                      {!podeGerenciarUsuario(usuario) ? (
+                        <span className="text-xs text-gray-400 italic px-2 py-1">Apenas o desenvolvedor pode gerenciar este usuário</span>
+                      ) : (
+                        <>
+                          {statusAtual !== "ATIVO" && (
+                            <Button
+                              size="sm"
+                              className="bg-green-600 hover:bg-green-700 text-white gap-1"
+                              onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "ATIVO" })}
+                              disabled={updateStatusMutation.isPending}
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                              Ativar
+                            </Button>
+                          )}
+                          {statusAtual !== "INATIVO" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-gray-400 text-gray-700 gap-1"
+                              onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "INATIVO" })}
+                              disabled={updateStatusMutation.isPending}
+                            >
+                              <XCircle className="w-4 h-4" />
+                              Desativar
+                            </Button>
+                          )}
+                          {statusAtual !== "BLOQUEADO" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
+                              onClick={() => { setDialogBloqueio(usuario); setMotivoBloqueio(""); }}
+                              disabled={updateStatusMutation.isPending}
+                            >
+                              <Lock className="w-4 h-4" />
+                              Bloquear
+                            </Button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-600 text-red-700 hover:bg-red-100 gap-1"
+                            onClick={() => setDialogExcluir(usuario)}
+                            disabled={deleteMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Excluir
+                          </Button>
+                        </>
                       )}
-                      {statusAtual !== "INATIVO" && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-gray-400 text-gray-700 gap-1"
-                          onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "INATIVO" })}
-                          disabled={updateStatusMutation.isPending}
-                        >
-                          <XCircle className="w-4 h-4" />
-                          Desativar
-                        </Button>
-                      )}
-                      {statusAtual !== "BLOQUEADO" && (
-                       <Button
-                         size="sm"
-                         variant="outline"
-                         className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                         onClick={() => { setDialogBloqueio(usuario); setMotivoBloqueio(""); }}
-                         disabled={updateStatusMutation.isPending}
-                       >
-                         <Lock className="w-4 h-4" />
-                         Bloquear
-                       </Button>
-                      )}
-                      <Button
-                       size="sm"
-                       variant="outline"
-                       className="border-red-600 text-red-700 hover:bg-red-100 gap-1"
-                       onClick={() => setDialogExcluir(usuario)}
-                       disabled={deleteMutation.isPending}
-                      >
-                       <Trash2 className="w-4 h-4" />
-                       Excluir
-                      </Button>
-                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
