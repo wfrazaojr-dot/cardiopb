@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Activity, FlaskConical, Download, FileText, AlertCircle, CheckCircle2, Building2, Package } from "lucide-react";
+import { Activity, FlaskConical, Download, FileText, AlertCircle, CheckCircle2, Building2, Package, FileSpreadsheet } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 
 const MEDICAMENTOS = [
   "TENECTEPLASE (Ampola 40mg)",
@@ -58,6 +59,7 @@ export default function RelatorioFarmacia() {
   const [filtroMedicamento, setFiltroMedicamento] = useState("todos");
   const [filtroUnidade, setFiltroUnidade] = useState("todas");
   const [gerandoPDF, setGerandoPDF] = useState(false);
+  const [exportandoSheets, setExportandoSheets] = useState(false);
 
   const { data: registros = [], isLoading } = useQuery({
     queryKey: ["registros-trombolise"],
@@ -251,6 +253,46 @@ export default function RelatorioFarmacia() {
     setGerandoPDF(false);
   };
 
+  const exportarSheets = () => {
+    setExportandoSheets(true);
+    const periodoStr = periodo === "mensal" ? `${meses[Number(mes) - 1]}_${ano}` : `Ano_${ano}`;
+
+    const linhas = registrosFiltrados.map((r) => ({
+      "Paciente": r.paciente_nome || "",
+      "Indicação": r.indicacao || "",
+      "Medicamento": r.medicamento || "",
+      "Lote": r.numero_lote || "",
+      "Dose": r.dose || "",
+      "Diluição": r.diluicao || "",
+      "Via": r.via_administracao || "",
+      "Unidade de Saúde": r.unidade_saude || "",
+      "Médico Prescritor": r.medico_prescritor_nome || "",
+      "CRM Prescritor": r.medico_prescritor_crm || "",
+      "Cardiologista (Indicação)": r.cardiologista_indicou_nome || "",
+      "CRM Cardiologista": r.cardiologista_indicou_crm || "",
+      "Enfermeiro Responsável": r.enfermeiro_responsavel_nome || "",
+      "COREN Enfermeiro": r.enfermeiro_responsavel_coren || "",
+      "Profissional que Administrou": r.profissional_administrou_nome || "",
+      "COREN Profissional": r.profissional_administrou_coren || "",
+      "Data/Hora Prescrição": r.data_hora_prescricao ? format(new Date(r.data_hora_prescricao), "dd/MM/yyyy HH:mm") : "",
+      "Horário Administração": r.horario_administracao || "",
+      "Intercorrência": r.tem_intercorrencia ? "Sim" : "Não",
+      "Tipo Intercorrência": r.tipo_intercorrencia || "",
+      "Gravidade Intercorrência": r.intercorrencia_gravidade || "",
+      "Descrição Intercorrência": r.descricao_intercorrencia || "",
+      "Conduta Intercorrência": r.conduta_intercorrencia || "",
+      "Observações": r.observacoes || "",
+      "Data Registro": r.created_date ? format(new Date(r.created_date), "dd/MM/yyyy HH:mm") : "",
+      "Status": verificarPendencias(r).length === 0 ? "Completo" : `Pendente (${verificarPendencias(r).length} campo(s))`,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(linhas);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Trombólise");
+    XLSX.writeFile(wb, `Trombolise_${periodoStr}.xlsx`);
+    setExportandoSheets(false);
+  };
+
   const periodoLabel = periodo === "mensal" ? `${meses[Number(mes) - 1]}/${ano}` : `Ano ${ano}`;
 
   return (
@@ -266,16 +308,29 @@ export default function RelatorioFarmacia() {
             </div>
             <p className="text-gray-600 mt-1">Consumo de trombolíticos para reposição de estoque</p>
           </div>
-          <Button
-            onClick={gerarPDF}
-            disabled={gerandoPDF || registrosFiltrados.length === 0}
-            className="bg-red-600 hover:bg-red-700"
-          >
-            {gerandoPDF
-              ? <Activity className="w-4 h-4 animate-spin mr-2" />
-              : <Download className="w-4 h-4 mr-2" />}
-            Exportar PDF
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={exportarSheets}
+              disabled={exportandoSheets || registrosFiltrados.length === 0}
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-50"
+            >
+              {exportandoSheets
+                ? <Activity className="w-4 h-4 animate-spin mr-2" />
+                : <FileSpreadsheet className="w-4 h-4 mr-2" />}
+              Exportar Excel / Sheets
+            </Button>
+            <Button
+              onClick={gerarPDF}
+              disabled={gerandoPDF || registrosFiltrados.length === 0}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {gerandoPDF
+                ? <Activity className="w-4 h-4 animate-spin mr-2" />
+                : <Download className="w-4 h-4 mr-2" />}
+              Exportar PDF
+            </Button>
+          </div>
         </div>
 
         {/* Filtros */}
