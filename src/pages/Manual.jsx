@@ -575,8 +575,18 @@ export default function Manual() {
                   <h4 className="font-semibold mb-2">📊 Auditoria e Controle</h4>
                   <ul className="list-disc pl-5 space-y-1">
                     <li><strong>Painel de Administração → aba Trombólise:</strong> tabela completa de todos os registros para auditoria administrativa</li>
-                    <li><strong>Relatório Farmacêutico:</strong> consolidação por medicamento, unidade, lote e período para controle de estoque</li>
+                    <li><strong>Relatório Farmacêutico:</strong> consolidação por medicamento, unidade, lote e período — com exportação em PDF e Excel (XLSX)</li>
                     <li>Rastreabilidade por unidade, cardiologista, prescritor e lote</li>
+                    <li>A página de <strong>Trombólise (Unidades de Saúde)</strong> gera apenas o PDF da prescrição individual. A exportação consolidada fica exclusivamente no <strong>Relatório Farmacêutico</strong></li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-red-400 pl-4">
+                  <h4 className="font-semibold mb-2">🔒 Controle de Acesso aos Dados</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Usuários de Unidade de Saúde visualizam apenas os registros da <strong>sua própria unidade</strong></li>
+                    <li>Administradores visualizam registros de <strong>todas as unidades</strong></li>
+                    <li>Apenas administradores podem <strong>excluir</strong> registros de trombólise</li>
                   </ul>
                 </div>
               </div>
