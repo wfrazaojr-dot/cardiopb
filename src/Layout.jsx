@@ -152,7 +152,6 @@ export default function Layout({ children, currentPageName }) {
         { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
         { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
         { title: "Gestão de Trombólise", url: createPageUrl("GestaoTrombolise"), icon: Pill },
-        { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },
         { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
         { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
       ];
@@ -212,11 +211,6 @@ export default function Layout({ children, currentPageName }) {
           title: "Trombólise",
           url: createPageUrl("GestaoTrombolise"),
           icon: Pill,
-        },
-        {
-          title: "Relatório Farmacêutico",
-          url: createPageUrl("RelatorioFarmacia"),
-          icon: FlaskConical,
         },
         {
           title: "Protocolos",

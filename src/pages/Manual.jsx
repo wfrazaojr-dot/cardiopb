@@ -116,6 +116,8 @@ export default function Manual() {
                     <li>Geração de relatório de triagem</li>
                     <li>Envio de Formulário/Vaga para SES</li>
                     <li>Acesso ao histórico de seus pacientes</li>
+                    <li><strong>Trombólise:</strong> prescrição e administração de trombolíticos (TENECTEPLASE / ALTEPLASE)</li>
+                    <li>Geração de PDF da prescrição trombolítica com cabeçalho oficial</li>
                   </ul>
                 </div>
 
@@ -696,7 +698,7 @@ export default function Manual() {
                   <li><strong>Monitor Transportes:</strong> Gestão de transportes em tempo real (Transporte)</li>
                   <li><strong>Formulário/Vaga:</strong> Solicitação de vaga SES</li>
                   <li><strong>Trombólise:</strong> Prescrição e registro de trombolíticos (Unidades de Saúde)</li>
-                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Adm. Cardiologia / Desenvolvedor)</li>
+                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (exclusivo <strong>Desenvolvedor</strong>)</li>
                   <li><strong>Gerenciar Acessos:</strong> Aprovação e gestão de usuários (Administrador Manager)</li>
                   <li><strong>Administração:</strong> Gestão de profissionais, indicadores e registros completos de trombólise (Administradores)</li>
                 </ul>
