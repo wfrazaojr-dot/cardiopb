@@ -221,6 +221,21 @@ export default function GerenciarAcessos() {
                         )}
                         {usuario.matricula && <span>Matrícula: {usuario.matricula}</span>}
                       </div>
+                      <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-1">
+                        {usuario.equipe && (
+                          <span className="font-medium text-blue-700">
+                            Equipe: {usuario.equipe.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
+                          </span>
+                        )}
+                        {usuario.unidade_saude && (
+                          <span>Unidade: <strong>{usuario.unidade_saude}</strong></span>
+                        )}
+                        {usuario.created_date && (
+                          <span className="text-gray-400">
+                            Cadastro: {new Date(usuario.created_date).toLocaleDateString("pt-BR")}
+                          </span>
+                        )}
+                      </div>
                       {usuario.motivo_bloqueio && (
                         <p className="text-xs text-red-600 mt-1">
                           Motivo: {usuario.motivo_bloqueio}
