@@ -323,13 +323,19 @@ export default function GestaoTrombolise() {
     setGerandoPDF(false);
   };
 
-  const registrosFiltrados = registros.filter((r) => {
+  const registrosFiltrados = registrosPorUnidade.filter((r) => {
     const matchBusca = !busca.trim() || r.paciente_nome?.toLowerCase().includes(busca.toLowerCase()) || r.unidade_saude?.toLowerCase().includes(busca.toLowerCase());
     const matchIndicacao = filtroIndicacao === "todas" || r.indicacao === filtroIndicacao;
     return matchBusca && matchIndicacao;
   });
 
   if (!user) return <div className="min-h-screen flex items-center justify-center"><Activity className="w-8 h-8 text-red-600 animate-spin" /></div>;
+
+  const isAdmin = user?.role === 'ADMINISTRADOR_CARDIOLOGIA' || user?.role === 'DESENVOLVEDOR' || user?.role === 'admin' || user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
+
+  const registrosPorUnidade = isAdmin
+    ? registros
+    : registros.filter((r) => r.unidade_saude && user?.unidade_saude && r.unidade_saude === user.unidade_saude);
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
@@ -358,14 +364,14 @@ export default function GestaoTrombolise() {
             <Card key={ind} className="shadow-sm border-l-4 border-l-red-500">
               <CardContent className="p-4">
                 <p className="text-xs text-gray-500 font-medium">{ind}</p>
-                <p className="text-2xl font-bold text-red-700">{registros.filter((r) => r.indicacao === ind).length}</p>
+                <p className="text-2xl font-bold text-red-700">{registrosPorUnidade.filter((r) => r.indicacao === ind).length}</p>
               </CardContent>
             </Card>
           ))}
           <Card className="shadow-sm border-l-4 border-l-gray-400">
             <CardContent className="p-4">
               <p className="text-xs text-gray-500 font-medium">Total</p>
-              <p className="text-2xl font-bold text-gray-700">{registros.length}</p>
+              <p className="text-2xl font-bold text-gray-700">{registrosPorUnidade.length}</p>
             </CardContent>
           </Card>
         </div>
