@@ -42,6 +42,8 @@ export default function Layout({ children, currentPageName }) {
 
 
 
+  const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
+
   const getNavigationItems = () => {
     // Menu padrão com Painel Inicial (sempre disponível para todos)
     const menuBase = [
@@ -52,8 +54,8 @@ export default function Layout({ children, currentPageName }) {
       },
     ];
 
-    // Menu para Admin (acesso pleno) - Verificação prioritária
-    if (user?.role === 'admin') {
+    // DESENVOLVEDOR ou Admin legado: acesso pleno
+    if (isDev || user?.role === 'DESENVOLVEDOR' || user?.role === 'admin') {
       return [
         ...menuBase,
         {
@@ -107,10 +109,62 @@ export default function Layout({ children, currentPageName }) {
           icon: ClipboardList,
         },
         {
+          title: "Gerenciar Acessos",
+          url: "/GerenciarAcessos",
+          icon: Shield,
+        },
+        {
           title: "Administração",
           url: createPageUrl("Administracao"),
           icon: Shield,
         },
+      ];
+    }
+
+    // ADMINISTRADOR_MANAGER: visão geral + gerenciamento de acessos
+    if (user?.role === 'ADMINISTRADOR_MANAGER') {
+      return [
+        ...menuBase,
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
+        { title: "Gerenciar Acessos", url: "/GerenciarAcessos", icon: Shield },
+        { title: "Logs de Auditoria", url: createPageUrl("LogsAuditoria"), icon: ClipboardList },
+        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
+      ];
+    }
+
+    // ADMINISTRADOR_CERH: acesso CERH + indicadores
+    if (user?.role === 'ADMINISTRADOR_CERH') {
+      return [
+        ...menuBase,
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
+      ];
+    }
+
+    // ADMINISTRADOR_CARDIOLOGIA: ASSCARDIO + Trombólise + Hemodinâmica
+    if (user?.role === 'ADMINISTRADOR_CARDIOLOGIA') {
+      return [
+        ...menuBase,
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
+        { title: "Gestão de Trombólise", url: createPageUrl("GestaoTrombolise"), icon: Pill },
+        { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+      ];
+    }
+
+    // ADMINISTRADOR_TRANSPORTE: Transporte + indicadores
+    if (user?.role === 'ADMINISTRADOR_TRANSPORTE') {
+      return [
+        ...menuBase,
+        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
       ];
     }
 
@@ -330,7 +384,22 @@ export default function Layout({ children, currentPageName }) {
                     <div className="bg-blue-50 p-3 rounded-lg mb-3">
                       <p className="text-xs text-blue-900 font-semibold">{user.full_name}</p>
                       <p className="text-xs text-blue-700">{user.email}</p>
-                      {user.role === 'admin' && (
+                      {(isDev || user.role === 'DESENVOLVEDOR') && (
+                        <p className="text-xs text-purple-700 font-bold mt-1">🛠 DESENVOLVEDOR</p>
+                      )}
+                      {!isDev && user.role === 'ADMINISTRADOR_MANAGER' && (
+                        <p className="text-xs text-red-600 font-bold mt-1">ADM. MANAGER</p>
+                      )}
+                      {!isDev && user.role === 'ADMINISTRADOR_CERH' && (
+                        <p className="text-xs text-blue-700 font-bold mt-1">ADM. CERH</p>
+                      )}
+                      {!isDev && user.role === 'ADMINISTRADOR_CARDIOLOGIA' && (
+                        <p className="text-xs text-green-700 font-bold mt-1">ADM. CARDIOLOGIA</p>
+                      )}
+                      {!isDev && user.role === 'ADMINISTRADOR_TRANSPORTE' && (
+                        <p className="text-xs text-orange-700 font-bold mt-1">ADM. TRANSPORTE</p>
+                      )}
+                      {!isDev && user.role === 'admin' && (
                         <p className="text-xs text-red-600 font-bold mt-1">ADMINISTRADOR</p>
                       )}
                     </div>
