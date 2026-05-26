@@ -73,7 +73,7 @@ const AuthenticatedApp = () => {
             <Route path="/LogsAuditoria" element={<LogsAuditoria />} />
             <Route path="/GestaoTrombolise" element={<GestaoTrombolise />} />
             <Route path="/RelatorioFarmacia" element={<RelatorioFarmacia />} />
-            <Route path="/GerenciarAcessos" element={<LayoutWrapper currentPageName="GerenciarAcessos"><GerenciarAcessos /></LayoutWrapper>} />
+            <Route path="/GerenciarAcessos" element={<GerenciarAcessos />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </LayoutWrapper>
