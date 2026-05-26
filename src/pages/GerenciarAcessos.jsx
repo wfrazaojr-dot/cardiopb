@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, Lock, Search, Users, RefreshCw, ShieldCheck, FileSpreadsheet, FileText } from "lucide-react";
+import { CheckCircle2, XCircle, Lock, Search, Users, RefreshCw, ShieldCheck, FileSpreadsheet, FileText, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import * as XLSX from "xlsx";
@@ -49,6 +49,7 @@ export default function GerenciarAcessos() {
   const [filtroPerfil, setFiltroPerfil] = useState("todos");
   const [dialogBloqueio, setDialogBloqueio] = useState(null);
   const [motivoBloqueio, setMotivoBloqueio] = useState("");
+  const [dialogExcluir, setDialogExcluir] = useState(null);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -59,6 +60,14 @@ export default function GerenciarAcessos() {
     queryKey: ['usuarios-gerenciar'],
     queryFn: () => base44.entities.User.list(),
     enabled: !!currentUser,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (userId) => base44.entities.User.delete(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['usuarios-gerenciar'] });
+      setDialogExcluir(null);
+    },
   });
 
   const updateStatusMutation = useMutation({
@@ -349,18 +358,28 @@ export default function GerenciarAcessos() {
                         </Button>
                       )}
                       {statusAtual !== "BLOQUEADO" && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                          onClick={() => { setDialogBloqueio(usuario); setMotivoBloqueio(""); }}
-                          disabled={updateStatusMutation.isPending}
-                        >
-                          <Lock className="w-4 h-4" />
-                          Bloquear
-                        </Button>
+                       <Button
+                         size="sm"
+                         variant="outline"
+                         className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
+                         onClick={() => { setDialogBloqueio(usuario); setMotivoBloqueio(""); }}
+                         disabled={updateStatusMutation.isPending}
+                       >
+                         <Lock className="w-4 h-4" />
+                         Bloquear
+                       </Button>
                       )}
-                    </div>
+                      <Button
+                       size="sm"
+                       variant="outline"
+                       className="border-red-600 text-red-700 hover:bg-red-100 gap-1"
+                       onClick={() => setDialogExcluir(usuario)}
+                       disabled={deleteMutation.isPending}
+                      >
+                       <Trash2 className="w-4 h-4" />
+                       Excluir
+                      </Button>
+                      </div>
                   </div>
                 </CardContent>
               </Card>
@@ -368,6 +387,32 @@ export default function GerenciarAcessos() {
           })}
         </div>
       )}
+
+      {/* Dialog de Exclusão */}
+      <Dialog open={!!dialogExcluir} onOpenChange={() => setDialogExcluir(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-red-700 flex items-center gap-2">
+              <Trash2 className="w-5 h-5" /> Excluir Usuário
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-700">
+            Tem certeza que deseja excluir permanentemente o usuário{" "}
+            <strong>{dialogExcluir?.full_name || dialogExcluir?.nome_completo || dialogExcluir?.email}</strong>?
+            Esta ação <strong>não pode ser desfeita</strong>.
+          </p>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDialogExcluir(null)}>Cancelar</Button>
+            <Button
+              className="bg-red-700 hover:bg-red-800 text-white"
+              onClick={() => deleteMutation.mutate(dialogExcluir.id)}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Excluindo..." : "Confirmar Exclusão"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de Bloqueio */}
       <Dialog open={!!dialogBloqueio} onOpenChange={() => setDialogBloqueio(null)}>
