@@ -94,7 +94,7 @@ export default function Layout({ children, currentPageName }) {
           icon: Truck,
         },
         {
-          title: "Gestão de Trombólise",
+          title: "Trombólise",
           url: createPageUrl("GestaoTrombolise"),
           icon: Pill,
         },
@@ -209,7 +209,7 @@ export default function Layout({ children, currentPageName }) {
           icon: History,
         },
         {
-          title: "Gestão de Trombólise",
+          title: "Trombólise",
           url: createPageUrl("GestaoTrombolise"),
           icon: Pill,
         },
