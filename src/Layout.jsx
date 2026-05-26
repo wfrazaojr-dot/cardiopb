@@ -168,6 +168,18 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
 
+    // Novo sistema: verificar role ASSCARDIO diretamente
+    if (user?.role === 'ASSCARDIO') {
+      return [
+        ...menuBase,
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+        { title: "Estratégias e Condutas", url: createPageUrl("ProtocoloEstrategias"), icon: FileText },
+        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
+      ];
+    }
+
     const equipe = user?.equipe || 'unidade_saude';
 
     // Menu para Transporte
