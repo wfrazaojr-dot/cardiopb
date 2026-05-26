@@ -111,6 +111,13 @@
       "type": "string",
       "description": "Observa\u00e7\u00f5es adicionais"
     },
+    "status_trombolise": {
+      "type": "string",
+      "enum": [
+        "TROMB\u00d3LISE EM ANDAMENTO"
+      ],
+      "description": "Status da tromb\u00f3lise \u2014 definido automaticamente ao gerar o PDF"
+    },
     "tem_intercorrencia": {
       "type": "boolean",
       "default": false,

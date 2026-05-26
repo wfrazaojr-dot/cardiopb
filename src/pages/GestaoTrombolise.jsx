@@ -308,6 +308,18 @@ export default function GestaoTrombolise() {
     doc.text("Documento gerado eletronicamente - Uso exclusivo da equipe de saúde", pageWidth / 2, pageHeight - 9, { align: "center" });
 
     doc.save(`Trombolise_${registro.paciente_nome?.replace(/\s+/g, "_")}_${format(new Date(), "dd-MM-yyyy")}.pdf`);
+
+    // Atualizar status para "TROMBÓLISE EM ANDAMENTO" ao gerar o PDF
+    try {
+      await base44.entities.RegistroTrombolise.update(registro.id, {
+        status_trombolise: "TROMBÓLISE EM ANDAMENTO",
+        relatorio_pdf_url: `gerado_${Date.now()}`
+      });
+      queryClient.invalidateQueries({ queryKey: ["registros-trombolise"] });
+    } catch (e) {
+      console.error("Erro ao atualizar status:", e);
+    }
+
     setGerandoPDF(false);
   };
 
