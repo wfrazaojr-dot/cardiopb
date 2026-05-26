@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Activity, Plus, FileText, Search, X, Pill, Printer, AlertTriangle, Download } from "lucide-react";
 import AlertaIntercorrencias from "@/components/trombolise/AlertaIntercorrencias";
 import SeletorUnidadeSaude from "@/components/common/SeletorUnidadeSaude";
-import ExportarDados from "@/components/common/ExportarDados";
 import { useAuditoria } from "@/hooks/useAuditoria";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -638,25 +637,6 @@ export default function GestaoTrombolise() {
         {/* Alerta de Intercorrências */}
         <AlertaIntercorrencias registros={registros} />
 
-        {/* Exportar */}
-        <div className="flex justify-end mb-2">
-          <ExportarDados
-            dados={registrosFiltrados}
-            titulo="Registros de Trombólise — Coração Paraibano"
-            nomeArquivo="trombolise"
-            colunas={[
-              { header: "Paciente", key: "paciente_nome" },
-              { header: "Indicação", key: "indicacao" },
-              { header: "Medicamento", key: "medicamento" },
-              { header: "Unidade", key: "unidade_saude" },
-              { header: "Médico", key: "medico_prescritor_nome" },
-              { header: "CRM", key: "medico_prescritor_crm" },
-              { header: "Lote", key: "numero_lote" },
-              { header: "Data", key: "created_date", format: (v) => v ? format(new Date(v), "dd/MM/yyyy HH:mm") : "-" },
-              { header: "Intercorrência", key: "tem_intercorrencia", format: (v) => v ? "Sim" : "Não" },
-            ]}
-          />
-        </div>
 
         {/* Filtros */}
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
