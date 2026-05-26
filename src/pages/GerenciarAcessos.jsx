@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, Lock, Search, Users, RefreshCw, ShieldCheck } from "lucide-react";
+import { CheckCircle2, XCircle, Lock, Search, Users, RefreshCw, ShieldCheck, FileSpreadsheet, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
 
 const STATUS_CONFIG = {
   PENDENTE: { label: "Pendente", color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
@@ -104,6 +106,74 @@ export default function GerenciarAcessos() {
   // Excluir o próprio desenvolvedor da lista
   const usuariosExibidos = usuariosFiltrados.filter(u => u.email?.toLowerCase() !== "wfrazaojr@gmail.com");
 
+  const getDadosExportacao = () => usuarios
+    .filter(u => u.email?.toLowerCase() !== "wfrazaojr@gmail.com")
+    .map(u => ({
+      "Nome": u.full_name || u.nome_completo || "(Sem nome)",
+      "E-mail": u.email || "",
+      "CPF": u.cpf || "",
+      "Perfil": PERFIL_LABELS[u.perfil] || u.perfil || "",
+      "Função": FUNCAO_LABELS[u.funcao] || u.funcao || "",
+      "Equipe": u.equipe?.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "",
+      "Unidade de Saúde": u.unidade_saude || "",
+      "Registro Profissional": u.registro_profissional_tipo && u.registro_profissional_numero
+        ? `${u.registro_profissional_tipo}: ${u.registro_profissional_numero}` : "",
+      "Matrícula": u.matricula || "",
+      "Status": STATUS_CONFIG[u.status_acesso]?.label || (u.cadastro_completo ? "Pendente" : "Sem cadastro"),
+      "Data de Cadastro": u.created_date ? new Date(u.created_date).toLocaleDateString("pt-BR") : "",
+    }));
+
+  const exportarExcel = () => {
+    const dados = getDadosExportacao();
+    const ws = XLSX.utils.json_to_sheet(dados);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Profissionais");
+    XLSX.writeFile(wb, `profissionais_${new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")}.xlsx`);
+  };
+
+  const exportarPDF = () => {
+    const dados = getDadosExportacao();
+    const doc = new jsPDF({ orientation: "landscape" });
+    doc.setFontSize(14);
+    doc.setTextColor(180, 30, 30);
+    doc.text("Lista de Profissionais Cadastrados", 14, 16);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Gerado em: ${new Date().toLocaleString("pt-BR")}   |   Total: ${dados.length} profissionais`, 14, 23);
+
+    // Cabeçalho da tabela
+    const colunas = ["Nome", "E-mail", "CPF", "Perfil", "Função", "Equipe", "Unidade de Saúde", "Registro", "Status", "Cadastro"];
+    const linhaAltura = 7;
+    let y = 30;
+
+    // Header
+    doc.setFillColor(220, 38, 38);
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(7);
+    doc.rect(14, y, 269, linhaAltura, "F");
+    const larguras = [35, 45, 22, 28, 20, 22, 30, 22, 18, 18];
+    let x = 14;
+    colunas.forEach((col, i) => { doc.text(col, x + 1, y + 5); x += larguras[i]; });
+    y += linhaAltura;
+
+    // Linhas
+    doc.setTextColor(40, 40, 40);
+    dados.forEach((row, idx) => {
+      if (y > 185) { doc.addPage(); y = 15; }
+      if (idx % 2 === 0) { doc.setFillColor(245, 245, 245); doc.rect(14, y, 269, linhaAltura, "F"); }
+      const vals = [row["Nome"], row["E-mail"], row["CPF"], row["Perfil"], row["Função"], row["Equipe"], row["Unidade de Saúde"], row["Registro Profissional"], row["Status"], row["Data de Cadastro"]];
+      x = 14;
+      vals.forEach((val, i) => {
+        const txt = doc.splitTextToSize(String(val || ""), larguras[i] - 2);
+        doc.text(txt[0] || "", x + 1, y + 5);
+        x += larguras[i];
+      });
+      y += linhaAltura;
+    });
+
+    doc.save(`profissionais_${new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")}.pdf`);
+  };
+
   const contadores = {
     PENDENTE: usuarios.filter(u => (u.status_acesso === "PENDENTE" || !u.status_acesso) && u.cadastro_completo).length,
     ATIVO: usuarios.filter(u => u.status_acesso === "ATIVO").length,
@@ -121,10 +191,20 @@ export default function GerenciarAcessos() {
           </h1>
           <p className="text-gray-600 text-sm mt-1">Aprovação e controle de usuários cadastrados no sistema</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
-          <RefreshCw className="w-4 h-4" />
-          Atualizar
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Atualizar
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportarExcel} className="gap-2 border-green-400 text-green-700 hover:bg-green-50">
+            <FileSpreadsheet className="w-4 h-4" />
+            Excel
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportarPDF} className="gap-2 border-red-300 text-red-700 hover:bg-red-50">
+            <FileText className="w-4 h-4" />
+            PDF
+          </Button>
+        </div>
       </div>
 
       {/* Contadores */}
