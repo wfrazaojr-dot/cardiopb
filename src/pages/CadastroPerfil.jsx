@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -51,7 +51,7 @@ function formatCPF(value) {
 
 export default function CadastroPerfil() {
   const navigate = useNavigate();
-  const { data: user } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
@@ -67,6 +67,25 @@ export default function CadastroPerfil() {
   });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
+
+  // Redirecionar para login se não autenticado
+  useEffect(() => {
+    if (!isLoading && !user) {
+      base44.auth.redirectToLogin(window.location.href);
+    }
+    // Se já tem cadastro completo, redirecionar para o painel
+    if (!isLoading && user?.cadastro_completo) {
+      navigate("/", { replace: true });
+    }
+  }, [user, isLoading, navigate]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   const funcoesDoPerfil = form.perfil ? FUNCOES_POR_PERFIL[form.perfil] || [] : [];
   const precisaRegistro = ["medico", "enfermeiro", "assistente_social"].includes(form.funcao);
@@ -151,8 +170,17 @@ export default function CadastroPerfil() {
             </div>
           </div>
           <CardTitle className="text-2xl text-gray-900">Cadastro Complementar</CardTitle>
-          <CardDescription className="text-gray-600">
-            Preencha seus dados para solicitar acesso ao sistema.<br />
+
+          {/* Confirmação de autenticação GOV.BR */}
+          <div className="mt-3 flex items-center justify-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <span className="text-sm text-green-800 font-medium">
+              Autenticação GOV.BR realizada com sucesso
+            </span>
+          </div>
+
+          <CardDescription className="text-gray-600 mt-3">
+            Para concluir seu cadastro, preencha os dados abaixo.<br />
             Seu acesso será liberado após aprovação do Administrador Manager.
           </CardDescription>
           {user && (
