@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Clock, LogOut, XCircle, Ban, Mail, CheckCircle2, Phone, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,10 +19,18 @@ const PERFIL_LABELS = {
 };
 
 export default function AcessoPendente() {
+  const navigate = useNavigate();
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
+
+  // Se status for ATIVO, redireciona para home
+  useEffect(() => {
+    if (user?.status_acesso === "ATIVO") {
+      navigate("/");
+    }
+  }, [user?.status_acesso, navigate]);
 
   const statusMsg = {
     PENDENTE: {
