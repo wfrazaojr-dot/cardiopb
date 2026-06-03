@@ -93,19 +93,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(true);
       const currentUser = await base44.auth.me();
       
-      // SEGURANÇA: Validar que o acesso foi via GOV.BR (exceto para desenvolvedor)
-      const isDev = currentUser.email?.toLowerCase() === "wfrazaojr@gmail.com";
-      const authMethod = currentUser.data?.auth_method || currentUser.auth_method;
-      if (!isDev && authMethod !== "GOVBR") {
-        console.warn("Tentativa de acesso sem autenticação GOV.BR detectada");
-        setIsAuthenticated(false);
-        setIsLoadingAuth(false);
-        setAuthError({
-          type: 'auth_required',
-          message: 'Acesso via GOV.BR é obrigatório'
-        });
-        return;
-      }
+
       
       setUser(currentUser);
       setIsAuthenticated(true);
