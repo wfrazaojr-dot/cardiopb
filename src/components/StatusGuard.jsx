@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 /**
- * StatusGuard — verifica se o usuário autenticado via GOV.BR
- * possui status_acesso = "ATIVO" antes de permitir acesso às rotas protegidas.
+ * StatusGuard — verifica se o usuário foi autenticado EXCLUSIVAMENTE via GOV.BR
+ * e possui status_acesso = "ATIVO" antes de permitir acesso às rotas protegidas.
  * 
  * Regras:
  * - Se não tiver cadastro_completo → redireciona para /CadastroPerfil
  * - Se status_acesso for PENDENTE, INATIVO ou BLOQUEADO → redireciona para /AcessoPendente
- * - Se status_acesso for ATIVO → permite acesso
+ * - Se auth_method NÃO for "GOVBR" → força logout (tentativa de bypass)
+ * - Se status_acesso for ATIVO E auth_method é GOVBR → permite acesso
  * - Desenvolvedor (email hardcoded) e role 'admin' → acesso irrestrito
  */
 export default function StatusGuard({ children }) {
@@ -36,6 +37,14 @@ export default function StatusGuard({ children }) {
 
   // Desenvolvedor e admin legado têm acesso irrestrito
   if (isDev || isAdmin) return <>{children}</>;
+
+  // SEGURANÇA: Rejeitar qualquer acesso que NÃO seja via GOV.BR
+  const authMethod = user.auth_method;
+  if (authMethod !== "GOVBR") {
+    // Forçar logout se tentou contornar o GOV.BR
+    base44.auth.logout();
+    return <Navigate to="/" replace />;
+  }
 
   // Usuário sem cadastro completo → vai para cadastro
   if (!user.cadastro_completo) {

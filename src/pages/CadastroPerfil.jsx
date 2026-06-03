@@ -162,6 +162,7 @@ export default function CadastroPerfil() {
       registro_profissional_numero: precisaRegistro ? form.registro_numero : null,
       matricula: precisaMatricula ? form.matricula : null,
       status_acesso: "PENDENTE",
+      auth_method: "GOVBR",
       cadastro_completo: true,
     });
 
