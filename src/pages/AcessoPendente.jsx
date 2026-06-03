@@ -1,7 +1,7 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Clock, LogOut, XCircle, Ban, Mail, CheckCircle2, Phone } from "lucide-react";
+import { Clock, LogOut, XCircle, Ban, Mail, CheckCircle2, Phone, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -118,14 +118,26 @@ export default function AcessoPendente() {
               </div>
             )}
 
-            <Button
-              variant="outline"
-              className="border-red-300 text-red-700 hover:bg-red-50 w-full"
-              onClick={() => base44.auth.logout()}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sair do Sistema
-            </Button>
+            <div className="space-y-2">
+              <Button
+                className="bg-green-600 hover:bg-green-700 text-white w-full"
+                onClick={() => {
+                  base44.auth.logout();
+                  setTimeout(() => base44.auth.redirectToLogin(), 500);
+                }}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Tentar Novamente
+              </Button>
+              <Button
+                variant="outline"
+                className="border-red-300 text-red-700 hover:bg-red-50 w-full"
+                onClick={() => base44.auth.logout()}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair do Sistema
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
