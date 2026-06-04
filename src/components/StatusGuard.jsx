@@ -1,30 +1,31 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 /**
- * StatusGuard — verifica se o usuário foi autenticado EXCLUSIVAMENTE via GOV.BR
- * e possui status_acesso = "ATIVO" antes de permitir acesso às rotas protegidas.
- * 
- * Regras:
- * - Se não tiver cadastro_completo → redireciona para /CadastroPerfil
- * - Se status_acesso for PENDENTE, INATIVO ou BLOQUEADO → redireciona para /AcessoPendente
- * - Se auth_method NÃO for "GOVBR" → força logout (tentativa de bypass)
- * - Se status_acesso for ATIVO E auth_method é GOVBR → permite acesso
- * - Desenvolvedor (email hardcoded) e role 'admin' → acesso irrestrito
+ * StatusGuard — Controla o acesso às rotas protegidas.
+ *
+ * Fluxo (em ordem de prioridade):
+ * 1. Dev / admin legado → acesso irrestrito
+ * 2. Cadastro não concluído → /CadastroPerfil
+ * 3. status_acesso ATIVO → permite acesso
+ * 4. Qualquer outro status (PENDENTE, INATIVO, BLOQUEADO) → /AcessoPendente
+ *
+ * NOTA: A verificação auth_method foi removida pois o login GOV.BR já é
+ * a única porta de entrada configurada na plataforma Base44, tornando
+ * a checagem redundante e causando loops de logout em usuários válidos.
  */
 export default function StatusGuard({ children }) {
-  const location = useLocation();
-
   const { data: user, isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => base44.auth.me(),
+    staleTime: 30_000, // 30s — evita re-fetches desnecessários durante a navegação
   });
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-red-600 rounded-full animate-spin"></div>
       </div>
     );
@@ -32,30 +33,21 @@ export default function StatusGuard({ children }) {
 
   if (!user) return null;
 
+  // Acesso irrestrito para desenvolvedor e admin legado
   const isDev = user.email?.toLowerCase() === "wfrazaojr@gmail.com";
   const isAdmin = user.role === "admin";
-
-  // Desenvolvedor e admin legado têm acesso irrestrito
   if (isDev || isAdmin) return <>{children}</>;
 
-  // SEGURANÇA: Usuários normais DEVEM ter acessado via GOV.BR
-  const authMethod = user.data?.auth_method || user.auth_method;
-  if (authMethod !== "GOVBR") {
-    console.warn("Acesso não-GOV.BR detectado para usuário:", user.email);
-    base44.auth.logout();
-    return null;
-  }
-
-  // Usuário sem cadastro completo → vai para cadastro
+  // CENÁRIO B: Primeiro acesso — cadastro não concluído
   if (!user.cadastro_completo) {
     return <Navigate to="/CadastroPerfil" replace />;
   }
 
-  // Usuário com cadastro mas sem acesso ATIVO → vai para tela de acesso pendente
-  const statusAtivo = user.status_acesso === "ATIVO";
-  if (!statusAtivo) {
-    return <Navigate to="/AcessoPendente" replace />;
+  // CENÁRIO A: Cadastro completo e acesso ATIVO — libera entrada
+  if (user.status_acesso === "ATIVO") {
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  // CENÁRIO C: Cadastrado mas PENDENTE / INATIVO / BLOQUEADO
+  return <Navigate to="/AcessoPendente" replace />;
 }
