@@ -19,9 +19,10 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, ja_existe: true, message: 'Solicitação já registrada anteriormente.' });
     }
 
+    // 1. CRIAR SolicitacaoAcesso com TODOS os dados EXATAMENTE como recebidos do formulário
     const solicitacao = await base44.asServiceRole.entities.SolicitacaoAcesso.create({
       email,
-      nome_completo,
+      nome_completo, // EXATAMENTE como o usuário digitou
       cpf: cpf || null,
       telefone: telefone || null,
       perfil,
@@ -33,25 +34,29 @@ Deno.serve(async (req) => {
       status: "PENDENTE",
     });
 
-    // Sincronizar dados no User (GOV.BR autenticado) ANTES de retornar sucesso
-    // Garante que o painel de controle tenha TODOS os dados completos
-    const allUsers = await base44.asServiceRole.entities.User.list();
-    const existingUser = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-    if (existingUser) {
-      await base44.asServiceRole.entities.User.update(existingUser.id, {
-        full_name: nome_completo,
-        cpf: cpf || existingUser.cpf || null,
-        telefone: telefone || existingUser.telefone || null,
-        perfil: perfil || existingUser.perfil || null,
-        funcao: funcao || existingUser.funcao || null,
-        equipe: equipe || existingUser.equipe || "unidade_saude",
-        unidade_saude: unidade_saude || existingUser.unidade_saude || null,
-        registro_profissional_tipo: registro_profissional_tipo || existingUser.registro_profissional_tipo || null,
-        registro_profissional_numero: registro_profissional_numero || existingUser.registro_profissional_numero || null,
-        matricula: matricula || existingUser.matricula || null,
-        status_acesso: existingUser.status_acesso || "PENDENTE",
-        cadastro_completo: true,
-      });
+    // 2. SINCRONIZAR com User APENAS se existir e usar EXATAMENTE o nome_completo recebido
+    try {
+      const userFiltered = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
+      if (userFiltered && userFiltered.length > 0) {
+        const existingUser = userFiltered[0]; // Pegar o primeiro resultado com match exato
+        await base44.asServiceRole.entities.User.update(existingUser.id, {
+          full_name: nome_completo, // NUNCA sobrescrever com valor errado
+          cpf: cpf || null,
+          telefone: telefone || null,
+          perfil: perfil || null,
+          funcao: funcao || null,
+          equipe: equipe || "unidade_saude",
+          unidade_saude: unidade_saude || null,
+          registro_profissional_tipo: registro_profissional_tipo || null,
+          registro_profissional_numero: registro_profissional_numero || null,
+          matricula: matricula || null,
+          status_acesso: "PENDENTE",
+          cadastro_completo: true,
+        });
+      }
+    } catch (userError) {
+      // Se falhar atualizar User, continua mesmo assim - SolicitacaoAcesso já foi criada
+      console.log("Aviso: Não foi possível atualizar User, mas SolicitacaoAcesso foi criada com sucesso");
     }
 
     // Notificar administradores por e-mail
