@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Clock, LogOut, XCircle, Ban, Mail, CheckCircle2, Phone, RefreshCw } from "lucide-react";
+import { Clock, LogOut, XCircle, Ban, CheckCircle2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -37,7 +37,7 @@ export default function AcessoPendente() {
       icon: <Clock className="w-16 h-16 text-yellow-500" />,
       title: "Cadastro em Análise",
       desc: "Seu cadastro foi enviado com sucesso e está aguardando aprovação do Administrador Manager.",
-      detalhe: "Assim que seu acesso for aprovado, você receberá um e-mail automático de confirmação no endereço cadastrado.",
+      detalhe: "",
       color: "border-yellow-400",
       bgColor: "bg-yellow-50",
     },
@@ -104,20 +104,7 @@ export default function AcessoPendente() {
               </div>
             )}
 
-            {/* Aviso de e-mail */}
-            {status === "PENDENTE" && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-5 text-left">
-                <div className="flex items-start gap-2 text-blue-800 text-sm">
-                  <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold">Notificação por e-mail</p>
-                    <p className="text-blue-700 mt-0.5 text-xs">
-                      Você receberá um e-mail automático em <strong>{user?.email_cadastro || user?.email || "seu e-mail"}</strong> quando seu cadastro for aprovado.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+
 
             {/* Bloqueio: mostrar motivo */}
             {status === "BLOQUEADO" && user?.motivo_bloqueio && (
