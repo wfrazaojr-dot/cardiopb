@@ -89,11 +89,7 @@ export default function GerenciarAcessos() {
   });
   const usuarios = usuariosData?.todos || [];
 
-  const { data: solicitacoes = [], refetch: refetchSolic } = useQuery({
-    queryKey: ["solicitacoes-acesso"],
-    queryFn:  () => base44.entities.SolicitacaoAcesso.list("-created_date", 200),
-    enabled:  !!currentUser,
-  });
+
 
   const { data: logsAuditoria = [] } = useQuery({
     queryKey: ["logs-acesso"],
@@ -179,7 +175,6 @@ export default function GerenciarAcessos() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["solicitacoes-acesso"] });
       queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
     },
   });
@@ -270,8 +265,8 @@ export default function GerenciarAcessos() {
   // Usuários pendentes já filtrados pela função backend
   const usuariosPendentes = usuariosData?.pendentes || [];
 
-  // Solicitações externas ainda PENDENTE na entidade SolicitacaoAcesso
-  const solicPendentes = solicitacoes.filter(s => s.status === "PENDENTE");
+  // Solicitações externas pendentes (já filtradas pela função backend)
+  const solicPendentes = usuariosData?.solicPendentes || [];
 
   // Total unificado para o badge
   const totalPendentes = usuariosPendentes.length + solicPendentes.length;
@@ -367,7 +362,7 @@ export default function GerenciarAcessos() {
           <p className="text-gray-600 text-sm mt-1">Aprovação e controle de usuários do sistema</p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => { refetch(); refetchSolic(); }} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => { refetch(); }} className="gap-2">
             <RefreshCw className="w-4 h-4" /> Atualizar
           </Button>
           <Button variant="outline" size="sm" onClick={exportarExcel} className="gap-2 border-green-400 text-green-700 hover:bg-green-50">
