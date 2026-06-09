@@ -126,13 +126,17 @@ export default function GerenciarAcessos() {
     mutationFn: async ({ sol, acao, tipo }) => {
       const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
         solicitacaoId: sol.id,
-        solicitacaoTipo: tipo, // "govbr" ou "solicitacao"
+        solicitacaoTipo: tipo,
         acao,
       });
-      if (!res.data?.success) throw new Error(res.data?.error || "Erro ao processar solicitação");
+      // 404 no rejeitar = já foi deletado antes, tratar como sucesso
+      if (!res.data?.success && !res.data?.error?.includes("not found")) {
+        throw new Error(res.data?.error || "Erro ao processar solicitação");
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
+      queryClient.removeQueries({ queryKey: ["usuarios-gerenciar"] });
+      refetch();
     },
   });
 
