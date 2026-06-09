@@ -107,10 +107,11 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
 
   // Pré-preencher com dados do GOV.BR
   useEffect(() => {
-    if (user?.email) {
+    if (user?.email || user?.full_name) {
       setForm(prev => ({
         ...prev,
         email: prev.email || user.email,
+        nome_completo: prev.nome_completo || user.full_name || "",
       }));
     }
   }, [user]);
