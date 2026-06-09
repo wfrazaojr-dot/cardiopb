@@ -110,7 +110,6 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
       setForm(prev => ({
         ...prev,
         email: prev.email || user.email,
-        nome_completo: prev.nome_completo || user.full_name || "",
       }));
     }
   }, [user]);
