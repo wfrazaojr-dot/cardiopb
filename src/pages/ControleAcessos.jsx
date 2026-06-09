@@ -104,8 +104,7 @@ export default function ControleAcessos() {
   // ── Mutations ────────────────────────────────────────────────────────────────
 
   const recarregar = () => {
-    queryClient.removeQueries({ queryKey: ["controle-acessos"] });
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ["controle-acessos"] });
   };
 
   // Aprovar solicitação externa → convida o usuário
@@ -196,22 +195,23 @@ export default function ControleAcessos() {
 
   // ── Dados para aba "Todos os Usuários" ────────────────────────────────────
 
-  const getStatusEfetivo = (u) => u.status_acesso || "PENDENTE";
+  const getStatusEfetivo = (u) => u.status_acesso;
 
   const usuariosExibidos = usuarios
     .filter(u => u.email?.toLowerCase() !== DEV_EMAIL)
+    .filter(u => u.status_acesso) // Mostrar apenas usuários com status definido
     .filter(u => {
       const matchBusca  = !busca ||
         u.full_name?.toLowerCase().includes(busca.toLowerCase()) ||
         u.email?.toLowerCase().includes(busca.toLowerCase()) ||
         u.cpf?.includes(busca);
-      const matchStatus = filtroStatus === "todos" || getStatusEfetivo(u) === filtroStatus;
+      const matchStatus = filtroStatus === "todos" || u.status_acesso === filtroStatus;
       const matchEquipe = filtroEquipe === "todos" || u.equipe === filtroEquipe;
       return matchBusca && matchStatus && matchEquipe;
     });
 
   const contadores = {
-    PENDENTE:  usuarios.filter(u => !u.status_acesso || u.status_acesso === "PENDENTE").length,
+    PENDENTE:  usuarios.filter(u => u.status_acesso === "PENDENTE").length,
     ATIVO:     usuarios.filter(u => u.status_acesso === "ATIVO").length,
     INATIVO:   usuarios.filter(u => u.status_acesso === "INATIVO").length,
     BLOQUEADO: usuarios.filter(u => u.status_acesso === "BLOQUEADO").length,
@@ -312,15 +312,19 @@ export default function ControleAcessos() {
 {/* ── ABA: TODOS OS USUÁRIOS ────────────────────────────────────────── */}
       {abaAtiva === "usuarios" && (
         <>
-          {/* Contadores */}
+          {/* Contadores - Clicáveis para filtrar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {Object.entries(contadores).map(([status, count]) => (
-              <Card key={status} className={`border ${STATUS_CONFIG[status].color}`}>
-                <CardContent className="pt-4 pb-4 text-center">
-                  <p className="text-2xl font-bold">{count}</p>
-                  <p className="text-xs font-medium mt-1">{STATUS_CONFIG[status].label}</p>
-                </CardContent>
-              </Card>
+              <button
+                key={status}
+                onClick={() => { setFiltroStatus(status); setBusca(""); }}
+                className={`border rounded-lg p-4 text-center transition-all cursor-pointer hover:shadow-md ${
+                  filtroStatus === status ? "ring-2 ring-red-600" : ""
+                } ${STATUS_CONFIG[status].color}`}
+              >
+                <p className="text-2xl font-bold">{count}</p>
+                <p className="text-xs font-medium mt-1">{STATUS_CONFIG[status].label}</p>
+              </button>
             ))}
           </div>
 
@@ -372,7 +376,7 @@ export default function ControleAcessos() {
             <div className="space-y-3">
               {usuariosExibidos.map(usuario => {
                 const statusAtual = getStatusEfetivo(usuario);
-                const cfg         = STATUS_CONFIG[statusAtual] || STATUS_CONFIG["PENDENTE"];
+                const cfg         = STATUS_CONFIG[statusAtual] || { label: statusAtual, color: "bg-gray-100 text-gray-800 border-gray-300" };
                 const logsUsuario = logsAuditoria.filter(l => l.entidade_id === usuario.id);
                 const expandido   = historicoExpandido[usuario.id];
 

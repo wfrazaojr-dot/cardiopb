@@ -21,17 +21,19 @@ Deno.serve(async (req) => {
     const solicAcessos = await base44.asServiceRole.entities.SolicitacaoAcesso.list();
 
     // Enriquecer usuários com dados da SolicitacaoAcesso quando disponível
-    const usuariosEnriquecidos = allUsers.map(u => {
-      const solic = solicAcessos.find(s => s.email?.toLowerCase() === u.email?.toLowerCase());
-      return {
-        ...u,
-        full_name: solic?.nome_completo || u.full_name,
-        cpf: solic?.cpf || u.cpf,
-        funcao: solic?.funcao || u.funcao,
-        perfil: solic?.perfil || u.perfil,
-        telefone: solic?.telefone || u.telefone,
-      };
-    });
+    const usuariosEnriquecidos = allUsers
+      .filter(u => u.status_acesso) // Mostrar apenas usuários com status_acesso definido
+      .map(u => {
+        const solic = solicAcessos.find(s => s.email?.toLowerCase() === u.email?.toLowerCase());
+        return {
+          ...u,
+          full_name: solic?.nome_completo || u.full_name,
+          cpf: solic?.cpf || u.cpf,
+          funcao: solic?.funcao || u.funcao,
+          perfil: solic?.perfil || u.perfil,
+          telefone: solic?.telefone || u.telefone,
+        };
+      });
 
     return Response.json({
       solicPendentes: solicAcessos.filter(s => s.status === "PENDENTE") || [],
