@@ -102,7 +102,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
   });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState(false);
+  const [etapa, setEtapa] = useState("FORMULARIO"); // FORMULARIO | REVISAO | SUCESSO
 
   // Pré-preencher com dados do GOV.BR
   useEffect(() => {
@@ -138,7 +138,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
   const precisaMatricula = ["operador_frota", "administrativo"].includes(form.funcao);
   const emailExibido = form.email || user?.email || "";
 
-  const handleSubmit = async (e) => {
+  const handleSalvarCadastro = (e) => {
     e.preventDefault();
     setErro("");
 
@@ -159,10 +159,15 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
       return;
     }
 
+    setErro("");
+    setEtapa("REVISAO");
+  };
+
+  const handleEnviarFormulario = async (e) => {
+    e.preventDefault();
     setLoading(true);
 
     if (modoSolicitacao) {
-      // Usuário não está no app → chamar backend para criar SolicitacaoAcesso e notificar admins
       const response = await base44.functions.invoke("registrarSolicitacaoAcesso", {
         email: emailExibido,
         nome_completo: form.nome_completo,
@@ -176,12 +181,11 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
       });
       setLoading(false);
       if (response?.data?.success) {
-        setSucesso(true);
+        setEtapa("SUCESSO");
       } else {
         setErro(response?.data?.error || "Erro ao registrar solicitação. Tente novamente.");
       }
     } else {
-      // Usuário já está no app → salvar perfil via updateMe
       await base44.auth.updateMe({
         nome_completo: form.nome_completo,
         email_cadastro: form.email || emailExibido,
@@ -203,8 +207,8 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
     }
   };
 
-  // Tela de sucesso para modoSolicitacao
-  if (sucesso) {
+  // Tela de sucesso
+  if (etapa === "SUCESSO") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-blue-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-xl text-center">
@@ -212,17 +216,92 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
             <div className="flex justify-center">
               <CheckCircle2 className="w-16 h-16 text-green-500" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Solicitação Enviada!</h2>
-            <p className="text-gray-600">
-              Sua solicitação de acesso foi registrada com sucesso.<br />
-              O Administrador Manager analisará seu pedido.
+            <h2 className="text-2xl font-bold text-gray-900">Cadastro em Análise</h2>
+            <p className="text-gray-700 leading-relaxed">
+              Seu cadastro foi enviado com sucesso e está aguardando aprovação em até 72h do Administrador Manager da Secretaria de estado da saúde da PB. Mantenha ativo seu acesso pelo GOV.BR.
             </p>
-            <div className="bg-orange-50 border border-orange-300 rounded-lg px-4 py-3 text-orange-700 font-semibold text-sm">
-              ⏱ Aguarde até 72 horas para novo acesso.
-            </div>
             <p className="text-xs text-gray-500 mt-2">
               Você pode fechar esta página. Quando aprovado, acesse novamente pelo link do sistema.
             </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Tela de revisão
+  if (etapa === "REVISAO") {
+    const registroLabel = precisaRegistro ? REGISTRO_TIPO_MAP[form.funcao] : "Registro";
+    const registroOuMatriculaLabel = precisaMatricula ? "Matrícula" : registroLabel;
+    const registroOuMatriculaValor = precisaMatricula ? form.matricula : form.registro_numero;
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-blue-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-xl shadow-xl">
+          <CardHeader className="text-center border-b pb-6">
+            <div className="flex justify-center gap-4 mb-3">
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png"
+                alt="Coração Paraibano"
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+            <div className="flex justify-center mb-2">
+              <div className="bg-blue-600 p-3 rounded-full">
+                <CheckCircle2 className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl text-gray-900">Confira seus Dados</CardTitle>
+            <CardDescription className="text-gray-600 mt-2">
+              Verifique se todos os dados estão corretos antes de enviar.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="pt-6">
+            <div className="space-y-4 mb-6 bg-gray-50 rounded-lg p-4">
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">Nome Completo:</span>
+                <span className="text-gray-900">{form.nome_completo}</span>
+              </div>
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">CPF:</span>
+                <span className="text-gray-900">{form.cpf}</span>
+              </div>
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">Telefone:</span>
+                <span className="text-gray-900">{form.telefone || "Não informado"}</span>
+              </div>
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">Perfil:</span>
+                <span className="text-gray-900">{PERFIS_OPCOES.find(p => p.value === form.perfil)?.label || form.perfil}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-gray-700">{registroOuMatriculaLabel}:</span>
+                <span className="text-gray-900">{registroOuMatriculaValor || "Não informado"}</span>
+              </div>
+            </div>
+
+            {erro && (
+              <p className="text-sm text-red-600 bg-red-50 rounded p-3 mb-4">{erro}</p>
+            )}
+
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setEtapa("FORMULARIO")}
+                variant="outline"
+                className="flex-1"
+                disabled={loading}
+              >
+                EDITAR
+              </Button>
+              <Button
+                onClick={handleEnviarFormulario}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                disabled={loading}
+              >
+                {loading ? "Enviando..." : "ENVIAR FORMULÁRIO"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -262,7 +341,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
         </CardHeader>
 
         <CardContent className="pt-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSalvarCadastro} className="space-y-4">
             <div>
               <Label>Nome Completo *</Label>
               <Input
@@ -357,7 +436,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
               className="w-full bg-red-600 hover:bg-red-700 text-white"
               disabled={loading}
             >
-              {loading ? "Enviando..." : "Enviar Solicitação de Acesso"}
+              SALVAR CADASTRO
             </Button>
           </form>
         </CardContent>
