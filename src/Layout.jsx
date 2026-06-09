@@ -109,8 +109,8 @@ export default function Layout({ children, currentPageName }) {
           icon: ClipboardList,
         },
         {
-          title: "Gerenciar Acessos",
-          url: "/GerenciarAcessos",
+          title: "Controle de Acessos",
+          url: "/ControleAcessos",
           icon: Shield,
         },
         {
@@ -127,7 +127,7 @@ export default function Layout({ children, currentPageName }) {
         ...menuBase,
         { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
         { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
-        { title: "Gerenciar Acessos", url: "/GerenciarAcessos", icon: Shield },
+        { title: "Controle de Acessos", url: "/ControleAcessos", icon: Shield },
         { title: "Logs de Auditoria", url: createPageUrl("LogsAuditoria"), icon: ClipboardList },
         { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
       ];

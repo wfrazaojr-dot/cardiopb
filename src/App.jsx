@@ -14,7 +14,8 @@ import RelatorioFarmacia from './pages/RelatorioFarmacia';
 import CadastroPerfil from './pages/CadastroPerfil';
 import AcessoPendente from './pages/AcessoPendente';
 import SolicitarAcesso from './pages/SolicitarAcesso';
-import GerenciarAcessos from './pages/GerenciarAcessos';
+import ControleAcessos from './pages/ControleAcessos.jsx';
+import PrimeiroAcesso from './pages/PrimeiroAcesso.jsx';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import StatusGuard from '@/components/StatusGuard';
@@ -78,7 +79,8 @@ const AuthenticatedApp = () => {
             <Route path="/LogsAuditoria" element={<LogsAuditoria />} />
             <Route path="/GestaoTrombolise" element={<GestaoTrombolise />} />
             <Route path="/RelatorioFarmacia" element={<RelatorioFarmacia />} />
-            <Route path="/GerenciarAcessos" element={<GerenciarAcessos />} />
+            <Route path="/ControleAcessos" element={<ControleAcessos />} />
+      <Route path="/PrimeiroAcesso" element={<PrimeiroAcesso />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </LayoutWrapper>

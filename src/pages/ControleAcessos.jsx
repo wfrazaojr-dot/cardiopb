@@ -4,18 +4,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   CheckCircle2, XCircle, Lock, Search, Users, RefreshCw,
   ShieldCheck, FileSpreadsheet, FileText, Trash2, History,
-  ChevronDown, ChevronUp, Bell, UserPlus, AlertCircle
+  ChevronDown, ChevronUp, Bell, AlertCircle
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 
-// ── Constantes ──────────────────────────────────────────────────────────────
+// ── Constantes ───────────────────────────────────────────────────────────────
 
 const DEV_EMAIL = "wfrazaojr@gmail.com";
 
@@ -32,13 +32,13 @@ const STATUS_CONFIG = {
 };
 
 const PERFIL_LABELS = {
-  UNIDADE_SAUDE:          "Unidade de Saúde",
-  CERH:                   "CERH",
-  ASSCARDIO:              "ASSCARDIO",
-  TRANSPORTE:             "Transporte",
-  HEMODINAMICA:           "Hemodinâmica",
-  ADMINISTRADOR_MANAGER:  "Adm. Manager",
-  ADMINISTRADOR_CERH:     "Adm. CERH",
+  UNIDADE_SAUDE:             "Unidade de Saúde",
+  CERH:                      "CERH",
+  ASSCARDIO:                 "ASSCARDIO",
+  TRANSPORTE:                "Transporte",
+  HEMODINAMICA:              "Hemodinâmica",
+  ADMINISTRADOR_MANAGER:     "Adm. Manager",
+  ADMINISTRADOR_CERH:        "Adm. CERH",
   ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia",
   ADMINISTRADOR_TRANSPORTE:  "Adm. Transporte",
 };
@@ -51,46 +51,35 @@ const FUNCAO_LABELS = {
   administrativo:    "Administrativo",
 };
 
-const EQUIPE_MAP = {
-  UNIDADE_SAUDE: "unidade_saude", CERH: "cerh", ASSCARDIO: "asscardio",
-  TRANSPORTE: "transporte", HEMODINAMICA: "hemodinamica",
-  ADMINISTRADOR_MANAGER: "admin", ADMINISTRADOR_CERH: "cerh",
-  ADMINISTRADOR_CARDIOLOGIA: "asscardio", ADMINISTRADOR_TRANSPORTE: "transporte",
-};
-
 // ── Componente principal ─────────────────────────────────────────────────────
 
-export default function GerenciarAcessos() {
+export default function ControleAcessos() {
   const queryClient = useQueryClient();
-  const [busca, setBusca]               = useState("");
-  const [filtroStatus, setFiltroStatus] = useState("todos");
-  const [filtroPerfil, setFiltroPerfil] = useState("todos");
-  const [filtroEquipe, setFiltroEquipe] = useState("todos");
+  const [abaAtiva, setAbaAtiva]           = useState("pendentes");
+  const [busca, setBusca]                 = useState("");
+  const [filtroStatus, setFiltroStatus]   = useState("todos");
+  const [filtroEquipe, setFiltroEquipe]   = useState("todos");
   const [dialogBloqueio, setDialogBloqueio] = useState(null);
   const [motivoBloqueio, setMotivoBloqueio] = useState("");
   const [dialogExcluir, setDialogExcluir]   = useState(null);
   const [historicoExpandido, setHistoricoExpandido] = useState({});
-  const [abaAtiva, setAbaAtiva] = useState("pendentes");
 
-  // ── Queries ────────────────────────────────────────────────────────────────
+  // ── Queries ─────────────────────────────────────────────────────────────────
 
   const { data: currentUser } = useQuery({
     queryKey: ["currentUser"],
     queryFn:  () => base44.auth.me(),
   });
 
-  const { data: usuariosData, isLoading, refetch } = useQuery({
-    queryKey: ["usuarios-gerenciar"],
+  const { data: dadosAcesso, isLoading, refetch } = useQuery({
+    queryKey: ["controle-acessos"],
     queryFn:  async () => {
       const res = await base44.functions.invoke("listarUsuariosPendentes", {});
       return res.data;
     },
-    enabled:  !!currentUser,
+    enabled:   !!currentUser,
     staleTime: 0,
   });
-  const usuarios = usuariosData?.todos || [];
-
-
 
   const { data: logsAuditoria = [] } = useQuery({
     queryKey: ["logs-acesso"],
@@ -98,90 +87,98 @@ export default function GerenciarAcessos() {
     enabled:  !!currentUser,
   });
 
-  // ── Verificação de permissão ───────────────────────────────────────────────
+  const isDev     = currentUser?.email?.toLowerCase() === DEV_EMAIL;
+  const isManager = isDev || ROLES_COM_ACESSO.includes(currentUser?.role);
 
-  const isDev      = currentUser?.email?.toLowerCase() === DEV_EMAIL;
-  const isManager  = isDev || ROLES_COM_ACESSO.includes(currentUser?.role);
-
-  const podeGerenciarUsuario = (u) => {
+  const podeGerenciar = (u) => {
     if (isDev) return true;
     if (u.role === "ADMINISTRADOR_MANAGER") return false;
     return isManager;
   };
 
-  // ── Mutations ──────────────────────────────────────────────────────────────
+  // Dados derivados
+  const solicPendentes = dadosAcesso?.solicPendentes || [];
+  const usuarios       = dadosAcesso?.todos || [];
+  const totalPendentes = solicPendentes.length;
 
-  const registrarLog = async (acao, usuario, descricao) => {
-    await base44.entities.LogAuditoria.create({
-      usuario_email: currentUser?.email || "",
-      usuario_nome:  currentUser?.full_name || currentUser?.email || "",
-      acao, entidade: "User", entidade_id: usuario.id, descricao,
-      severidade: acao === "deletar" ? "critico" : "aviso",
-    });
-    queryClient.invalidateQueries({ queryKey: ["logs-acesso"] });
+  // ── Mutations ────────────────────────────────────────────────────────────────
+
+  const recarregar = () => {
+    queryClient.removeQueries({ queryKey: ["controle-acessos"] });
+    refetch();
   };
 
-  // Aprovar/Rejeitar registro da entidade SolicitacaoAcesso (formulário externo)
-  const processarSolicMutation = useMutation({
-    mutationFn: async ({ sol, acao, tipo }) => {
+  // Aprovar solicitação externa → convida o usuário
+  const aprovarMutation = useMutation({
+    mutationFn: async (sol) => {
       const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
         solicitacaoId: sol.id,
-        solicitacaoTipo: tipo,
-        acao,
+        solicitacaoTipo: "solicitacao",
+        acao: "aprovar",
       });
-      // 404 no rejeitar = já foi deletado antes, tratar como sucesso
-      if (!res.data?.success && !res.data?.error?.includes("not found")) {
-        throw new Error(res.data?.error || "Erro ao processar solicitação");
-      }
+      if (!res.data?.success) throw new Error(res.data?.error || "Erro ao aprovar");
     },
-    onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["usuarios-gerenciar"] });
-      refetch();
-    },
+    onSuccess: recarregar,
   });
 
-  // Ativar / Inativar / Bloquear usuário existente
+  // Excluir/rejeitar solicitação externa
+  const excluirSolicMutation = useMutation({
+    mutationFn: async (sol) => {
+      const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
+        solicitacaoId: sol.id,
+        solicitacaoTipo: "solicitacao",
+        acao: "rejeitar",
+      });
+      // 404 = já excluído, tratar como sucesso
+      if (!res.data?.success && !res.data?.error?.includes("not found")) {
+        throw new Error(res.data?.error || "Erro ao excluir");
+      }
+    },
+    onSuccess: recarregar,
+  });
+
+  // Atualizar status de usuário ativo (ativar/inativar/bloquear)
   const updateStatusMutation = useMutation({
     mutationFn: async ({ userId, status, motivo, usuarioAlvo }) => {
-      // Log de auditoria local (não bloqueia a operação principal)
-      const descricao = motivo
-        ? `Status alterado para "${status}" — Motivo: ${motivo}`
-        : `Status alterado para "${status}"`;
-      if (usuarioAlvo) {
-        base44.entities.LogAuditoria.create({
-          usuario_email: currentUser?.email || "",
-          usuario_nome: currentUser?.full_name || currentUser?.email || "",
-          acao: "atualizar", entidade: "User", entidade_id: usuarioAlvo.id,
-          descricao, severidade: "aviso",
-        }).catch(() => {}); // silencia erro de log para não bloquear a ação principal
-      }
+      base44.entities.LogAuditoria.create({
+        usuario_email: currentUser?.email || "",
+        usuario_nome:  currentUser?.full_name || currentUser?.email || "",
+        acao: "atualizar", entidade: "User", entidade_id: usuarioAlvo?.id,
+        descricao: motivo ? `Status → "${status}" — Motivo: ${motivo}` : `Status → "${status}"`,
+        severidade: "aviso",
+      }).catch(() => {});
 
       const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
-        userId,
-        status,
-        motivo: motivo || null,
+        userId, status, motivo: motivo || null,
       });
       if (!res.data?.success) throw new Error(res.data?.error || "Erro ao atualizar status");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
+      recarregar();
       setDialogBloqueio(null);
       setMotivoBloqueio("");
     },
   });
 
+  // Excluir usuário permanentemente
   const deleteMutation = useMutation({
     mutationFn: async (usuario) => {
-      await registrarLog("deletar", usuario, `Usuário "${usuario.full_name || usuario.email}" foi EXCLUÍDO.`);
+      await base44.entities.LogAuditoria.create({
+        usuario_email: currentUser?.email || "",
+        usuario_nome:  currentUser?.full_name || currentUser?.email || "",
+        acao: "deletar", entidade: "User", entidade_id: usuario.id,
+        descricao: `Usuário "${usuario.full_name || usuario.email}" EXCLUÍDO.`,
+        severidade: "critico",
+      });
       return base44.entities.User.delete(usuario.id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
+      recarregar();
       setDialogExcluir(null);
     },
   });
 
-  // ── Acesso negado ──────────────────────────────────────────────────────────
+  // ── Acesso negado ─────────────────────────────────────────────────────────
 
   if (!isManager) {
     return (
@@ -190,62 +187,52 @@ export default function GerenciarAcessos() {
           <CardContent className="pt-8 text-center">
             <Lock className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-gray-900 mb-2">Acesso Negado</h2>
-            <p className="text-gray-600">Apenas o Administrador Manager tem acesso a esta página.</p>
+            <p className="text-gray-600">Apenas administradores têm acesso a esta página.</p>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  // ── Dados computados ───────────────────────────────────────────────────────
+  // ── Dados para aba "Todos os Usuários" ────────────────────────────────────
 
-  const getStatusEfetivo = (u) => u.status_acesso || (u.cadastro_completo ? "PENDENTE" : "PENDENTE");
+  const getStatusEfetivo = (u) => u.status_acesso || "PENDENTE";
 
-  // Solicitações externas pendentes (já filtradas pela função backend)
-  const solicPendentes = usuariosData?.solicPendentes || [];
-
-  // Total para o badge
-  const totalPendentes = solicPendentes.length;
-
-  // Lista "Todos os Usuários" com filtros
   const usuariosExibidos = usuarios
     .filter(u => u.email?.toLowerCase() !== DEV_EMAIL)
     .filter(u => {
-      const matchBusca = !busca ||
+      const matchBusca  = !busca ||
         u.full_name?.toLowerCase().includes(busca.toLowerCase()) ||
         u.email?.toLowerCase().includes(busca.toLowerCase()) ||
         u.cpf?.includes(busca);
-      const statusEfetivo = getStatusEfetivo(u);
-      const matchStatus   = filtroStatus === "todos" || statusEfetivo === filtroStatus;
-      const matchPerfil   = filtroPerfil === "todos" || u.perfil === filtroPerfil;
-      const matchEquipe   = filtroEquipe === "todos" || u.equipe === filtroEquipe;
-      return matchBusca && matchStatus && matchPerfil && matchEquipe;
+      const matchStatus = filtroStatus === "todos" || getStatusEfetivo(u) === filtroStatus;
+      const matchEquipe = filtroEquipe === "todos" || u.equipe === filtroEquipe;
+      return matchBusca && matchStatus && matchEquipe;
     });
 
   const contadores = {
-    PENDENTE:  usuarios.filter(u => (u.status_acesso === "PENDENTE" || !u.status_acesso) && u.cadastro_completo).length,
+    PENDENTE:  usuarios.filter(u => !u.status_acesso || u.status_acesso === "PENDENTE").length,
     ATIVO:     usuarios.filter(u => u.status_acesso === "ATIVO").length,
     INATIVO:   usuarios.filter(u => u.status_acesso === "INATIVO").length,
     BLOQUEADO: usuarios.filter(u => u.status_acesso === "BLOQUEADO").length,
   };
 
-  // ── Exportação ─────────────────────────────────────────────────────────────
+  // ── Exportação ────────────────────────────────────────────────────────────
 
   const getDadosExportacao = () => usuarios
     .filter(u => u.email?.toLowerCase() !== DEV_EMAIL)
     .map(u => ({
-      "Nome":                u.full_name || u.nome_completo || "",
-      "E-mail":              u.email || "",
-      "CPF":                 u.cpf || "",
-      "Perfil":              PERFIL_LABELS[u.perfil] || u.perfil || "",
-      "Função":              FUNCAO_LABELS[u.funcao] || u.funcao || "",
-      "Equipe":              u.equipe?.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "",
-      "Unidade de Saúde":    u.unidade_saude || "",
-      "Registro":            u.registro_profissional_tipo && u.registro_profissional_numero
-                               ? `${u.registro_profissional_tipo}: ${u.registro_profissional_numero}` : "",
-      "Matrícula":           u.matricula || "",
-      "Status":              STATUS_CONFIG[u.status_acesso]?.label || "Pendente",
-      "Cadastro":            u.created_date ? new Date(u.created_date).toLocaleDateString("pt-BR") : "",
+      "Nome":             u.full_name || u.nome_completo || "",
+      "E-mail":           u.email || "",
+      "CPF":              u.cpf || "",
+      "Perfil":           PERFIL_LABELS[u.perfil] || u.perfil || "",
+      "Função":           FUNCAO_LABELS[u.funcao] || u.funcao || "",
+      "Equipe":           u.equipe?.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "",
+      "Unidade de Saúde": u.unidade_saude || "",
+      "Registro":         u.registro_profissional_tipo && u.registro_profissional_numero
+                            ? `${u.registro_profissional_tipo}: ${u.registro_profissional_numero}` : "",
+      "Status":           STATUS_CONFIG[u.status_acesso]?.label || "Pendente",
+      "Cadastro":         u.created_date ? new Date(u.created_date).toLocaleDateString("pt-BR") : "",
     }));
 
   const exportarExcel = () => {
@@ -259,18 +246,17 @@ export default function GerenciarAcessos() {
     const dados = getDadosExportacao();
     const doc = new jsPDF({ orientation: "landscape" });
     doc.setFontSize(14); doc.setTextColor(180, 30, 30);
-    doc.text("Lista de Profissionais", 14, 16);
+    doc.text("Controle de Acessos — Profissionais", 14, 16);
     doc.setFontSize(8); doc.setTextColor(100, 100, 100);
     doc.text(`Gerado: ${new Date().toLocaleString("pt-BR")} | Total: ${dados.length}`, 14, 23);
-    const colunas   = ["Nome", "E-mail", "CPF", "Perfil", "Função", "Equipe", "Unidade", "Registro", "Status", "Cadastro"];
-    const larguras  = [35, 45, 22, 28, 20, 22, 30, 22, 18, 18];
+    const colunas  = ["Nome", "E-mail", "CPF", "Perfil", "Função", "Equipe", "Unidade", "Registro", "Status", "Cadastro"];
+    const larguras = [35, 45, 22, 28, 20, 22, 30, 22, 18, 18];
     let y = 30;
     doc.setFillColor(220, 38, 38); doc.setTextColor(255, 255, 255); doc.setFontSize(7);
     doc.rect(14, y, 269, 7, "F");
     let x = 14;
     colunas.forEach((c, i) => { doc.text(c, x + 1, y + 5); x += larguras[i]; });
-    y += 7;
-    doc.setTextColor(40, 40, 40);
+    y += 7; doc.setTextColor(40, 40, 40);
     dados.forEach((row, idx) => {
       if (y > 185) { doc.addPage(); y = 15; }
       if (idx % 2 === 0) { doc.setFillColor(245, 245, 245); doc.rect(14, y, 269, 7, "F"); }
@@ -283,7 +269,7 @@ export default function GerenciarAcessos() {
     doc.save(`profissionais_${new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")}.pdf`);
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
@@ -293,12 +279,12 @@ export default function GerenciarAcessos() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <ShieldCheck className="w-7 h-7 text-red-600" />
-            Gerenciar Acessos
+            Controle de Acessos
           </h1>
-          <p className="text-gray-600 text-sm mt-1">Aprovação e controle de usuários do sistema</p>
+          <p className="text-gray-600 text-sm mt-1">Aprovação e gerenciamento de usuários do sistema</p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => { queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] }); refetch(); }} className="gap-2">
+          <Button variant="outline" size="sm" onClick={recarregar} className="gap-2">
             <RefreshCw className="w-4 h-4" /> Atualizar
           </Button>
           <Button variant="outline" size="sm" onClick={exportarExcel} className="gap-2 border-green-400 text-green-700 hover:bg-green-50">
@@ -336,88 +322,88 @@ export default function GerenciarAcessos() {
         </button>
       </div>
 
-      {/* ── ABA: AGUARDANDO APROVAÇÃO ───────────────────────────────────── */}
+      {/* ── ABA: AGUARDANDO APROVAÇÃO ─────────────────────────────────────── */}
       {abaAtiva === "pendentes" && (
-        <div className="space-y-6">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            Novas Solicitações de Acesso
+            <span className="bg-orange-100 text-orange-800 border border-orange-300 text-xs px-2 py-0.5 rounded-full font-bold">
+              {solicPendentes.length}
+            </span>
+          </h2>
 
-          {/* Solicitações externas (entidade SolicitacaoAcesso) */}
-          <div>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
-              Solicitações de acesso externas
-              <span className="bg-orange-100 text-orange-800 border border-orange-300 text-xs px-2 py-0.5 rounded-full font-bold">
-                {solicPendentes.length}
-              </span>
-            </h2>
-
-            {solicPendentes.length === 0 ? (
-              <Card>
-                <CardContent className="py-8 text-center text-gray-400">
-                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-400" />
-                  <p className="text-sm">Nenhuma solicitação externa pendente.</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-3">
-                {solicPendentes.map(sol => (
-                  <Card key={sol.id} className="border border-orange-300 bg-orange-50">
-                    <CardContent className="pt-4 pb-4">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-gray-900">{sol.nome_completo}</span>
-                            <span className="text-xs px-2 py-0.5 rounded-full border font-medium bg-orange-100 text-orange-800 border-orange-300">
-                              Solicitação Externa
+          {isLoading ? (
+            <div className="text-center py-12 text-gray-400">Carregando...</div>
+          ) : solicPendentes.length === 0 ? (
+            <Card>
+              <CardContent className="py-10 text-center text-gray-400">
+                <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400" />
+                <p className="text-sm font-medium">Nenhuma solicitação pendente.</p>
+                <p className="text-xs mt-1">Todas as solicitações foram processadas.</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {solicPendentes.map(sol => (
+                <Card key={sol.id} className="border border-orange-300 bg-orange-50">
+                  <CardContent className="pt-4 pb-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-gray-900">{sol.nome_completo}</span>
+                          <span className="text-xs px-2 py-0.5 rounded-full border font-medium bg-orange-100 text-orange-800 border-orange-300">
+                            Nova Solicitação
+                          </span>
+                          {sol.perfil && (
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                              {PERFIL_LABELS[sol.perfil] || sol.perfil}
                             </span>
-                            {sol.perfil && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                                {PERFIL_LABELS[sol.perfil] || sol.perfil}
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-sm text-gray-600 mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                            <span>{sol.email}</span>
-                            {sol.cpf && <span>CPF: {sol.cpf}</span>}
-                            {sol.funcao && <span>Função: {FUNCAO_LABELS[sol.funcao] || sol.funcao}</span>}
-                            {sol.registro_profissional_tipo && sol.registro_profissional_numero && (
-                              <span>{sol.registro_profissional_tipo}: {sol.registro_profissional_numero}</span>
-                            )}
-                            {sol.telefone && <span>Tel: {sol.telefone}</span>}
-                            {sol.unidade_saude && <span>Unidade: {sol.unidade_saude}</span>}
-                          </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            Solicitado em: {sol.created_date ? new Date(sol.created_date).toLocaleString("pt-BR") : "—"}
-                          </div>
+                          )}
                         </div>
-                        <div className="flex gap-2 shrink-0">
-                          <Button
-                            size="sm"
-                            className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                            onClick={() => processarSolicMutation.mutate({ sol, acao: "aprovar", tipo: "solicitacao" })}
-                            disabled={processarSolicMutation.isPending}
-                          >
-                            <CheckCircle2 className="w-4 h-4" /> Aprovar & Convidar
-                          </Button>
-                          <Button
-                            size="sm" variant="outline"
-                            className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                            onClick={() => processarSolicMutation.mutate({ sol, acao: "rejeitar", tipo: "solicitacao" })}
-                            disabled={processarSolicMutation.isPending}
-                          >
-                            <XCircle className="w-4 h-4" /> Rejeitar
-                          </Button>
+                        <div className="text-sm text-gray-600 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                          <span>{sol.email}</span>
+                          {sol.cpf && <span>CPF: {sol.cpf}</span>}
+                          {sol.funcao && <span>Função: {FUNCAO_LABELS[sol.funcao] || sol.funcao}</span>}
+                          {sol.registro_profissional_tipo && sol.registro_profissional_numero && (
+                            <span>{sol.registro_profissional_tipo}: {sol.registro_profissional_numero}</span>
+                          )}
+                          {sol.telefone && <span>Tel: {sol.telefone}</span>}
+                          {sol.unidade_saude && <span>Unidade: {sol.unidade_saude}</span>}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          Solicitado em: {sol.created_date ? new Date(sol.created_date).toLocaleString("pt-BR") : "—"}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
+                      <div className="flex gap-2 shrink-0">
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 text-white gap-1"
+                          onClick={() => aprovarMutation.mutate(sol)}
+                          disabled={aprovarMutation.isPending || excluirSolicMutation.isPending}
+                        >
+                          <CheckCircle2 className="w-4 h-4" /> APROVAR
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-red-400 text-red-700 hover:bg-red-50 gap-1"
+                          onClick={() => excluirSolicMutation.mutate(sol)}
+                          disabled={aprovarMutation.isPending || excluirSolicMutation.isPending}
+                        >
+                          <Trash2 className="w-4 h-4" /> EXCLUIR
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* ── ABA: TODOS OS USUÁRIOS ──────────────────────────────────────── */}
+      {/* ── ABA: TODOS OS USUÁRIOS ────────────────────────────────────────── */}
       {abaAtiva === "usuarios" && (
         <>
           {/* Contadores */}
@@ -462,27 +448,6 @@ export default function GerenciarAcessos() {
                     <SelectItem value="hemodinamica">Hemodinâmica</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={filtroPerfil} onValueChange={setFiltroPerfil}>
-                  <SelectTrigger className="w-full md:w-52"><SelectValue placeholder="Perfil" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos os Perfis</SelectItem>
-                    <SelectGroup>
-                      <SelectLabel className="text-xs text-gray-500 font-semibold uppercase tracking-wide px-2 py-1">Perfis Base</SelectLabel>
-                      <SelectItem value="UNIDADE_SAUDE">Unidade de Saúde</SelectItem>
-                      <SelectItem value="CERH">CERH</SelectItem>
-                      <SelectItem value="ASSCARDIO">ASSCARDIO</SelectItem>
-                      <SelectItem value="TRANSPORTE">Transporte</SelectItem>
-                      <SelectItem value="HEMODINAMICA">Hemodinâmica</SelectItem>
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel className="text-xs text-gray-500 font-semibold uppercase tracking-wide px-2 py-1">Administradores</SelectLabel>
-                      <SelectItem value="ADMINISTRADOR_MANAGER">ADM Manager</SelectItem>
-                      <SelectItem value="ADMINISTRADOR_CERH">ADM CERH</SelectItem>
-                      <SelectItem value="ADMINISTRADOR_CARDIOLOGIA">ADM Cardiologia</SelectItem>
-                      <SelectItem value="ADMINISTRADOR_TRANSPORTE">ADM Transporte</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
               </div>
             </CardContent>
           </Card>
@@ -494,16 +459,16 @@ export default function GerenciarAcessos() {
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
                 <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>Nenhum usuário encontrado com os filtros selecionados.</p>
+                <p>Nenhum usuário encontrado.</p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-3">
               {usuariosExibidos.map(usuario => {
                 const statusAtual = getStatusEfetivo(usuario);
-                const cfg = STATUS_CONFIG[statusAtual] || STATUS_CONFIG["PENDENTE"];
+                const cfg         = STATUS_CONFIG[statusAtual] || STATUS_CONFIG["PENDENTE"];
                 const logsUsuario = logsAuditoria.filter(l => l.entidade_id === usuario.id);
-                const expandido = historicoExpandido[usuario.id];
+                const expandido   = historicoExpandido[usuario.id];
 
                 return (
                   <Card key={usuario.id} className="border hover:shadow-md transition-shadow">
@@ -568,7 +533,7 @@ export default function GerenciarAcessos() {
                         </div>
 
                         <div className="flex gap-2 flex-wrap shrink-0">
-                          {!podeGerenciarUsuario(usuario) ? (
+                          {!podeGerenciar(usuario) ? (
                             <span className="text-xs text-gray-400 italic px-2 py-1">Apenas o desenvolvedor pode gerenciar</span>
                           ) : (
                             <>
@@ -610,7 +575,7 @@ export default function GerenciarAcessos() {
         </>
       )}
 
-      {/* Dialog Excluir */}
+      {/* Dialog Excluir Usuário */}
       <Dialog open={!!dialogExcluir} onOpenChange={() => setDialogExcluir(null)}>
         <DialogContent>
           <DialogHeader>
