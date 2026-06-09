@@ -180,19 +180,24 @@ export default function ControleAcessos() {
   const deleteMutation = useMutation({
     mutationFn: async (usuario) => {
       if (!usuario.id) throw new Error("ID do usuário inválido");
-      await base44.entities.LogAuditoria.create({
+      // Registrar log (best effort)
+      base44.entities.LogAuditoria.create({
         usuario_email: currentUser?.email || "",
         usuario_nome:  currentUser?.full_name || currentUser?.email || "",
         acao: "deletar", entidade: "User", entidade_id: usuario.id,
         descricao: `Usuário "${usuario.full_name || usuario.email}" EXCLUÍDO.`,
         severidade: "critico",
-      });
+      }).catch(err => console.warn("⚠️ Aviso ao registrar log:", err.message));
+      
+      // Deletar usuário
       await base44.entities.User.delete(usuario.id);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       setDialogExcluir(null);
-      queryClient.invalidateQueries({ queryKey: ["controle-acessos"] });
-      queryClient.invalidateQueries({ queryKey: ["logs-acesso"] });
+      await queryClient.invalidateQueries({ queryKey: ["controle-acessos"] });
+      await queryClient.invalidateQueries({ queryKey: ["logs-acesso"] });
+      // Refetch para garantir atualização
+      refetch();
     },
     onError: (error) => {
       console.error("❌ Erro ao excluir:", error.message);
