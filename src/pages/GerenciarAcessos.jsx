@@ -86,6 +86,7 @@ export default function GerenciarAcessos() {
       return res.data;
     },
     enabled:  !!currentUser,
+    staleTime: 0,
   });
   const usuarios = usuariosData?.todos || [];
 
@@ -398,10 +399,10 @@ export default function GerenciarAcessos() {
                           <Button
                             size="sm" variant="outline"
                             className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                            onClick={() => updateStatusMutation.mutate({ userId: u.id, status: "BLOQUEADO", usuarioAlvo: u })}
-                            disabled={updateStatusMutation.isPending}
+                            onClick={() => processarSolicMutation.mutate({ sol: u, acao: "rejeitar" })}
+                            disabled={processarSolicMutation.isPending || updateStatusMutation.isPending}
                           >
-                            <XCircle className="w-4 h-4" /> Recusar
+                            <XCircle className="w-4 h-4" /> Rejeitar
                           </Button>
                         </div>
                       </div>

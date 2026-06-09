@@ -27,10 +27,16 @@ Deno.serve(async (req) => {
     const { solicitacaoId, acao, userId, status, motivo } = await req.json();
 
     // ── Ação sobre entidade SolicitacaoAcesso (aprovar/rejeitar solicitação externa) ──
+    // OU rejeitar usuário GOV.BR pendente (passa sol.id = User.id quando vem de usuariosPendentes)
     if (solicitacaoId && acao) {
       if (acao === 'rejeitar') {
-        // Deletar a solicitação do banco
-        await base44.asServiceRole.entities.SolicitacaoAcesso.delete(solicitacaoId);
+        // Tentar deletar da SolicitacaoAcesso primeiro; se não existir, deletar do User
+        try {
+          await base44.asServiceRole.entities.SolicitacaoAcesso.delete(solicitacaoId);
+        } catch (_) {
+          // Pode ser um User pendente (GOV.BR) — deletar da entidade User
+          await base44.asServiceRole.entities.User.delete(solicitacaoId);
+        }
         return Response.json({ success: true });
       }
 

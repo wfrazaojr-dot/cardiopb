@@ -46,11 +46,12 @@ Deno.serve(async (req) => {
       updated_date: u.updated_date,
     });
 
-    // Filtrar pendentes da entidade User
+    // Filtrar pendentes da entidade User — apenas quem completou o cadastro
     const pendentes = todosUsuarios
       .filter(u =>
         u.email?.toLowerCase() !== 'wfrazaojr@gmail.com' &&
         u.role !== 'admin' &&
+        u.cadastro_completo === true &&
         u.status_acesso !== 'ATIVO' &&
         u.status_acesso !== 'BLOQUEADO' &&
         u.status_acesso !== 'INATIVO'
