@@ -216,13 +216,12 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
             <h2 className="text-2xl font-bold text-gray-900">Solicitação Enviada!</h2>
             <p className="text-gray-600">
               Sua solicitação de acesso foi registrada com sucesso.<br />
-              O Administrador Manager receberá uma notificação e analisará seu pedido.<br />
-              <strong>Você receberá um e-mail quando seu acesso for aprovado.</strong>
+              O Administrador Manager analisará seu pedido.
             </p>
-            <p className="text-sm text-blue-700 font-medium bg-blue-50 rounded-lg px-3 py-2 border border-blue-200">
-              {emailExibido}
-            </p>
-            <p className="text-xs text-gray-500 mt-4">
+            <div className="bg-orange-50 border border-orange-300 rounded-lg px-4 py-3 text-orange-700 font-semibold text-sm">
+              ⏱ Aguarde até 72 horas para novo acesso.
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
               Você pode fechar esta página. Quando aprovado, acesse novamente pelo link do sistema.
             </p>
           </CardContent>
@@ -253,7 +252,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
           <CardDescription className="text-gray-600 mt-2">
             Preencha seus dados para solicitar acesso ao Sistema Coração Paraibano.<br />
             Após o envio, o Administrador Manager analisará seu pedido.<br />
-            <span className="text-blue-700 font-medium">Você receberá um e-mail quando seu acesso for liberado.</span>
+            <span className="text-orange-600 font-medium">⏱ Aguarde até 72 horas para novo acesso.</span>
           </CardDescription>
           {emailExibido && (
             <div className="mt-3 text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2 border border-green-200">

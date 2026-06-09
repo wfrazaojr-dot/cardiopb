@@ -161,17 +161,7 @@ export default function GerenciarAcessos() {
           }
         }
 
-        await base44.integrations.Core.SendEmail({
-          to: sol.email,
-          subject: "✅ Acesso Aprovado — Sistema Coração Paraibano",
-          body: `Olá, ${sol.nome_completo}!\n\nSua solicitação foi APROVADA.\nPerfil: ${PERFIL_LABELS[sol.perfil] || sol.perfil}\n\nAcesse: https://coracaoparaibano.base44.app\n\nAtenciosamente,\nEquipe Coração Paraibano`,
-        });
-      } else {
-        await base44.integrations.Core.SendEmail({
-          to: sol.email,
-          subject: "❌ Solicitação Negada — Sistema Coração Paraibano",
-          body: `Olá, ${sol.nome_completo}.\n\nSua solicitação não foi aprovada. Para mais informações, contate o Administrador Manager.\n\nAtenciosamente,\nEquipe Coração Paraibano`,
-        });
+        // E-mail de notificação removido conforme nova política
       }
     },
     onSuccess: () => {
@@ -212,16 +202,7 @@ export default function GerenciarAcessos() {
       }
 
       const result = await base44.entities.User.update(userId, updateData);
-      if (status === "ATIVO" && usuarioAlvo) {
-        const emailDest = usuarioAlvo.email_cadastro || usuarioAlvo.email;
-        if (emailDest) {
-          await base44.integrations.Core.SendEmail({
-            to: emailDest,
-            subject: "✅ Acesso Aprovado — Sistema Coração Paraibano",
-            body: `Olá, ${usuarioAlvo.full_name || usuarioAlvo.nome_completo || "Profissional"}!\n\nSeu cadastro foi APROVADO. Acesse: https://coracaoparaibano.base44.app\n\nAtenciosamente,\nEquipe Coração Paraibano`,
-          });
-        }
-      }
+      // E-mail de notificação removido conforme nova política
       return result;
     },
     onSuccess: () => {
