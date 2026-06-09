@@ -33,10 +33,10 @@ export default function StatusGuard({ children }) {
 
   if (!user) return null;
 
-  // Acesso irrestrito para desenvolvedor e admin legado
+  // Acesso irrestrito para desenvolvedor, admin legado e todos os roles administrativos
   const isDev = user.email?.toLowerCase() === "wfrazaojr@gmail.com";
-  const isAdmin = user.role === "admin";
-  if (isDev || isAdmin) return <>{children}</>;
+  const rolesAdministrativas = ["admin", "ADMINISTRADOR_MANAGER", "ADMINISTRADOR_CERH", "ADMINISTRADOR_CARDIOLOGIA", "ADMINISTRADOR_TRANSPORTE", "DESENVOLVEDOR"];
+  if (isDev || rolesAdministrativas.includes(user.role)) return <>{children}</>;
 
   // CENÁRIO A: Acesso ATIVO — libera entrada (com ou sem cadastro_completo)
   if (user.status_acesso === "ATIVO") {

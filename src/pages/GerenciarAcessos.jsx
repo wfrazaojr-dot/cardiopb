@@ -197,7 +197,8 @@ export default function GerenciarAcessos() {
 
   // Verificar permissão
   const isDev = currentUser?.email?.toLowerCase() === "wfrazaojr@gmail.com";
-  const isManager = currentUser?.role === "ADMINISTRADOR_MANAGER" || currentUser?.role === "admin" || isDev;
+  const rolesComAcesso = ["admin", "ADMINISTRADOR_MANAGER", "ADMINISTRADOR_CERH", "ADMINISTRADOR_CARDIOLOGIA", "ADMINISTRADOR_TRANSPORTE", "DESENVOLVEDOR"];
+  const isManager = isDev || rolesComAcesso.includes(currentUser?.role);
 
   // Apenas o desenvolvedor pode aprovar/ativar/bloquear/excluir ADMINISTRADOR_MANAGER
   const podeGerenciarUsuario = (usuario) => {
@@ -346,11 +347,16 @@ export default function GerenciarAcessos() {
         >
           <Bell className="w-4 h-4" />
           Aguardando Aprovação
-          {usuarios.filter(u => u.email?.toLowerCase() !== "wfrazaojr@gmail.com" && u.status_acesso !== "ATIVO" && u.status_acesso !== "BLOQUEADO" && u.status_acesso !== "INATIVO").length > 0 && (
-            <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-              {usuarios.filter(u => u.email?.toLowerCase() !== "wfrazaojr@gmail.com" && u.status_acesso !== "ATIVO" && u.status_acesso !== "BLOQUEADO" && u.status_acesso !== "INATIVO").length}
-            </span>
-          )}
+          {(() => {
+            const qtd = usuarios.filter(u => {
+              const email = u.email?.toLowerCase() || "";
+              if (email === "wfrazaojr@gmail.com") return false;
+              return u.status_acesso !== "ATIVO" && u.status_acesso !== "BLOQUEADO" && u.status_acesso !== "INATIVO";
+            }).length;
+            return qtd > 0 ? (
+              <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">{qtd}</span>
+            ) : null;
+          })()}
         </button>
         <button
           onClick={() => setAbaAtiva("usuarios")}
@@ -363,12 +369,12 @@ export default function GerenciarAcessos() {
 
       {/* Aba: Aguardando Aprovação */}
       {abaAtiva === "pendentes" && (() => {
-        const pendentes = usuarios.filter(u =>
-          u.email?.toLowerCase() !== "wfrazaojr@gmail.com" &&
-          u.status_acesso !== "ATIVO" &&
-          u.status_acesso !== "BLOQUEADO" &&
-          u.status_acesso !== "INATIVO"
-        );
+        const pendentes = usuarios.filter(u => {
+          const email = u.email?.toLowerCase() || "";
+          if (email === "wfrazaojr@gmail.com") return false;
+          if (rolesComAcesso.includes(u.role) && u.status_acesso === "ATIVO") return false; // admins ativos fora
+          return u.status_acesso !== "ATIVO" && u.status_acesso !== "BLOQUEADO" && u.status_acesso !== "INATIVO";
+        });
         return (
           <div className="space-y-3 mb-6">
             {pendentes.length === 0 ? (
