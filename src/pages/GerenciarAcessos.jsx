@@ -79,11 +79,15 @@ export default function GerenciarAcessos() {
     queryFn:  () => base44.auth.me(),
   });
 
-  const { data: usuarios = [], isLoading, refetch } = useQuery({
+  const { data: usuariosData, isLoading, refetch } = useQuery({
     queryKey: ["usuarios-gerenciar"],
-    queryFn:  () => base44.entities.User.list(),
+    queryFn:  async () => {
+      const res = await base44.functions.invoke("listarUsuariosPendentes", {});
+      return res.data;
+    },
     enabled:  !!currentUser,
   });
+  const usuarios = usuariosData?.todos || [];
 
   const { data: solicitacoes = [], refetch: refetchSolic } = useQuery({
     queryKey: ["solicitacoes-acesso"],
@@ -263,14 +267,8 @@ export default function GerenciarAcessos() {
 
   const getStatusEfetivo = (u) => u.status_acesso || (u.cadastro_completo ? "PENDENTE" : "PENDENTE");
 
-  // Usuários sem status ATIVO (ainda não aprovados) — excluindo dev e admin/colaboradores
-  const usuariosPendentes = usuarios.filter(u =>
-    u.email?.toLowerCase() !== DEV_EMAIL &&
-    u.role !== "admin" &&
-    u.status_acesso !== "ATIVO" &&
-    u.status_acesso !== "BLOQUEADO" &&
-    u.status_acesso !== "INATIVO"
-  );
+  // Usuários pendentes já filtrados pela função backend
+  const usuariosPendentes = usuariosData?.pendentes || [];
 
   // Solicitações externas ainda PENDENTE na entidade SolicitacaoAcesso
   const solicPendentes = solicitacoes.filter(s => s.status === "PENDENTE");

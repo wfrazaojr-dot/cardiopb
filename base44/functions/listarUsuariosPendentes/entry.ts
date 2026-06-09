@@ -16,10 +16,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Buscar todos os usuários do app (inclui os que aceitaram convite)
+    // Buscar TODOS os usuários com privilégio de admin (ignora RLS)
     const todosUsuarios = await base44.asServiceRole.entities.User.list();
 
-    // Filtrar apenas os pendentes: sem status_acesso definido como ATIVO, sem role admin/dev
+    // Filtrar pendentes: qualquer usuário sem status ATIVO/BLOQUEADO/INATIVO, exceto dev e admin
     const pendentes = todosUsuarios.filter(u =>
       u.email?.toLowerCase() !== 'wfrazaojr@gmail.com' &&
       u.role !== 'admin' &&
@@ -28,7 +28,11 @@ Deno.serve(async (req) => {
       u.status_acesso !== 'INATIVO'
     );
 
-    return Response.json({ pendentes });
+    const todos = todosUsuarios.filter(u =>
+      u.email?.toLowerCase() !== 'wfrazaojr@gmail.com'
+    );
+
+    return Response.json({ pendentes, todos });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
