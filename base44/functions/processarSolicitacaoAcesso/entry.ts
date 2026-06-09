@@ -96,8 +96,8 @@ Deno.serve(async (req) => {
             if (!usuarioAlvo.equipe && sol.perfil)      dadosPerfil.equipe   = EQUIPE_MAP[sol.perfil] || "unidade_saude";
             if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf;
             if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone;
+            if (sol.nome_completo) dadosPerfil.full_name = sol.nome_completo;
             if (Object.keys(dadosPerfil).length > 0) {
-              if (!usuarioAlvo.full_name && sol.nome_completo) dadosPerfil.full_name = sol.nome_completo;
               await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
             }
             await base44.asServiceRole.entities.SolicitacaoAcesso.update(sol.id, { status: "APROVADO" });
