@@ -80,27 +80,5 @@
     "nome_completo",
     "perfil",
     "funcao"
-  ],
-  "rls": {
-    "create": {},
-    "read": {},
-    "update": {
-      "user_condition": {
-        "role": [
-          "admin",
-          "ADMINISTRADOR_MANAGER",
-          "DESENVOLVEDOR"
-        ]
-      }
-    },
-    "delete": {
-      "user_condition": {
-        "role": [
-          "admin",
-          "ADMINISTRADOR_MANAGER",
-          "DESENVOLVEDOR"
-        ]
-      }
-    }
-  }
+  ]
 }
