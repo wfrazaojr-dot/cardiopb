@@ -38,31 +38,35 @@ Deno.serve(async (req) => {
       status: "PENDENTE",
     });
 
-    // 2. SINCRONIZAR com User APENAS se existir e usar EXATAMENTE o nome_completo recebido
+    // 2. ✅ GARANTIA CRÍTICA: SINCRONIZAR com User com EXATAMENTE o nome_completo do formulário
+    // Nunca extrair nome do email. O nome que importa é nome_completo digitado pelo usuário.
     try {
       const userFiltered = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
       if (userFiltered && userFiltered.length > 0) {
-        const existingUser = userFiltered[0]; // Pegar o primeiro resultado com match exato
-        // ⚠️ CRÍTICO: SEMPRE atualizar full_name com nome_completo do formulário
-        // Isso sobrescreve qualquer nome anterior que tenha sido extraído do email
+        const existingUser = userFiltered[0];
+        
+        // Log para auditoria (remover em produção se necessário)
+        console.log(`[SALVAMENTO] Atualizando User ${existingUser.id} com nome: "${nome_completo}" (email: ${email})`);
+        
+        // ⚠️ POLÍTICA ABSOLUTA: full_name = EXATAMENTE nome_completo do formulário
         await base44.asServiceRole.entities.User.update(existingUser.id, {
-          full_name: nome_completo, // Sobrescrever com o REAL nome completo do usuário
-          cpf: cpf || null,
-          telefone: telefone || null,
-          perfil: perfil || null,
-          funcao: funcao || null,
+          full_name: nome_completo.trim(), // NUNCA extrair do email
+          cpf: cpf?.trim() || null,
+          telefone: telefone?.trim() || null,
+          perfil: perfil,
+          funcao: funcao,
           equipe: equipe || "unidade_saude",
-          unidade_saude: unidade_saude || null,
+          unidade_saude: unidade_saude?.trim() || null,
           registro_profissional_tipo: registro_profissional_tipo || null,
-          registro_profissional_numero: registro_profissional_numero || null,
-          matricula: matricula || null,
+          registro_profissional_numero: registro_profissional_numero?.trim() || null,
+          matricula: matricula?.trim() || null,
           status_acesso: "PENDENTE",
           cadastro_completo: true,
         });
       }
     } catch (userError) {
-      // Se falhar atualizar User, continua mesmo assim - SolicitacaoAcesso já foi criada
-      console.log("Aviso: Não foi possível atualizar User, mas SolicitacaoAcesso foi criada com sucesso");
+      console.error(`[ERRO] Falha ao atualizar User: ${userError.message}`);
+      // Continua mesmo assim - SolicitacaoAcesso já foi criada
     }
 
     // Notificar administradores por e-mail

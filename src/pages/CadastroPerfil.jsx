@@ -192,16 +192,17 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
   const [pdfExportado, setPdfExportado] = useState(false); // Controla se o PDF foi exportado
 
   // ⚠️ POLÍTICA CRÍTICA: NUNCA pré-preencher nome_completo automaticamente
-  // Somente email do GOV.BR é preenchido automaticamente
-  // Tudo que importa é o que o usuário digita explicitamente no formulário
+  // Email é preenchido APENAS na primeira renderização (se vazio)
+  // O usuário SEMPRE deve digitar o nome completo manualmente
   useEffect(() => {
     if (user?.email && !form.email) {
+      console.log(`[FORM] Email auto-preenchido: ${user.email}`);
       setForm(prev => ({
         ...prev,
-        email: user.email, // APENAS email é auto-preenchido
+        email: user.email, // APENAS email é auto-preenchido UMA VEZ
       }));
     }
-  }, [user]);
+  }, [user?.email]);
 
   // Modo normal: redirecionar se não autenticado ou se já tem cadastro
   useEffect(() => {

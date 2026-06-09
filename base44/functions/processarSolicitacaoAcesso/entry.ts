@@ -43,18 +43,21 @@ Deno.serve(async (req) => {
         const usuarioExistente = todosUsuarios.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
 
         if (usuarioExistente) {
-          // ⚠️ POLÍTICA CRÍTICA: Usar SEMPRE sol.nome_completo (do formulário do usuário, não do email)
+          // ✅ GARANTIA CRÍTICA: Usar SEMPRE sol.nome_completo (exatamente como digitado no formulário)
+          const nomeFinal = sol.nome_completo?.trim();
+          console.log(`[APROVAÇÃO] User ${usuarioExistente.id} aprovado com nome: "${nomeFinal}" (SolicitacaoAcesso: ${solicitacaoId})`);
+          
           await base44.asServiceRole.entities.User.update(usuarioExistente.id, {
-            full_name: sol.nome_completo, // Vem direto da SolicitacaoAcesso (cadastro do usuário)
-            cpf: sol.cpf,
-            telefone: sol.telefone,
+            full_name: nomeFinal, // NUNCA extrair do email - vem direto da SolicitacaoAcesso
+            cpf: sol.cpf?.trim() || null,
+            telefone: sol.telefone?.trim() || null,
             perfil: sol.perfil,
             funcao: sol.funcao,
             equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
-            unidade_saude: sol.unidade_saude || null,
+            unidade_saude: sol.unidade_saude?.trim() || null,
             registro_profissional_tipo: sol.registro_profissional_tipo,
-            registro_profissional_numero: sol.registro_profissional_numero,
-            matricula: sol.matricula,
+            registro_profissional_numero: sol.registro_profissional_numero?.trim() || null,
+            matricula: sol.matricula?.trim() || null,
             status_acesso: "ATIVO",
             cadastro_completo: true,
           });
@@ -92,13 +95,16 @@ Deno.serve(async (req) => {
         if (usuarioAlvo?.email) {
           const solics = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ email: usuarioAlvo.email, status: "PENDENTE" });
           for (const sol of (solics || [])) {
-            // ⚠️ POLÍTICA CRÍTICA: Sincronizar full_name com sol.nome_completo (do cadastro, não do email)
-            const dadosPerfil = { full_name: sol.nome_completo };
+            // ✅ POLÍTICA ABSOLUTA: Sincronizar full_name com sol.nome_completo (do formulário, NUNCA do email)
+            const nomeFinal = sol.nome_completo?.trim();
+            console.log(`[SINCRONIZAÇÃO] Atualizando User ${userId} com nome: "${nomeFinal}" (SolicitacaoAcesso: ${sol.id})`);
+
+            const dadosPerfil = { full_name: nomeFinal };
             if (!usuarioAlvo.perfil && sol.perfil)      dadosPerfil.perfil   = sol.perfil;
             if (!usuarioAlvo.funcao && sol.funcao)      dadosPerfil.funcao   = sol.funcao;
             if (!usuarioAlvo.equipe && sol.perfil)      dadosPerfil.equipe   = EQUIPE_MAP[sol.perfil] || "unidade_saude";
-            if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf;
-            if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone;
+            if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf?.trim() || null;
+            if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone?.trim() || null;
             if (Object.keys(dadosPerfil).length > 0) {
               await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
             }
