@@ -69,7 +69,7 @@ export default function PrimeiroAcesso() {
               <CardContent className="pt-5 pb-5 text-center">
                 <Shield className="w-8 h-8 text-green-600 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-800">Acesso Liberado</p>
-                <p className="text-xs text-gray-600 mt-1">Após aprovação, entre com sua conta GOV.BR</p>
+                <p className="text-xs text-gray-600 mt-1">Após aprovação, você poderá acessar o sistema</p>
               </CardContent>
             </Card>
           </div>

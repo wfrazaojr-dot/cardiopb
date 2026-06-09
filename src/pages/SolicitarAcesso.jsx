@@ -68,12 +68,8 @@ export default function SolicitarAcesso() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState(false);
 
-  // Tentar obter e-mail do usuário autenticado pelo GOV.BR
-  useEffect(() => {
-    base44.auth.me()
-      .then(u => { if (u?.email) setUserEmail(u.email); })
-      .catch(() => {});
-  }, []);
+  // E-mail deve ser preenchido manualmente pelo usuário
+  // (Não há autenticação GOV.BR implementada)
 
   const funcoesDoPerfil = form.perfil ? FUNCOES_POR_PERFIL[form.perfil] || [] : [];
   const precisaRegistro = ["medico", "enfermeiro", "assistente_social"].includes(form.funcao);
@@ -96,7 +92,7 @@ export default function SolicitarAcesso() {
       return;
     }
     if (!userEmail) {
-      setErro("Não foi possível identificar seu e-mail. Faça login pelo GOV.BR novamente.");
+      setErro("Informe seu e-mail.");
       return;
     }
 
@@ -164,6 +160,12 @@ export default function SolicitarAcesso() {
 
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label>E-mail *</Label>
+              <Input className="mt-1" type="email" placeholder="seu.email@example.com"
+                value={userEmail} onChange={e => setUserEmail(e.target.value)} />
+            </div>
+
             <div>
               <Label>Nome Completo *</Label>
               <Input className="mt-1" placeholder="Digite seu nome completo"

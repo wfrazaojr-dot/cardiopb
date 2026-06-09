@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -152,27 +150,12 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
 }
 
 /**
- * CadastroPerfil — funciona em dois modos:
- *
- * 1. Modo normal (modoSolicitacao=false, padrão):
- *    Usuário já está registrado no app mas não completou o cadastro.
- *    Usa base44.auth.updateMe() para salvar dados.
- *
- * 2. modoSolicitacao=true:
- *    Usuário autenticou via GOV.BR mas NÃO está registrado no app ainda.
- *    Chama a função backend `registrarSolicitacaoAcesso` que cria o registro
- *    na entidade SolicitacaoAcesso e notifica os admins.
- *    Após envio, exibe tela de aguardo (sem redirect que causa loop).
+ * CadastroPerfil — formulário de cadastro para novas solicitações.
+ * Salva os dados na entidade SolicitacaoAcesso e notifica administradores.
  */
-export default function CadastroPerfil({ modoSolicitacao = false }) {
-  const navigate = useNavigate();
+export default function CadastroPerfil() {
 
-  // Só busca usuário se estiver no modo normal
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
+
 
   const [form, setForm] = useState({
     perfil: "",
@@ -191,42 +174,12 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
   const [dadosSalvos, setDadosSalvos] = useState(null); // Preserva dados após envio bem-sucedido
   const [pdfExportado, setPdfExportado] = useState(false); // Controla se o PDF foi exportado
 
-  // ⚠️ POLÍTICA CRÍTICA: NUNCA pré-preencher nome_completo automaticamente
-  // Email é preenchido APENAS na primeira renderização (se vazio)
-  // O usuário SEMPRE deve digitar o nome completo manualmente
-  useEffect(() => {
-    if (user?.email && !form.email) {
-      console.log(`[FORM] Email auto-preenchido: ${user.email}`);
-      setForm(prev => ({
-        ...prev,
-        email: user.email, // APENAS email é auto-preenchido UMA VEZ
-      }));
-    }
-  }, [user?.email]);
 
-  // Modo normal: redirecionar se não autenticado ou se já tem cadastro
-  useEffect(() => {
-    if (modoSolicitacao) return;
-    if (!isLoading && !user) {
-      base44.auth.redirectToLogin(window.location.href);
-    }
-    if (!isLoading && user?.cadastro_completo) {
-      navigate("/", { replace: true });
-    }
-  }, [user, isLoading, navigate, modoSolicitacao]);
-
-  if (!modoSolicitacao && (isLoading || !user)) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white">
-        <div className="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
 
   const funcoesDoPerfil = form.perfil ? FUNCOES_POR_PERFIL[form.perfil] || [] : [];
   const precisaRegistro = ["medico", "enfermeiro", "assistente_social"].includes(form.funcao);
   const precisaMatricula = ["operador_frota", "administrativo"].includes(form.funcao);
-  const emailExibido = form.email || user?.email || "";
+  const emailExibido = form.email;
 
   const handleSalvarCadastro = (e) => {
     e.preventDefault();
@@ -272,46 +225,24 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
       unidade_saude: form.unidade_saude?.trim() || null,
     };
 
-    if (modoSolicitacao) {
-      const response = await base44.functions.invoke("registrarSolicitacaoAcesso", dadosParaSalvar);
-      setLoading(false);
-      if (response?.data?.success) {
-        // ✅ Preservar EXATAMENTE o que foi salvo
-        setDadosSalvos({
-          nome_completo: form.nome_completo,
-          cpf: form.cpf,
-          email: emailExibido,
-          telefone: form.telefone,
-          perfil: form.perfil,
-          funcao: form.funcao,
-          unidade_saude: form.unidade_saude,
-          registro_numero: form.registro_numero,
-          matricula: form.matricula,
-        });
-        setEtapa("SUCESSO");
-      } else {
-        setErro(response?.data?.error || "Erro ao registrar solicitação. Tente novamente.");
-      }
-    } else {
-      // ⚠️ GARANTIA CRÍTICA: full_name recebe EXATAMENTE o nome digitado
-      await base44.auth.updateMe({
-        full_name: dadosParaSalvar.nome_completo, // Valor exato digitado
-        email_cadastro: dadosParaSalvar.email,
-        cpf: dadosParaSalvar.cpf,
-        telefone: dadosParaSalvar.telefone,
-        perfil: dadosParaSalvar.perfil,
-        funcao: dadosParaSalvar.funcao,
-        equipe: dadosParaSalvar.equipe,
-        registro_profissional_tipo: dadosParaSalvar.registro_profissional_tipo,
-        registro_profissional_numero: dadosParaSalvar.registro_profissional_numero,
-        matricula: dadosParaSalvar.matricula,
-        status_acesso: "PENDENTE",
-        auth_method: "GOVBR",
-        cadastro_completo: true,
+    const response = await base44.functions.invoke("registrarSolicitacaoAcesso", dadosParaSalvar);
+    setLoading(false);
+    if (response?.data?.success) {
+      // ✅ Preservar EXATAMENTE o que foi salvo
+      setDadosSalvos({
+        nome_completo: form.nome_completo,
+        cpf: form.cpf,
+        email: emailExibido,
+        telefone: form.telefone,
+        perfil: form.perfil,
+        funcao: form.funcao,
+        unidade_saude: form.unidade_saude,
+        registro_numero: form.registro_numero,
+        matricula: form.matricula,
       });
-      sessionStorage.setItem("perfil_selecionado_sessao", form.perfil);
-      setLoading(false);
-      navigate("/AcessoPendente");
+      setEtapa("SUCESSO");
+    } else {
+      setErro(response?.data?.error || "Erro ao registrar solicitação. Tente novamente.");
     }
   };
 
@@ -518,9 +449,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
               <ClipboardList className="w-8 h-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-gray-900">
-            {modoSolicitacao ? "Solicitar Acesso" : "Cadastro Complementar"}
-          </CardTitle>
+          <CardTitle className="text-2xl text-gray-900">Solicitar Acesso</CardTitle>
           <CardDescription className="text-gray-600 mt-2">
             Preencha seus dados para solicitar acesso ao Sistema Coração Paraibano.<br />
             Após o envio, o Administrador Manager analisará seu pedido.<br />
