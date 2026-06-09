@@ -47,8 +47,13 @@ Deno.serve(async (req) => {
           const nomeFinal = sol.nome_completo?.trim();
           console.log(`[APROVAÇÃO] User ${usuarioExistente.id} aprovado com nome: "${nomeFinal}" (SolicitacaoAcesso: ${solicitacaoId})`);
           
-          await base44.asServiceRole.entities.User.update(usuarioExistente.id, {
-            full_name: nomeFinal, // NUNCA extrair do email - vem direto da SolicitacaoAcesso
+          const dadosAntigos = {
+            full_name: usuarioExistente.full_name,
+            status_acesso: usuarioExistente.status_acesso,
+          };
+          
+          const dadosNovos = {
+            full_name: nomeFinal,
             cpf: sol.cpf?.trim() || null,
             telefone: sol.telefone?.trim() || null,
             perfil: sol.perfil,
@@ -60,7 +65,24 @@ Deno.serve(async (req) => {
             matricula: sol.matricula?.trim() || null,
             status_acesso: "ATIVO",
             cadastro_completo: true,
-          });
+          };
+          
+          await base44.asServiceRole.entities.User.update(usuarioExistente.id, dadosNovos);
+          
+          // ✅ REGISTRAR AUDITORIA: Aprovação de solicitação
+          try {
+            await base44.asServiceRole.functions.invoke("registrarLog", {
+              acao: "atualizar",
+              entidade: "User",
+              entidade_id: usuarioExistente.id,
+              descricao: `Solicitação de acesso aprovada para ${nomeFinal} - Status alterado de ${dadosAntigos.status_acesso} para ATIVO`,
+              dados_anteriores: dadosAntigos,
+              dados_novos: dadosNovos,
+              severidade: "info"
+            });
+          } catch (auditError) {
+            console.error(`[AUDITORIA] Falha ao registrar log: ${auditError.message}`);
+          }
         }
 
         await base44.asServiceRole.entities.SolicitacaoAcesso.update(solicitacaoId, { status: "APROVADO" });

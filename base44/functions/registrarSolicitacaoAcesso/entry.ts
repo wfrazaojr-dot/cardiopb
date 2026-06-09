@@ -38,6 +38,31 @@ Deno.serve(async (req) => {
       status: "PENDENTE",
     });
 
+    // ✅ REGISTRAR AUDITORIA: Novo cadastro criado
+    try {
+      await base44.asServiceRole.functions.invoke("registrarLog", {
+        acao: "criar",
+        entidade: "SolicitacaoAcesso",
+        entidade_id: solicitacao.id,
+        descricao: `Nova solicitação de acesso criada para ${nome_completo} (${email})`,
+        dados_novos: {
+          email,
+          nome_completo,
+          cpf,
+          telefone,
+          perfil,
+          funcao,
+          registro_profissional_tipo,
+          registro_profissional_numero,
+          matricula,
+          unidade_saude,
+        },
+        severidade: "info"
+      });
+    } catch (auditError) {
+      console.error(`[AUDITORIA] Falha ao registrar log: ${auditError.message}`);
+    }
+
     // 2. ✅ GARANTIA CRÍTICA: SINCRONIZAR com User com EXATAMENTE o nome_completo do formulário
     // Nunca extrair nome do email. O nome que importa é nome_completo digitado pelo usuário.
     try {
