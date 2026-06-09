@@ -43,8 +43,9 @@ Deno.serve(async (req) => {
         const usuarioExistente = todosUsuarios.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
 
         if (usuarioExistente) {
+          // ⚠️ POLÍTICA CRÍTICA: Usar SEMPRE sol.nome_completo (do formulário do usuário, não do email)
           await base44.asServiceRole.entities.User.update(usuarioExistente.id, {
-            full_name: sol.nome_completo,
+            full_name: sol.nome_completo, // Vem direto da SolicitacaoAcesso (cadastro do usuário)
             cpf: sol.cpf,
             telefone: sol.telefone,
             perfil: sol.perfil,
@@ -91,6 +92,7 @@ Deno.serve(async (req) => {
         if (usuarioAlvo?.email) {
           const solics = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ email: usuarioAlvo.email, status: "PENDENTE" });
           for (const sol of (solics || [])) {
+            // ⚠️ POLÍTICA CRÍTICA: Sincronizar full_name com sol.nome_completo (do cadastro, não do email)
             const dadosPerfil = { full_name: sol.nome_completo };
             if (!usuarioAlvo.perfil && sol.perfil)      dadosPerfil.perfil   = sol.perfil;
             if (!usuarioAlvo.funcao && sol.funcao)      dadosPerfil.funcao   = sol.funcao;

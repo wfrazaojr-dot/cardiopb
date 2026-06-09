@@ -13,6 +13,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Campos obrigatórios: email, nome_completo, perfil, funcao' }, { status: 400 });
     }
 
+    // ⚠️ POLÍTICA CRÍTICA: nome_completo vem do formulário, NUNCA do email
+    // Exemplo: email "walberjp@gov.br" → nome_completo deve ser "Walber Alves Frazão Júnior" (digitado pelo usuário)
+    // O prefixo do email "walberjp" é descartado completamente
+
     // Verificar se já existe solicitação pendente para este e-mail
     const existentes = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ email, status: "PENDENTE" });
     if (existentes && existentes.length > 0) {
