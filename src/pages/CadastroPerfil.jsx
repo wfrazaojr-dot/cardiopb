@@ -154,9 +154,7 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
  * Salva os dados na entidade SolicitacaoAcesso e notifica administradores.
  */
 export default function CadastroPerfil() {
-
-
-
+  // ✅ Todos os campos iniciam vazios - sem pré-preenchimento
   const [form, setForm] = useState({
     perfil: "",
     nome_completo: "",
@@ -190,7 +188,7 @@ export default function CadastroPerfil() {
       return;
     }
     if (!emailExibido) {
-      setErro("Não foi possível identificar seu e-mail. Faça login pelo GOV.BR novamente.");
+      setErro("Informe seu e-mail.");
       return;
     }
     if (precisaRegistro && !form.registro_numero) {
