@@ -78,7 +78,10 @@ Deno.serve(async (req) => {
       if (motivo) updateData.motivo_bloqueio = motivo;
       if (status === "ATIVO") updateData.motivo_bloqueio = null;
 
-      await base44.asServiceRole.entities.User.update(userId, updateData);
+      await base44.asServiceRole.entities.User.update(userId, {
+       ...updateData,
+       cadastro_completo: true
+      });
 
       // Se aprovando, sincronizar SolicitacaoAcesso pendente do mesmo email
       if (status === "ATIVO") {
