@@ -159,11 +159,7 @@ export default function SolicitarAcesso() {
             Após o envio, aguarde a aprovação do Administrador Manager.<br />
             <span className="text-blue-700 font-medium">Você receberá um e-mail quando seu acesso for liberado.</span>
           </CardDescription>
-          {userEmail && (
-            <div className="mt-3 text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2 border border-green-200">
-              ✅ Autenticado via GOV.BR: <strong>{userEmail}</strong>
-            </div>
-          )}
+
         </CardHeader>
 
         <CardContent className="pt-6">
