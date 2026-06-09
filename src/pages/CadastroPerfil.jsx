@@ -99,6 +99,7 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
     registro_numero: "",
     matricula: "",
     telefone: "",
+    unidade_saude: "",
   });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -232,15 +233,42 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
                 <CheckCircle2 className="w-4 h-4" />
                 Dados enviados e armazenados:
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
-                <div><span className="font-medium">Nome Completo:</span> {form.nome_completo}</div>
-                <div><span className="font-medium">CPF:</span> {form.cpf}</div>
-                <div><span className="font-medium">E-mail:</span> {emailExibido}</div>
-                <div><span className="font-medium">Telefone:</span> {form.telefone || "—"}</div>
-                <div><span className="font-medium">Perfil:</span> {PERFIS_OPCOES.find(p => p.value === form.perfil)?.label}</div>
-                <div><span className="font-medium">Função:</span> {FUNCAO_LABELS[form.funcao] || form.funcao}</div>
+              <div className="space-y-2 text-sm text-gray-700">
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Nome Completo:</span>
+                  <span className="font-semibold text-gray-900">{form.nome_completo}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">CPF:</span>
+                  <span className="text-gray-900">{form.cpf}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">E-mail:</span>
+                  <span className="text-gray-900">{emailExibido}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Telefone:</span>
+                  <span className="text-gray-900">{form.telefone || "—"}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Perfil:</span>
+                  <span className="text-gray-900">{PERFIS_OPCOES.find(p => p.value === form.perfil)?.label}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Função:</span>
+                  <span className="font-semibold text-gray-900">{FUNCAO_LABELS[form.funcao] || form.funcao}</span>
+                </div>
+                {form.perfil === "UNIDADE_SAUDE" && form.unidade_saude && (
+                  <div className="flex justify-between border-b pb-2">
+                    <span className="font-medium">Unidade de Saúde:</span>
+                    <span className="text-gray-900">{form.unidade_saude}</span>
+                  </div>
+                )}
                 {registroOuMatriculaLabel && (
-                  <div><span className="font-medium">{registroOuMatriculaLabel}:</span> {registroOuMatriculaValor}</div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">{registroOuMatriculaLabel}:</span>
+                    <span className="text-gray-900">{registroOuMatriculaValor}</span>
+                  </div>
                 )}
               </div>
             </div>
@@ -284,11 +312,15 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
             <div className="space-y-4 mb-6 bg-gray-50 rounded-lg p-4">
               <div className="flex justify-between border-b pb-3">
                 <span className="font-semibold text-gray-700">Nome Completo:</span>
-                <span className="text-gray-900">{form.nome_completo}</span>
+                <span className="text-gray-900 font-medium">{form.nome_completo}</span>
               </div>
               <div className="flex justify-between border-b pb-3">
                 <span className="font-semibold text-gray-700">CPF:</span>
                 <span className="text-gray-900">{form.cpf}</span>
+              </div>
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">E-mail:</span>
+                <span className="text-gray-900">{emailExibido}</span>
               </div>
               <div className="flex justify-between border-b pb-3">
                 <span className="font-semibold text-gray-700">Telefone:</span>
@@ -298,10 +330,22 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
                 <span className="font-semibold text-gray-700">Perfil:</span>
                 <span className="text-gray-900">{PERFIS_OPCOES.find(p => p.value === form.perfil)?.label || form.perfil}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="font-semibold text-gray-700">{registroOuMatriculaLabel}:</span>
-                <span className="text-gray-900">{registroOuMatriculaValor || "Não informado"}</span>
+              <div className="flex justify-between border-b pb-3">
+                <span className="font-semibold text-gray-700">Função:</span>
+                <span className="text-gray-900 font-medium">{FUNCAO_LABELS[form.funcao] || form.funcao}</span>
               </div>
+              {form.perfil === "UNIDADE_SAUDE" && (
+                <div className="flex justify-between border-b pb-3">
+                  <span className="font-semibold text-gray-700">Unidade de Saúde:</span>
+                  <span className="text-gray-900">{form.unidade_saude || "Não informado"}</span>
+                </div>
+              )}
+              {registroOuMatriculaLabel && (
+                <div className="flex justify-between">
+                  <span className="font-semibold text-gray-700">{registroOuMatriculaLabel}:</span>
+                  <span className="text-gray-900">{registroOuMatriculaValor || "Não informado"}</span>
+                </div>
+              )}
             </div>
 
             {erro && (
@@ -417,6 +461,18 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+            )}
+
+            {form.perfil === "UNIDADE_SAUDE" && (
+              <div>
+                <Label>Unidade de Saúde</Label>
+                <Input
+                  className="mt-1"
+                  placeholder="Digite o nome de sua unidade de saúde"
+                  value={form.unidade_saude}
+                  onChange={e => setForm({ ...form, unidade_saude: e.target.value })}
+                />
               </div>
             )}
 
