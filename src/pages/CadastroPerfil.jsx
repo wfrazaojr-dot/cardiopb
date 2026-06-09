@@ -211,18 +211,41 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
 
   // Tela de sucesso
   if (etapa === "SUCESSO") {
+    const registroOuMatriculaLabel = precisaMatricula ? "Matrícula" : (precisaRegistro ? REGISTRO_TIPO_MAP[form.funcao] : "");
+    const registroOuMatriculaValor = precisaMatricula ? form.matricula : (precisaRegistro ? form.registro_numero : "");
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-blue-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-xl text-center">
-          <CardContent className="pt-10 pb-10 space-y-4">
-            <div className="flex justify-center">
+        <Card className="w-full max-w-2xl shadow-xl">
+          <CardContent className="pt-10 pb-10">
+            <div className="flex justify-center mb-4">
               <CheckCircle2 className="w-16 h-16 text-green-500" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Cadastro em Análise</h2>
-            <p className="text-gray-700 leading-relaxed">
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Cadastro em Análise</h2>
+            <p className="text-gray-700 leading-relaxed text-center mb-6">
              Seu cadastro foi enviado com sucesso e está aguardando aprovação em até 72h do Administrador Manager da Secretaria de estado da saúde da PB. Mantenha ativo seu acesso pelo GOV.BR.
             </p>
-            <p className="text-gray-600 text-sm mt-3">⏱ Aguarde até 72 horas para novo acesso.</p>
+
+            {/* Dados revisados e salvos */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <p className="text-sm font-semibold text-green-700 mb-3 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                Dados enviados e armazenados:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
+                <div><span className="font-medium">Nome Completo:</span> {form.nome_completo}</div>
+                <div><span className="font-medium">CPF:</span> {form.cpf}</div>
+                <div><span className="font-medium">E-mail:</span> {emailExibido}</div>
+                <div><span className="font-medium">Telefone:</span> {form.telefone || "—"}</div>
+                <div><span className="font-medium">Perfil:</span> {PERFIS_OPCOES.find(p => p.value === form.perfil)?.label}</div>
+                <div><span className="font-medium">Função:</span> {FUNCAO_LABELS[form.funcao] || form.funcao}</div>
+                {registroOuMatriculaLabel && (
+                  <div><span className="font-medium">{registroOuMatriculaLabel}:</span> {registroOuMatriculaValor}</div>
+                )}
+              </div>
+            </div>
+
+            <p className="text-gray-600 text-sm text-center">⏱ Aguarde até 72 horas para novo acesso.</p>
           </CardContent>
         </Card>
       </div>

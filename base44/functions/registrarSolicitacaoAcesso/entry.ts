@@ -33,24 +33,24 @@ Deno.serve(async (req) => {
       status: "PENDENTE",
     });
 
-    // Também salvar no User se já autenticado via GOV.BR (para sincronizar com painel)
-    // Isso garante que todos os dados fiquem disponíveis
+    // Sincronizar dados no User (GOV.BR autenticado) ANTES de retornar sucesso
+    // Garante que o painel de controle tenha TODOS os dados completos
     const allUsers = await base44.asServiceRole.entities.User.list();
     const existingUser = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-    if (existingUser && !existingUser.status_acesso) {
+    if (existingUser) {
       await base44.asServiceRole.entities.User.update(existingUser.id, {
         full_name: nome_completo,
-        cpf: cpf || null,
-        telefone: telefone || null,
-        perfil: perfil,
-        funcao: funcao,
-        equipe: equipe || "unidade_saude",
-        unidade_saude: unidade_saude || null,
-        registro_profissional_tipo: registro_profissional_tipo || null,
-        registro_profissional_numero: registro_profissional_numero || null,
-        matricula: matricula || null,
-        status_acesso: "PENDENTE",
-        cadastro_completo: false,
+        cpf: cpf || existingUser.cpf || null,
+        telefone: telefone || existingUser.telefone || null,
+        perfil: perfil || existingUser.perfil || null,
+        funcao: funcao || existingUser.funcao || null,
+        equipe: equipe || existingUser.equipe || "unidade_saude",
+        unidade_saude: unidade_saude || existingUser.unidade_saude || null,
+        registro_profissional_tipo: registro_profissional_tipo || existingUser.registro_profissional_tipo || null,
+        registro_profissional_numero: registro_profissional_numero || existingUser.registro_profissional_numero || null,
+        matricula: matricula || existingUser.matricula || null,
+        status_acesso: existingUser.status_acesso || "PENDENTE",
+        cadastro_completo: true,
       });
     }
 
