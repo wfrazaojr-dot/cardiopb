@@ -90,13 +90,12 @@ Deno.serve(async (req) => {
         if (usuarioAlvo?.email) {
           const solics = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ email: usuarioAlvo.email, status: "PENDENTE" });
           for (const sol of (solics || [])) {
-            const dadosPerfil = {};
+            const dadosPerfil = { full_name: sol.nome_completo };
             if (!usuarioAlvo.perfil && sol.perfil)      dadosPerfil.perfil   = sol.perfil;
             if (!usuarioAlvo.funcao && sol.funcao)      dadosPerfil.funcao   = sol.funcao;
             if (!usuarioAlvo.equipe && sol.perfil)      dadosPerfil.equipe   = EQUIPE_MAP[sol.perfil] || "unidade_saude";
             if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf;
             if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone;
-            if (sol.nome_completo) dadosPerfil.full_name = sol.nome_completo;
             if (Object.keys(dadosPerfil).length > 0) {
               await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
             }
