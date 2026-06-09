@@ -123,46 +123,11 @@ export default function GerenciarAcessos() {
   // Aprovar/Rejeitar registro da entidade SolicitacaoAcesso (formulário externo)
   const processarSolicMutation = useMutation({
     mutationFn: async ({ sol, acao }) => {
-      await base44.entities.SolicitacaoAcesso.update(sol.id, {
-        status: acao === "aprovar" ? "APROVADO" : "REJEITADO",
+      const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
+        solicitacaoId: sol.id,
+        acao,
       });
-      if (acao === "aprovar") {
-        // Verificar se o usuário já existe (logou via GOV.BR antes da aprovação)
-        const todos = await base44.entities.User.list();
-        const usuarioExistente = todos.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
-
-        if (usuarioExistente) {
-          // Usuário já existe: apenas atualizar os dados e ativar
-          await base44.entities.User.update(usuarioExistente.id, {
-            nome_completo: sol.nome_completo, cpf: sol.cpf, telefone: sol.telefone,
-            perfil: sol.perfil, funcao: sol.funcao,
-            equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
-            registro_profissional_tipo: sol.registro_profissional_tipo,
-            registro_profissional_numero: sol.registro_profissional_numero,
-            matricula: sol.matricula, status_acesso: "ATIVO",
-            cadastro_completo: true,
-          });
-        } else {
-          // Usuário ainda não existe: convidar e aguardar criação
-          await base44.users.inviteUser(sol.email, sol.perfil || "user");
-          await new Promise(r => setTimeout(r, 2000));
-          const todosApos = await base44.entities.User.list();
-          const criado = todosApos.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
-          if (criado) {
-            await base44.entities.User.update(criado.id, {
-              nome_completo: sol.nome_completo, cpf: sol.cpf, telefone: sol.telefone,
-              perfil: sol.perfil, funcao: sol.funcao,
-              equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
-              registro_profissional_tipo: sol.registro_profissional_tipo,
-              registro_profissional_numero: sol.registro_profissional_numero,
-              matricula: sol.matricula, status_acesso: "ATIVO",
-              cadastro_completo: true,
-            });
-          }
-        }
-
-        // E-mail de notificação removido conforme nova política
-      }
+      if (!res.data?.success) throw new Error(res.data?.error || "Erro ao processar solicitação");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
@@ -172,38 +137,25 @@ export default function GerenciarAcessos() {
   // Ativar / Inativar / Bloquear usuário existente
   const updateStatusMutation = useMutation({
     mutationFn: async ({ userId, status, motivo, usuarioAlvo }) => {
-      const updateData = { status_acesso: status };
-      if (motivo) updateData.motivo_bloqueio = motivo;
-      if (status === "ATIVO") updateData.motivo_bloqueio = null;
+      // Log de auditoria local (não bloqueia a operação principal)
       const descricao = motivo
         ? `Status alterado para "${status}" — Motivo: ${motivo}`
         : `Status alterado para "${status}"`;
-      if (usuarioAlvo) await registrarLog("atualizar", usuarioAlvo, descricao);
-
-      // Se ativando, sincronizar SolicitacaoAcesso correspondente (se houver)
-      if (status === "ATIVO" && usuarioAlvo?.email) {
-        const solics = await base44.entities.SolicitacaoAcesso.filter({ email: usuarioAlvo.email, status: "PENDENTE" });
-        for (const sol of (solics || [])) {
-          // Copiar dados do perfil para o User se ainda não tiver
-          const dadosPerfil = {};
-          if (!usuarioAlvo.perfil && sol.perfil)   dadosPerfil.perfil  = sol.perfil;
-          if (!usuarioAlvo.funcao && sol.funcao)    dadosPerfil.funcao  = sol.funcao;
-          if (!usuarioAlvo.cpf   && sol.cpf)        dadosPerfil.cpf     = sol.cpf;
-          if (!usuarioAlvo.telefone && sol.telefone) dadosPerfil.telefone = sol.telefone;
-          if (!usuarioAlvo.equipe && sol.perfil)    dadosPerfil.equipe  = EQUIPE_MAP[sol.perfil] || "unidade_saude";
-          if (!usuarioAlvo.registro_profissional_tipo && sol.registro_profissional_tipo)
-            dadosPerfil.registro_profissional_tipo = sol.registro_profissional_tipo;
-          if (!usuarioAlvo.registro_profissional_numero && sol.registro_profissional_numero)
-            dadosPerfil.registro_profissional_numero = sol.registro_profissional_numero;
-          if (Object.keys(dadosPerfil).length > 0)
-            Object.assign(updateData, dadosPerfil);
-          await base44.entities.SolicitacaoAcesso.update(sol.id, { status: "APROVADO" });
-        }
+      if (usuarioAlvo) {
+        base44.entities.LogAuditoria.create({
+          usuario_email: currentUser?.email || "",
+          usuario_nome: currentUser?.full_name || currentUser?.email || "",
+          acao: "atualizar", entidade: "User", entidade_id: usuarioAlvo.id,
+          descricao, severidade: "aviso",
+        }).catch(() => {}); // silencia erro de log para não bloquear a ação principal
       }
 
-      const result = await base44.entities.User.update(userId, updateData);
-      // E-mail de notificação removido conforme nova política
-      return result;
+      const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
+        userId,
+        status,
+        motivo: motivo || null,
+      });
+      if (!res.data?.success) throw new Error(res.data?.error || "Erro ao atualizar status");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] });
