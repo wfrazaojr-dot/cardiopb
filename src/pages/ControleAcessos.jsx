@@ -137,27 +137,46 @@ export default function ControleAcessos() {
     onSuccess: recarregar,
   });
 
-  // Atualizar status de usuário ativo (ativar/inativar/bloquear)
-   const updateStatusMutation = useMutation({
-     mutationFn: async ({ userId, status, motivo, usuarioAlvo }) => {
-       const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
-         userId, status, motivo: motivo || null,
-       });
-       if (!res.data?.success) throw new Error(res.data?.error || "Erro ao atualizar status");
-     },
-     onSuccess: () => {
-       setDialogBloqueio(null);
-       setMotivoBloqueio("");
-       refetch(); // ✅ Recarregar dados após sucesso
-     },
-     onError: (error) => {
-       console.error("Erro ao atualizar status:", error.message);
-     },
-   });
+  // Atualizar status de usuário (ativar/inativar/bloquear) - CORRIGIDO
+    const updateStatusMutation = useMutation({
+      mutationFn: async ({ solicitacaoId, userId, status, motivo }) => {
+        // 🔍 DETECTAR: Se é uma solicitação pendente (solicitacaoId) ou usuário ativo (userId)
+        if (solicitacaoId) {
+          // Fluxo de solicitação pendente: aprovar
+          const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
+            solicitacaoId,
+            solicitacaoTipo: "solicitacao",
+            acao: "aprovar",
+          });
+          if (!res.data?.success) throw new Error(res.data?.error || "Erro ao aprovar solicitação");
+        } else if (userId) {
+          // Fluxo de usuário ativo: alterar status
+          const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
+            userId,
+            status,
+            motivo: motivo || null,
+          });
+          if (!res.data?.success) throw new Error(res.data?.error || "Erro ao atualizar status");
+        } else {
+          throw new Error("ID inválido");
+        }
+      },
+      onSuccess: () => {
+        setDialogBloqueio(null);
+        setMotivoBloqueio("");
+        queryClient.invalidateQueries({ queryKey: ["controle-acessos"] });
+        queryClient.invalidateQueries({ queryKey: ["logs-acesso"] });
+      },
+      onError: (error) => {
+        console.error("❌ Erro ao atualizar:", error.message);
+        alert(`Erro: ${error.message}`);
+      },
+    });
 
-  // Excluir usuário permanentemente
+  // Excluir usuário permanentemente - CORRIGIDO
   const deleteMutation = useMutation({
     mutationFn: async (usuario) => {
+      if (!usuario.id) throw new Error("ID do usuário inválido");
       await base44.entities.LogAuditoria.create({
         usuario_email: currentUser?.email || "",
         usuario_nome:  currentUser?.full_name || currentUser?.email || "",
@@ -165,11 +184,16 @@ export default function ControleAcessos() {
         descricao: `Usuário "${usuario.full_name || usuario.email}" EXCLUÍDO.`,
         severidade: "critico",
       });
-      return base44.entities.User.delete(usuario.id);
+      await base44.entities.User.delete(usuario.id);
     },
     onSuccess: () => {
-      recarregar();
       setDialogExcluir(null);
+      queryClient.invalidateQueries({ queryKey: ["controle-acessos"] });
+      queryClient.invalidateQueries({ queryKey: ["logs-acesso"] });
+    },
+    onError: (error) => {
+      console.error("❌ Erro ao excluir:", error.message);
+      alert(`Erro ao excluir: ${error.message}`);
     },
   });
 
@@ -445,22 +469,30 @@ export default function ControleAcessos() {
                             <>
                               {statusAtual !== "ATIVO" && (
                                 <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                                  onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "ATIVO", usuarioAlvo: usuario })}
+                                  onClick={() => {
+                                    if (!usuario.status_acesso || usuario.status_acesso === "PENDENTE") {
+                                      // Solicitação pendente: usar solicitacao_id
+                                      updateStatusMutation.mutate({ solicitacaoId: usuario.solicitacao_id || usuario.id });
+                                    } else {
+                                      // Usuário ativo: usar userId
+                                      updateStatusMutation.mutate({ userId: usuario.id, status: "ATIVO" });
+                                    }
+                                  }}
                                   disabled={updateStatusMutation.isPending}>
                                   <CheckCircle2 className="w-4 h-4" /> Ativar
                                 </Button>
                               )}
-                              {statusAtual !== "INATIVO" && (
+                              {statusAtual !== "INATIVO" && statusAtual !== "PENDENTE" && (
                                 <Button size="sm" variant="outline" className="border-gray-400 text-gray-700 gap-1"
-                                  onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "INATIVO", usuarioAlvo: usuario })}
+                                  onClick={() => updateStatusMutation.mutate({ userId: usuario.id, status: "INATIVO" })}
                                   disabled={updateStatusMutation.isPending}>
                                   <XCircle className="w-4 h-4" /> Desativar
                                 </Button>
                               )}
-                              {statusAtual !== "BLOQUEADO" && (
+                              {statusAtual !== "BLOQUEADO" && statusAtual !== "PENDENTE" && (
                                 <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
                                   onClick={() => { setDialogBloqueio(usuario); setMotivoBloqueio(""); }}
-                                  disabled={updateStatusMutation.isPending}>
+                                  disabled={updateStatusMutation.isPending || deleteMutation.isPending}>
                                   <Lock className="w-4 h-4" /> Bloquear
                                 </Button>
                               )}
@@ -525,7 +557,7 @@ export default function ControleAcessos() {
             <Button className="bg-red-600 hover:bg-red-700 text-white"
               onClick={() => updateStatusMutation.mutate({
                 userId: dialogBloqueio.id, status: "BLOQUEADO",
-                motivo: motivoBloqueio, usuarioAlvo: dialogBloqueio,
+                motivo: motivoBloqueio,
               })} disabled={updateStatusMutation.isPending}>
               Confirmar Bloqueio
             </Button>

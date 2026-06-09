@@ -33,7 +33,8 @@ Deno.serve(async (req) => {
     const usuariosComSolic = solicAcessos.map(solic => {
       const user = allUsers.find(u => u.email?.toLowerCase() === solic.email?.toLowerCase());
       return {
-        id: user?.id || solic.id,
+        id: user?.id, // ✅ OBRIGATÓRIO: Sempre usar ID do User para ativar/desativar/excluir
+        solicitacao_id: solic.id, // Guardar ID da solicitação para contexto apenas
         email: solic.email,
         full_name: solic.nome_completo, // ✅ SEMPRE do formulário
         cpf: solic.cpf,

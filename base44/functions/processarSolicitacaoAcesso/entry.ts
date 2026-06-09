@@ -41,35 +41,37 @@ Deno.serve(async (req) => {
 
         const todosUsuarios = await base44.asServiceRole.entities.User.list();
         const usuarioExistente = todosUsuarios.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
+        
+        const nomeFinal = sol.nome_completo?.trim();
+        const dadosNovos = {
+          full_name: nomeFinal,
+          email: sol.email,
+          cpf: sol.cpf?.trim() || "",
+          telefone: sol.telefone?.trim() || "",
+          perfil: sol.perfil,
+          funcao: sol.funcao,
+          equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
+          unidade_saude: sol.unidade_saude?.trim() || "",
+          registro_profissional_tipo: sol.registro_profissional_tipo || "",
+          registro_profissional_numero: sol.registro_profissional_numero?.trim() || "",
+          matricula: sol.matricula?.trim() || "",
+          macrorregiao: "Macro 1", // Campo obrigatório do entity User
+          motivo_bloqueio: "", // Campo obrigatório, deixar vazio
+          status_acesso: "ATIVO",
+          cadastro_completo: true,
+        };
 
         if (usuarioExistente) {
-          // ✅ GARANTIA CRÍTICA: Usar SEMPRE sol.nome_completo (exatamente como digitado no formulário)
-          const nomeFinal = sol.nome_completo?.trim();
-          console.log(`[APROVAÇÃO] User ${usuarioExistente.id} aprovado com nome: "${nomeFinal}" (SolicitacaoAcesso: ${solicitacaoId})`);
-          
+          // ✅ User já existe: atualizar dados
           const dadosAntigos = {
             full_name: usuarioExistente.full_name,
             status_acesso: usuarioExistente.status_acesso,
           };
           
-          const dadosNovos = {
-            full_name: nomeFinal,
-            cpf: sol.cpf?.trim() || null,
-            telefone: sol.telefone?.trim() || null,
-            perfil: sol.perfil,
-            funcao: sol.funcao,
-            equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
-            unidade_saude: sol.unidade_saude?.trim() || null,
-            registro_profissional_tipo: sol.registro_profissional_tipo,
-            registro_profissional_numero: sol.registro_profissional_numero?.trim() || null,
-            matricula: sol.matricula?.trim() || null,
-            status_acesso: "ATIVO",
-            cadastro_completo: true,
-          };
-          
           await base44.asServiceRole.entities.User.update(usuarioExistente.id, dadosNovos);
+          console.log(`[APROVAÇÃO] User ${usuarioExistente.id} atualizado com nome: "${nomeFinal}"`);
           
-          // ✅ REGISTRAR AUDITORIA: Aprovação de solicitação
+          // ✅ REGISTRAR AUDITORIA
           try {
             await base44.asServiceRole.functions.invoke("registrarLog", {
               acao: "atualizar",
@@ -82,6 +84,29 @@ Deno.serve(async (req) => {
             });
           } catch (auditError) {
             console.error(`[AUDITORIA] Falha ao registrar log: ${auditError.message}`);
+          }
+        } else {
+          // ✅ User NÃO existe: criar novo
+          try {
+            const novoUser = await base44.asServiceRole.entities.User.create(dadosNovos);
+            console.log(`[APROVAÇÃO] Novo User ${novoUser.id} criado com nome: "${nomeFinal}"`);
+            
+            // ✅ REGISTRAR AUDITORIA
+            try {
+              await base44.asServiceRole.functions.invoke("registrarLog", {
+                acao: "criar",
+                entidade: "User",
+                entidade_id: novoUser.id,
+                descricao: `Novo User criado via aprovação de solicitação: ${nomeFinal}`,
+                dados_novos: dadosNovos,
+                severidade: "info"
+              });
+            } catch (auditError) {
+              console.error(`[AUDITORIA] Falha ao registrar log: ${auditError.message}`);
+            }
+          } catch (createError) {
+            console.error(`[ERRO] Falha ao criar User: ${createError.message}`);
+            // Continua mesmo com erro - a solicitação foi aprovada
           }
         }
 
