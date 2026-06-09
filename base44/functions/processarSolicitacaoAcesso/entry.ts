@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
 
         if (usuarioExistente) {
           await base44.asServiceRole.entities.User.update(usuarioExistente.id, {
-            nome_completo: sol.nome_completo,
+            full_name: sol.nome_completo,
             cpf: sol.cpf,
             telefone: sol.telefone,
             perfil: sol.perfil,
@@ -97,6 +97,7 @@ Deno.serve(async (req) => {
             if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf;
             if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone;
             if (Object.keys(dadosPerfil).length > 0) {
+              if (!usuarioAlvo.full_name && sol.nome_completo) dadosPerfil.full_name = sol.nome_completo;
               await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
             }
             await base44.asServiceRole.entities.SolicitacaoAcesso.update(sol.id, { status: "APROVADO" });
