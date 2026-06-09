@@ -50,6 +50,7 @@ Deno.serve(async (req) => {
             perfil: sol.perfil,
             funcao: sol.funcao,
             equipe: EQUIPE_MAP[sol.perfil] || "unidade_saude",
+            unidade_saude: sol.unidade_saude || null,
             registro_profissional_tipo: sol.registro_profissional_tipo,
             registro_profissional_numero: sol.registro_profissional_numero,
             matricula: sol.matricula,

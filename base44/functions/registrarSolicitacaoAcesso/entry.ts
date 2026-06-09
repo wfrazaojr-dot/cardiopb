@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
 
     const { email, nome_completo, cpf, telefone, perfil, funcao,
             registro_profissional_tipo, registro_profissional_numero,
-            matricula, unidade_saude } = body;
+            matricula, unidade_saude, equipe } = body;
 
     if (!email || !nome_completo || !perfil || !funcao) {
       return Response.json({ error: 'Campos obrigatórios: email, nome_completo, perfil, funcao' }, { status: 400 });
@@ -32,6 +32,27 @@ Deno.serve(async (req) => {
       unidade_saude: unidade_saude || null,
       status: "PENDENTE",
     });
+
+    // Também salvar no User se já autenticado via GOV.BR (para sincronizar com painel)
+    // Isso garante que todos os dados fiquem disponíveis
+    const allUsers = await base44.asServiceRole.entities.User.list();
+    const existingUser = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+    if (existingUser && !existingUser.status_acesso) {
+      await base44.asServiceRole.entities.User.update(existingUser.id, {
+        full_name: nome_completo,
+        cpf: cpf || null,
+        telefone: telefone || null,
+        perfil: perfil,
+        funcao: funcao,
+        equipe: equipe || "unidade_saude",
+        unidade_saude: unidade_saude || null,
+        registro_profissional_tipo: registro_profissional_tipo || null,
+        registro_profissional_numero: registro_profissional_numero || null,
+        matricula: matricula || null,
+        status_acesso: "PENDENTE",
+        cadastro_completo: false,
+      });
+    }
 
     // Notificar administradores por e-mail
     const PERFIL_LABELS = {

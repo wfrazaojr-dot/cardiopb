@@ -178,6 +178,8 @@ export default function CadastroPerfil({ modoSolicitacao = false }) {
         registro_profissional_tipo: precisaRegistro ? REGISTRO_TIPO_MAP[form.funcao] : null,
         registro_profissional_numero: precisaRegistro ? form.registro_numero : null,
         matricula: precisaMatricula ? form.matricula : null,
+        equipe: EQUIPE_MAP[form.perfil] || "unidade_saude",
+        unidade_saude: form.unidade_saude || null,
       });
       setLoading(false);
       if (response?.data?.success) {
