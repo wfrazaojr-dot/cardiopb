@@ -44,8 +44,8 @@ const AuthenticatedApp = () => {
   // Handle authentication errors
   if (authError) {
     if (authError.type === 'user_not_registered') {
-      // Usuário autenticado via GOV.BR mas não registrado no app → mostrar página de solicitação diretamente
-      return <SolicitarAcesso />;
+      // Usuário autenticado via GOV.BR mas não registrado no app → mostrar cadastro diretamente (sem redirect)
+      return <CadastroPerfil modoSolicitacao />;
     } else if (authError.type === 'auth_required') {
       navigateToLogin();
       return null;

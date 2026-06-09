@@ -38,14 +38,14 @@ export default function StatusGuard({ children }) {
   const isAdmin = user.role === "admin";
   if (isDev || isAdmin) return <>{children}</>;
 
-  // CENÁRIO B: Primeiro acesso — cadastro não concluído
-  if (!user.cadastro_completo) {
-    return <Navigate to="/CadastroPerfil" replace />;
-  }
-
-  // CENÁRIO A: Cadastro completo e acesso ATIVO — libera entrada
+  // CENÁRIO A: Acesso ATIVO — libera entrada (com ou sem cadastro_completo)
   if (user.status_acesso === "ATIVO") {
     return <>{children}</>;
+  }
+
+  // CENÁRIO B: Primeiro acesso — cadastro não concluído e não ATIVO → cadastrar
+  if (!user.cadastro_completo) {
+    return <Navigate to="/CadastroPerfil" replace />;
   }
 
   // CENÁRIO C: Cadastrado mas PENDENTE / INATIVO / BLOQUEADO

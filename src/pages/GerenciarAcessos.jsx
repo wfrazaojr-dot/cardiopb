@@ -81,18 +81,57 @@ export default function GerenciarAcessos() {
     mutationFn: async ({ solicitacao, acao }) => {
       await base44.entities.SolicitacaoAcesso.update(solicitacao.id, { status: acao === "aprovar" ? "APROVADO" : "REJEITADO" });
       if (acao === "aprovar") {
-        // Convidar usuário para o app
-        await base44.users.inviteUser(solicitacao.email, "user");
+        // Convidar usuário para o app com role correto e já salvar dados do perfil
+        await base44.users.inviteUser(solicitacao.email, solicitacao.perfil || "user");
+        
+        // Aguardar um momento para o usuário ser criado e então atualizar seus dados
+        await new Promise(r => setTimeout(r, 2000));
+        
+        // Buscar o usuário recém-criado e atualizar seus dados
+        const todosUsuarios = await base44.entities.User.list();
+        const usuarioCriado = todosUsuarios.find(u => u.email?.toLowerCase() === solicitacao.email?.toLowerCase());
+        
+        if (usuarioCriado) {
+          const equipeMap = {
+            UNIDADE_SAUDE: "unidade_saude", CERH: "cerh", ASSCARDIO: "asscardio",
+            TRANSPORTE: "transporte", HEMODINAMICA: "hemodinamica",
+            ADMINISTRADOR_MANAGER: "admin", ADMINISTRADOR_CERH: "cerh",
+            ADMINISTRADOR_CARDIOLOGIA: "asscardio", ADMINISTRADOR_TRANSPORTE: "transporte",
+          };
+          await base44.entities.User.update(usuarioCriado.id, {
+            nome_completo: solicitacao.nome_completo,
+            cpf: solicitacao.cpf,
+            telefone: solicitacao.telefone,
+            perfil: solicitacao.perfil,
+            funcao: solicitacao.funcao,
+            equipe: equipeMap[solicitacao.perfil] || "unidade_saude",
+            registro_profissional_tipo: solicitacao.registro_profissional_tipo,
+            registro_profissional_numero: solicitacao.registro_profissional_numero,
+            matricula: solicitacao.matricula,
+            status_acesso: "ATIVO",
+            cadastro_completo: true,
+            auth_method: "GOVBR",
+          });
+        }
+
         // Notificar por e-mail
         await base44.integrations.Core.SendEmail({
           to: solicitacao.email,
           subject: "✅ Acesso Aprovado — Sistema Coração Paraibano",
-          body: `Olá, ${solicitacao.nome_completo}!\n\nSua solicitação de acesso ao Sistema Coração Paraibano foi APROVADA.\n\nVocê foi convidado para o sistema. Acesse pelo link abaixo e faça login com seu GOV.BR:\nhttps://coracaoparaibano.base44.app\n\nApós o login, complete seu cadastro e aguarde a ativação final pelo Administrador.\n\nAtenciosamente,\nEquipe Coração Paraibano`,
+          body: `Olá, ${solicitacao.nome_completo}!\n\nSua solicitação de acesso ao Sistema Coração Paraibano foi APROVADA e seu acesso está liberado.\n\nPerfil: ${PERFIL_LABELS[solicitacao.perfil] || solicitacao.perfil}\n\nAcesse o sistema pelo link abaixo e faça login com seu GOV.BR:\nhttps://coracaoparaibano.base44.app\n\nAtenciosamente,\nEquipe Coração Paraibano\nSecretaria de Estado de Saúde da Paraíba`,
+        });
+      } else {
+        // Rejeitar: notificar o usuário
+        await base44.integrations.Core.SendEmail({
+          to: solicitacao.email,
+          subject: "❌ Solicitação de Acesso Negada — Sistema Coração Paraibano",
+          body: `Olá, ${solicitacao.nome_completo}.\n\nSua solicitação de acesso ao Sistema Coração Paraibano não foi aprovada.\n\nPara mais informações, entre em contato com o Administrador Manager do sistema.\n\nAtenciosamente,\nEquipe Coração Paraibano`,
         });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['solicitacoes-acesso'] });
+      queryClient.invalidateQueries({ queryKey: ['usuarios-gerenciar'] });
     },
   });
 
