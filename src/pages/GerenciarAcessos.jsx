@@ -123,9 +123,10 @@ export default function GerenciarAcessos() {
 
   // Aprovar/Rejeitar registro da entidade SolicitacaoAcesso (formulário externo)
   const processarSolicMutation = useMutation({
-    mutationFn: async ({ sol, acao }) => {
+    mutationFn: async ({ sol, acao, tipo }) => {
       const res = await base44.functions.invoke("processarSolicitacaoAcesso", {
         solicitacaoId: sol.id,
+        solicitacaoTipo: tipo, // "govbr" ou "solicitacao"
         acao,
       });
       if (!res.data?.success) throw new Error(res.data?.error || "Erro ao processar solicitação");
@@ -296,7 +297,7 @@ export default function GerenciarAcessos() {
           <p className="text-gray-600 text-sm mt-1">Aprovação e controle de usuários do sistema</p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => { refetch(); }} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => { queryClient.invalidateQueries({ queryKey: ["usuarios-gerenciar"] }); refetch(); }} className="gap-2">
             <RefreshCw className="w-4 h-4" /> Atualizar
           </Button>
           <Button variant="outline" size="sm" onClick={exportarExcel} className="gap-2 border-green-400 text-green-700 hover:bg-green-50">
@@ -399,7 +400,7 @@ export default function GerenciarAcessos() {
                           <Button
                             size="sm" variant="outline"
                             className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                            onClick={() => processarSolicMutation.mutate({ sol: u, acao: "rejeitar" })}
+                            onClick={() => processarSolicMutation.mutate({ sol: u, acao: "rejeitar", tipo: "govbr" })}
                             disabled={processarSolicMutation.isPending || updateStatusMutation.isPending}
                           >
                             <XCircle className="w-4 h-4" /> Rejeitar
@@ -466,7 +467,7 @@ export default function GerenciarAcessos() {
                           <Button
                             size="sm"
                             className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                            onClick={() => processarSolicMutation.mutate({ sol, acao: "aprovar" })}
+                            onClick={() => processarSolicMutation.mutate({ sol, acao: "aprovar", tipo: "solicitacao" })}
                             disabled={processarSolicMutation.isPending}
                           >
                             <CheckCircle2 className="w-4 h-4" /> Aprovar & Convidar
@@ -474,7 +475,7 @@ export default function GerenciarAcessos() {
                           <Button
                             size="sm" variant="outline"
                             className="border-red-300 text-red-700 hover:bg-red-50 gap-1"
-                            onClick={() => processarSolicMutation.mutate({ sol, acao: "rejeitar" })}
+                            onClick={() => processarSolicMutation.mutate({ sol, acao: "rejeitar", tipo: "solicitacao" })}
                             disabled={processarSolicMutation.isPending}
                           >
                             <XCircle className="w-4 h-4" /> Rejeitar

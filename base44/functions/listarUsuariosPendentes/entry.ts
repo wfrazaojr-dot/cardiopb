@@ -16,13 +16,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Buscar TODOS os usuários e solicitações com privilégio de admin (ignora RLS)
     const [todosUsuarios, todasSolicitacoes] = await Promise.all([
       base44.asServiceRole.entities.User.list(),
       base44.asServiceRole.entities.SolicitacaoAcesso.list('-created_date', 200),
     ]);
 
-    // Campos compactos para usuários (evitar payload gigante)
     const camposUser = (u) => ({
       id: u.id,
       email: u.email,
@@ -46,11 +44,14 @@ Deno.serve(async (req) => {
       updated_date: u.updated_date,
     });
 
-    // Filtrar pendentes da entidade User — apenas quem completou o cadastro
+    // Roles administrativos que nunca devem aparecer como "pendentes"
+    const rolesAdminOuEspeciais = ['admin', 'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_CERH', 'ADMINISTRADOR_CARDIOLOGIA', 'ADMINISTRADOR_TRANSPORTE', 'DESENVOLVEDOR'];
+
+    // Pendentes: completou cadastro, não tem status ATIVO/BLOQUEADO/INATIVO, e não é admin/gestor
     const pendentes = todosUsuarios
       .filter(u =>
         u.email?.toLowerCase() !== 'wfrazaojr@gmail.com' &&
-        u.role !== 'admin' &&
+        !rolesAdminOuEspeciais.includes(u.role) &&
         u.cadastro_completo === true &&
         u.status_acesso !== 'ATIVO' &&
         u.status_acesso !== 'BLOQUEADO' &&
@@ -62,7 +63,6 @@ Deno.serve(async (req) => {
       .filter(u => u.email?.toLowerCase() !== 'wfrazaojr@gmail.com')
       .map(camposUser);
 
-    // Solicitações pendentes (entidade SolicitacaoAcesso)
     const solicPendentes = todasSolicitacoes.filter(s => s.status === 'PENDENTE');
 
     return Response.json({ pendentes, todos, solicPendentes });

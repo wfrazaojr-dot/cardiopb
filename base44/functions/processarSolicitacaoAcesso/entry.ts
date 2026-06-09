@@ -24,31 +24,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { solicitacaoId, acao, userId, status, motivo } = await req.json();
+    const body = await req.json();
+    const { solicitacaoId, solicitacaoTipo, acao, userId, status, motivo } = body;
 
-    // ── Ação sobre entidade SolicitacaoAcesso (aprovar/rejeitar solicitação externa) ──
-    // OU rejeitar usuário GOV.BR pendente (passa sol.id = User.id quando vem de usuariosPendentes)
-    if (solicitacaoId && acao) {
+    // ── Ação sobre SolicitacaoAcesso externa (tipo = "solicitacao") ──
+    if (solicitacaoId && acao && solicitacaoTipo === 'solicitacao') {
       if (acao === 'rejeitar') {
-        // Tentar deletar da SolicitacaoAcesso primeiro; se não existir, deletar do User
-        try {
-          await base44.asServiceRole.entities.SolicitacaoAcesso.delete(solicitacaoId);
-        } catch (_) {
-          // Pode ser um User pendente (GOV.BR) — deletar da entidade User
-          await base44.asServiceRole.entities.User.delete(solicitacaoId);
-        }
+        await base44.asServiceRole.entities.SolicitacaoAcesso.delete(solicitacaoId);
         return Response.json({ success: true });
       }
 
       if (acao === 'aprovar') {
-        // Buscar dados da solicitação
         const solicitacoes = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ id: solicitacaoId });
         const sol = solicitacoes?.[0];
-        if (!sol) {
-          return Response.json({ error: 'Solicitação não encontrada' }, { status: 404 });
-        }
+        if (!sol) return Response.json({ error: 'Solicitação não encontrada' }, { status: 404 });
 
-        // Verificar se o usuário já existe
         const todosUsuarios = await base44.asServiceRole.entities.User.list();
         const usuarioExistente = todosUsuarios.find(u => u.email?.toLowerCase() === sol.email?.toLowerCase());
 
@@ -68,13 +58,21 @@ Deno.serve(async (req) => {
           });
         }
 
-        // Marcar solicitação como aprovada
         await base44.asServiceRole.entities.SolicitacaoAcesso.update(solicitacaoId, { status: "APROVADO" });
         return Response.json({ success: true });
       }
     }
 
-    // ── Ação sobre entidade User (aprovar/rejeitar usuário pendente via GOV.BR) ──
+    // ── Ação sobre usuário GOV.BR pendente (tipo = "govbr") ──
+    if (solicitacaoId && acao && solicitacaoTipo === 'govbr') {
+      if (acao === 'rejeitar') {
+        // Deletar o registro do User diretamente
+        await base44.asServiceRole.entities.User.delete(solicitacaoId);
+        return Response.json({ success: true });
+      }
+    }
+
+    // ── Atualizar status de usuário existente (ativar/inativar/bloquear) ──
     if (userId && status) {
       const updateData = { status_acesso: status };
       if (motivo) updateData.motivo_bloqueio = motivo;
@@ -82,7 +80,7 @@ Deno.serve(async (req) => {
 
       await base44.asServiceRole.entities.User.update(userId, updateData);
 
-      // Se aprovando, sincronizar SolicitacaoAcesso pendente
+      // Se aprovando, sincronizar SolicitacaoAcesso pendente do mesmo email
       if (status === "ATIVO") {
         const todosUsuarios = await base44.asServiceRole.entities.User.list();
         const usuarioAlvo = todosUsuarios.find(u => u.id === userId);
@@ -90,11 +88,11 @@ Deno.serve(async (req) => {
           const solics = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({ email: usuarioAlvo.email, status: "PENDENTE" });
           for (const sol of (solics || [])) {
             const dadosPerfil = {};
-            if (!usuarioAlvo.perfil && sol.perfil)    dadosPerfil.perfil   = sol.perfil;
-            if (!usuarioAlvo.funcao && sol.funcao)    dadosPerfil.funcao   = sol.funcao;
-            if (!usuarioAlvo.equipe && sol.perfil)    dadosPerfil.equipe   = EQUIPE_MAP[sol.perfil] || "unidade_saude";
-            if (!usuarioAlvo.cpf   && sol.cpf)        dadosPerfil.cpf      = sol.cpf;
-            if (!usuarioAlvo.telefone && sol.telefone) dadosPerfil.telefone = sol.telefone;
+            if (!usuarioAlvo.perfil && sol.perfil)      dadosPerfil.perfil   = sol.perfil;
+            if (!usuarioAlvo.funcao && sol.funcao)      dadosPerfil.funcao   = sol.funcao;
+            if (!usuarioAlvo.equipe && sol.perfil)      dadosPerfil.equipe   = EQUIPE_MAP[sol.perfil] || "unidade_saude";
+            if (!usuarioAlvo.cpf   && sol.cpf)          dadosPerfil.cpf      = sol.cpf;
+            if (!usuarioAlvo.telefone && sol.telefone)  dadosPerfil.telefone = sol.telefone;
             if (Object.keys(dadosPerfil).length > 0) {
               await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
             }
