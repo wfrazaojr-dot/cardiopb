@@ -93,7 +93,13 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(true);
       const currentUser = await base44.auth.me();
       
-
+      // Bypass para desenvolvedor
+      if (currentUser?.email?.toLowerCase() === 'wfrazaojr@gmail.com') {
+        setUser(currentUser);
+        setIsAuthenticated(true);
+        setIsLoadingAuth(false);
+        return;
+      }
       
       setUser(currentUser);
       setIsAuthenticated(true);
