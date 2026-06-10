@@ -63,7 +63,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Rotas sem sidebar: cadastro e acesso pendente */}
-      <Route path="/CadastroPerfil" element={<CadastroPerfil />} />
+      <Route path="/CadastroPerfil" element={<CadastroPerfil modoSolicitacao />} />
       <Route path="/AcessoPendente" element={<AcessoPendente />} />
       <Route path="/SolicitarAcesso" element={<SolicitarAcesso />} />
 
