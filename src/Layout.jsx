@@ -328,7 +328,7 @@ export default function Layout({ children, currentPageName }) {
             />
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" 
-              alt="Coração Paraibano" 
+              alt="CARDIOPB" 
               className="h-12 md:h-14 w-auto object-contain"
             />
             <img 
@@ -345,11 +345,11 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-3">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/ffd6172a5_LOGOCORAAOPARAIBANO.png" 
-                alt="Coração Paraibano" 
+                alt="CARDIOPB" 
                 className="h-12 w-auto"
               />
             </div>
-            <p className="text-xs text-gray-600 mt-2">App Coração Paraibano</p>
+            <p className="text-xs text-gray-600 mt-2">App CARDIOPB</p>
           </SidebarHeader>
           
           <SidebarContent className="p-2">
@@ -476,7 +476,7 @@ export default function Layout({ children, currentPageName }) {
             <header className="bg-white border-b border-gray-200 px-4 py-3 md:hidden shadow-sm">
               <div className="flex items-center gap-3">
                 <SidebarTrigger className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg shadow-lg transition-all duration-200" />
-                <h1 className="text-lg font-bold text-red-600">Coração Paraibano</h1>
+                <h1 className="text-lg font-bold text-red-600">CARDIOPB</h1>
               </div>
             </header>
 

@@ -274,7 +274,7 @@ export default function RelatorioFarmacia() {
     doc.setDrawColor(220, 38, 38);
     doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
     doc.setFontSize(7); doc.setTextColor(100, 100, 100);
-    doc.text("Sistema Coração Paraibano © 2025-2026 - Secretaria de Estado de Saúde da Paraíba", pageWidth / 2, pageHeight - 14, { align: "center" });
+    doc.text("Sistema CARDIOPB © 2025-2026 - Secretaria de Estado de Saúde da Paraíba", pageWidth / 2, pageHeight - 14, { align: "center" });
     doc.text("Documento gerado eletronicamente — Uso exclusivo da Farmácia/Gestor", pageWidth / 2, pageHeight - 9, { align: "center" });
 
     const nomeArquivo = `Relatorio_Farmacia_${periodo === "mensal" ? `${meses[Number(mes) - 1]}_${ano}` : ano}.pdf`;

@@ -297,8 +297,8 @@ export default function ProtocoloEstrategias() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Condutas Iniciais</h1>
-          <p className="text-gray-600">Protocolo Coração Paraibano - Secretaria de Estado da Saúde</p>
-          <p className="text-sm text-gray-500 mt-2">Fonte: Protocolo Coração Paraibano, 2026</p>
+          <p className="text-gray-600">Protocolo CARDIOPB - Secretaria de Estado da Saúde</p>
+          <p className="text-sm text-gray-500 mt-2">Fonte: Protocolo CARDIOPB, 2026</p>
         </div>
 
         {/* Tabs de Cenários */}
@@ -349,7 +349,7 @@ export default function ProtocoloEstrategias() {
         {/* Footer com fonte */}
         <div className="mt-12 pt-8 border-t border-gray-300">
           <p className="text-xs text-gray-600">
-            <strong>Fonte:</strong> Secretaria de Estado da Saúde da Paraíba - Protocolo Coração Paraibano, 2026<br />
+            <strong>Fonte:</strong> Secretaria de Estado da Saúde da Paraíba - Protocolo CARDIOPB, 2026<br />
             Fundação Paraibana de Gestão em Saúde<br />
             Rua Roberto dos Santos Correia, S/N, Várzea Nova, Santa Rita – PB | CEP: 58.034-500
           </p>

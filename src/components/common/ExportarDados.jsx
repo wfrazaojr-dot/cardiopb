@@ -126,7 +126,7 @@ export default function ExportarDados({ dados = [], colunas = [], titulo = "Rela
     doc.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
     doc.setFontSize(6);
     doc.setTextColor(120, 120, 120);
-    doc.text("Sistema Coração Paraibano © 2025-2026 — SES-PB", pageWidth / 2, pageHeight - 7, { align: "center" });
+    doc.text("Sistema CARDIOPB © 2025-2026 — SES-PB", pageWidth / 2, pageHeight - 7, { align: "center" });
 
     doc.save(`${nomeArquivo}.pdf`);
     setExportando(false);

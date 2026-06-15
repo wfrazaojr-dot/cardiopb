@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Plus } from "lucide-react";
 
-export default function CoracaoParaibano() {
+export default function CardioPB() {
   const navigate = useNavigate();
 
   const handleNovosPacientes = () => {
@@ -17,10 +17,10 @@ export default function CoracaoParaibano() {
         <div className="max-w-6xl mx-auto">
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" 
-            alt="Coração Paraibano" 
+            alt="CARDIOPB" 
             className="h-20 w-auto object-contain mb-4"
           />
-          <h1 className="text-3xl font-bold text-gray-900">CORAÇÃO PARAIBANO</h1>
+          <h1 className="text-3xl font-bold text-gray-900">CARDIOPB</h1>
           <p className="text-gray-600 mt-1">Unidade de Saúde - Triagem de Pacientes Cardíacos</p>
         </div>
       </header>

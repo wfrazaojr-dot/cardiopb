@@ -7,7 +7,7 @@ export default function Manual() {
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Manual do Sistema Coração Paraibano</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Manual do Sistema CARDIOPB</h1>
           <p className="text-gray-600">Guia completo de uso do sistema integrado de regulação cardiológica</p>
         </div>
 
@@ -83,7 +83,7 @@ export default function Manual() {
             <CardContent className="p-6">
               <div className="space-y-3 text-sm text-gray-700">
                 <p>
-                  O <strong>Sistema Coração Paraibano</strong> é uma plataforma integrada de regulação cardiológica desenvolvida para 
+                  O <strong>Sistema CARDIOPB</strong> é uma plataforma integrada de regulação cardiológica desenvolvida para 
                   otimizar o fluxo de pacientes com síndromes coronarianas agudas (SCA) no estado da Paraíba.
                 </p>
                 <p>
@@ -731,11 +731,11 @@ export default function Manual() {
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-xs text-gray-600">
                     <strong>Secretaria de Estado de Saúde da Paraíba</strong><br />
-                    Programa Coração Paraibano
+                    Programa CARDIOPB
                   </p>
                 </div>
                 <p className="mt-4 pt-4 border-t text-xs text-gray-600">
-                  © 2025-2026 Sistema Coração Paraibano - Todos os direitos reservados<br />
+                  © 2025-2026 Sistema CARDIOPB - Todos os direitos reservados<br />
                   O uso, cópia ou venda não autorizados são proibidos
                 </p>
               </div>

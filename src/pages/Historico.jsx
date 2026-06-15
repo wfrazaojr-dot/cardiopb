@@ -166,7 +166,7 @@ export default function Historico() {
           <div className="flex items-center gap-3 flex-wrap">
             <ExportarDados
               dados={pacientesFiltrados}
-              titulo="Painel Assistencial — Coração Paraibano"
+              titulo="Painel Assistencial — CARDIOPB"
               nomeArquivo="historico_pacientes"
               colunas={[
                 { header: "Paciente", key: "nome_completo" },

@@ -53,7 +53,7 @@ export default function TransporteDetalhe() {
   };
   const [formData, setFormData] = useState({
     central_transporte: "",
-    tipo_transporte: "USA CORAÇÃO PARAIBANO",
+    tipo_transporte: "USA CARDIOPB",
     viatura: "",
     medico: "",
     enfermeiro: "",
@@ -477,7 +477,7 @@ export default function TransporteDetalhe() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USA CORAÇÃO PARAIBANO">USA CORAÇÃO PARAIBANO</SelectItem>
+                        <SelectItem value="USA CARDIOPB">USA CARDIOPB</SelectItem>
                         <SelectItem value="USA SAMU">USA SAMU</SelectItem>
                         <SelectItem value="USA MUNICIPAL">USA MUNICIPAL</SelectItem>
                         <SelectItem value="USB COM MÉDICO">USB COM MÉDICO</SelectItem>

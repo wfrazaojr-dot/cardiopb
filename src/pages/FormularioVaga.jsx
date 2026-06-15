@@ -276,7 +276,7 @@ export default function FormularioVaga() {
     pdf.setFontSize(9);
     pdf.setFont(undefined, 'normal');
     pdf.setTextColor(80, 80, 80);
-    pdf.text("Governo da Paraíba | Coração Paraibano | Complexo Regulador", pageW / 2, y, { align: 'center' });
+    pdf.text("Governo da Paraíba | CARDIOPB | Complexo Regulador", pageW / 2, y, { align: 'center' });
     y += 4;
     pdf.text(`Data da Solicitação: ${new Date(formData.data_solicitacao).toLocaleDateString('pt-BR')}`, pageW / 2, y, { align: 'center' });
     y += 6;
@@ -426,7 +426,7 @@ export default function FormularioVaga() {
           ? "\n\n📎 DOCUMENTOS ANEXADOS (acesso restrito ao sistema):\n" + formData.documentos.map((doc, idx) => `${idx + 1}. ${doc.nome || `Documento ${idx + 1}`}`).join("\n")
           : "";
 
-        const emailBody = `FORMULÁRIO DE SOLICITAÇÃO DE VAGA - Sistema Coração Paraibano
+        const emailBody = `FORMULÁRIO DE SOLICITAÇÃO DE VAGA - Sistema CARDIOPB
 Data/Hora: ${new Date().toLocaleString('pt-BR')} | Macrorregião: ${getMacro()} | ID: ${idPaciente}
 
 PACIENTE: ${getNomePaciente()} | Idade: ${dadosFormulario.idade} anos | Sexo: ${dadosFormulario.sexo}

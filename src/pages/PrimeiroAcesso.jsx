@@ -19,7 +19,7 @@ export default function PrimeiroAcesso() {
           />
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png"
-            alt="Coração Paraibano"
+            alt="CARDIOPB"
             className="h-12 w-auto object-contain"
           />
           <img
@@ -42,7 +42,7 @@ export default function PrimeiroAcesso() {
               </div>
             </div>
             <h1 className="text-4xl font-bold text-gray-900">
-              Bem-vindo ao <span className="text-red-600">Coração Paraibano</span>
+              Bem-vindo ao <span className="text-red-600">CARDIOPB</span>
             </h1>
             <p className="text-lg text-gray-600 max-w-xl mx-auto">
               Sistema integrado de regulação e controle para doenças cardiovasculares do Estado da Paraíba.
@@ -103,7 +103,7 @@ export default function PrimeiroAcesso() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-4 text-center">
-        <p className="text-xs text-gray-500">© 2025 Coração Paraibano — Secretaria de Estado da Saúde da Paraíba</p>
+        <p className="text-xs text-gray-500">© 2025 CARDIOPB — Secretaria de Estado da Saúde da Paraíba</p>
       </footer>
     </div>
   );

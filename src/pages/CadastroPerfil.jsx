@@ -78,7 +78,7 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
   // Título
   doc.setFontSize(18);
   doc.setTextColor(220, 38, 38); // Vermelho (vermelho da marca)
-  doc.text("Coração Paraibano", margin, yPosition);
+  doc.text("CARDIOPB", margin, yPosition);
   
   // Subtítulo
   doc.setFontSize(12);
@@ -141,7 +141,7 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
   // Rodapé
   doc.setFontSize(8);
   doc.setTextColor(120, 120, 120);
-  doc.text("Este documento foi gerado automaticamente pelo Sistema Coração Paraibano.", margin, yPosition);
+  doc.text("Este documento foi gerado automaticamente pelo Sistema CARDIOPB.", margin, yPosition);
   doc.text("Mantenha este arquivo para controle pessoal. A aprovação será enviada via e-mail.", margin, yPosition + 5);
   
   // Salvar PDF
@@ -332,7 +332,7 @@ export default function CadastroPerfil() {
             <div className="flex justify-center gap-4 mb-3">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png"
-                alt="Coração Paraibano"
+                alt="CARDIOPB"
                 className="h-12 w-auto object-contain"
               />
             </div>
@@ -438,7 +438,7 @@ export default function CadastroPerfil() {
           <div className="flex justify-center gap-4 mb-3">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png"
-              alt="Coração Paraibano"
+              alt="CARDIOPB"
               className="h-12 w-auto object-contain"
             />
           </div>
@@ -449,7 +449,7 @@ export default function CadastroPerfil() {
           </div>
           <CardTitle className="text-2xl text-gray-900">Solicitar Acesso</CardTitle>
           <CardDescription className="text-gray-600 mt-2">
-            Preencha seus dados para solicitar acesso ao Sistema Coração Paraibano.<br />
+            Preencha seus dados para solicitar acesso ao Sistema CARDIOPB.<br />
             Após o envio, o Administrador Manager analisará seu pedido.<br />
             <span className="text-orange-600 font-medium">⏱ Aguarde até 72 horas para novo acesso.</span>
           </CardDescription>

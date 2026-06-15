@@ -223,7 +223,7 @@ export default function ASSCARDIODetalhe() {
     };
 
     ln("RELATÓRIO DE ASSESSORIA CARDIOLÓGICA - ASSCARDIO", 14, true, [180, 0, 0]);
-    ln("Programa Coração Paraibano", 10, false, [80, 80, 80]);
+    ln("Programa CARDIOPB", 10, false, [80, 80, 80]);
     ln(`Data/Hora: ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`, 9, false, [80, 80, 80]);
     divisor();
 
@@ -310,7 +310,7 @@ export default function ASSCARDIODetalhe() {
     }
     divisor();
 
-    ln("Sistema de Triagem de Dor Torácica — Coração Paraibano", 8, false, [120, 120, 120]);
+    ln("Sistema de Triagem de Dor Torácica — CARDIOPB", 8, false, [120, 120, 120]);
     ln("Desenvolvedor: Walber Alves Frazão Júnior — COREN 110.238", 8, false, [120, 120, 120]);
     ln(`Gerado em: ${format(new Date(), "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR })}`, 8, false, [120, 120, 120]);
 

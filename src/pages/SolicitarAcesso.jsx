@@ -142,7 +142,7 @@ export default function SolicitarAcesso() {
       <Card className="w-full max-w-xl shadow-xl">
         <CardHeader className="text-center border-b pb-6">
           <div className="flex justify-center gap-4 mb-4">
-            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" alt="Coração Paraibano" className="h-12 w-auto object-contain" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" alt="CARDIOPB" className="h-12 w-auto object-contain" />
           </div>
           <div className="flex justify-center mb-2">
             <div className="bg-red-600 p-3 rounded-full">
@@ -151,7 +151,7 @@ export default function SolicitarAcesso() {
           </div>
           <CardTitle className="text-2xl text-gray-900">Solicitar Acesso</CardTitle>
           <CardDescription className="text-gray-600 mt-2">
-            Preencha seus dados para solicitar acesso ao Sistema Coração Paraibano.<br />
+            Preencha seus dados para solicitar acesso ao Sistema CARDIOPB.<br />
             Após o envio, aguarde a aprovação do Administrador Manager.<br />
             <span className="text-blue-700 font-medium">Você receberá um e-mail quando seu acesso for liberado.</span>
           </CardDescription>

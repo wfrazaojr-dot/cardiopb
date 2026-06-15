@@ -68,7 +68,7 @@ export default function PerfilSelection() {
           />
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" 
-            alt="Coração Paraibano" 
+            alt="CARDIOPB" 
             className="h-16 md:h-20 w-auto object-contain"
           />
           <img 

@@ -7,7 +7,7 @@ export default function Protocolos() {
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Protocolo de Dor Torácica - Coração Paraibano 2026</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Protocolo de Dor Torácica - CARDIOPB 2026</h1>
           <p className="text-gray-600 font-semibold mb-2">Resumo Clínico</p>
           <p className="text-sm text-gray-700 mb-3">
             Documento institucional da Secretaria de Estado da Saúde, para orientação teórica e prática a Médicos e Equipe Multiprofissional na abordagem dos pacientes com início agudo de sintomas sugestivos de Síndrome Coronária Aguda (SCA).

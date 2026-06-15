@@ -88,7 +88,7 @@ export default function Inicio() {
           />
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png" 
-            alt="Coração Paraibano" 
+            alt="CARDIOPB" 
             className="h-16 md:h-20 w-auto object-contain"
           />
           <img 
@@ -104,7 +104,7 @@ export default function Inicio() {
           {/* Boas-vindas */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Bem-vindo ao App Coração Paraibano
+              Bem-vindo ao App CARDIOPB
             </h1>
             <p className="text-xl text-gray-700 mb-2">
               Olá, <span className="font-semibold text-red-600">{user?.full_name}</span>

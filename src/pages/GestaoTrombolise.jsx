@@ -303,7 +303,7 @@ export default function GestaoTrombolise() {
     doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
     doc.setFontSize(7);
     doc.setTextColor(100, 100, 100);
-    doc.text("Sistema Coração Paraibano © 2025-2026 - Secretaria de Estado de Saúde da Paraíba", pageWidth / 2, pageHeight - 14, { align: "center" });
+    doc.text("Sistema CARDIOPB © 2025-2026 - Secretaria de Estado de Saúde da Paraíba", pageWidth / 2, pageHeight - 14, { align: "center" });
     doc.text("Documento gerado eletronicamente - Uso exclusivo da equipe de saúde", pageWidth / 2, pageHeight - 9, { align: "center" });
 
     doc.save(`Trombolise_${registro.paciente_nome?.replace(/\s+/g, "_")}_${format(new Date(), "dd-MM-yyyy")}.pdf`);
