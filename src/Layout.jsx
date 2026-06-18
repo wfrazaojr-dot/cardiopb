@@ -326,7 +326,7 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/0e16b728d_logoSecretariadeEstadodaSade.png" 
                 alt="Secretaria de Estado da Saúde" 
-                className="h-10 md:h-14 object-contain"
+                className="h-[4.4rem] md:h-[6.6rem] object-contain"
               />
             </div>
 
@@ -344,7 +344,7 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/940dd8bd1_LogoComplexoregulador.jpg" 
                 alt="Complexo Regulador" 
-                className="h-10 md:h-14 object-contain"
+                className="h-[4.4rem] md:h-[6.6rem] object-contain"
               />
             </div>
           </div>
