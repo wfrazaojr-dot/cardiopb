@@ -310,6 +310,7 @@ export default function Layout({ children, currentPageName }) {
           --primary-foreground: 0 0% 100%;
           --destructive: 0 84% 60%;
           --destructive-foreground: 0 0% 100%;
+          --sidebar-width: 12rem;
         }
         
         .ecg-background {
@@ -320,43 +321,49 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen flex flex-col w-full bg-gray-50 ecg-background">
         {/* Header com as 3 logos — distribuição proporcional */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
-          <div className="flex items-center justify-center gap-6 md:gap-10 w-full max-w-6xl mx-auto">
+          <div className="grid grid-cols-3 items-center w-full max-w-6xl mx-auto">
             {/* Logo Governo do Estado — Esquerda */}
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/8e093c8da_logoSecretariadeEstadodaSade.png" 
-              alt="Secretaria de Estado da Saúde" 
-              className="h-12 md:h-14 w-auto object-contain"
-            />
+            <div className="flex justify-start">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/8e093c8da_logoSecretariadeEstadodaSade.png" 
+                alt="Secretaria de Estado da Saúde" 
+                className="h-10 md:h-14 w-auto object-contain"
+              />
+            </div>
             {/* Logo CARDIOPB — Centro (destaque) */}
-            <img 
-              src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
-              alt="CARDIOPB" 
-              className="h-20 md:h-28 w-auto object-contain"
-            />
+            <div className="flex justify-center">
+              <img 
+                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
+                alt="CARDIOPB" 
+                className="h-20 md:h-28 w-auto object-contain"
+              />
+            </div>
             {/* Logo PBSAÚDE — Direita */}
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/873a4a563_logo.png" 
-              alt="PBSAÚDE" 
-              className="h-8 md:h-10 w-auto object-contain"
-            />
+            <div className="flex justify-end">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/873a4a563_logo.png" 
+                alt="PBSAÚDE" 
+                className="h-8 md:h-10 w-auto object-contain"
+              />
+            </div>
           </div>
         </header>
 
         <div className="flex flex-1 min-h-0">
         <Sidebar className="border-r border-red-200 bg-white">
-          <SidebarHeader className="border-b border-red-200 p-4 bg-white">
+          <SidebarHeader className="border-b border-red-200 p-3 bg-white">
             <div className="flex items-center justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-36 w-auto"
+                className="h-24 w-auto"
               />
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="p-2">
+          <SidebarContent className="p-1">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-sm font-semibold text-gray-600 uppercase tracking-wider px-2 py-2">
+              <SidebarGroupLabel className="text-xs font-semibold text-gray-600 uppercase tracking-wider px-1 py-1">
                 Navegação
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -365,12 +372,12 @@ export default function Layout({ children, currentPageName }) {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
                         asChild 
-                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded-lg mb-1 ${
+                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded-lg mb-0.5 ${
                           location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
                         }`}
                       >
-                        <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5 text-sm">
-                          <item.icon className="w-5 h-5" />
+                        <Link to={item.url} className="flex items-center gap-2 px-2 py-2 text-xs">
+                          <item.icon className="w-4 h-4" />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -384,31 +391,31 @@ export default function Layout({ children, currentPageName }) {
 
             {user && (
               <SidebarGroup>
-                <SidebarGroupLabel className="text-xs font-medium text-gray-500 uppercase tracking-wider px-2 py-2">
+                <SidebarGroupLabel className="text-[10px] font-medium text-gray-500 uppercase tracking-wider px-1 py-1">
                   Usuário
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
-                  <div className="px-3 py-2">
-                    <div className="bg-blue-50 p-3 rounded-lg mb-3">
-                      <p className="text-xs text-blue-900 font-semibold">{user.full_name}</p>
-                      <p className="text-xs text-blue-700">{user.email}</p>
+                  <div className="px-2 py-1">
+                    <div className="bg-blue-50 p-2 rounded-lg mb-2">
+                      <p className="text-[10px] text-blue-900 font-semibold">{user.full_name}</p>
+                      <p className="text-[10px] text-blue-700">{user.email}</p>
                       {(isDev || user.role === 'DESENVOLVEDOR') && (
-                        <p className="text-xs text-purple-700 font-bold mt-1">🛠 DESENVOLVEDOR</p>
+                        <p className="text-[10px] text-purple-700 font-bold mt-0.5">🛠 DESENVOLVEDOR</p>
                       )}
                       {!isDev && user.role === 'ADMINISTRADOR_MANAGER' && (
-                        <p className="text-xs text-red-600 font-bold mt-1">ADM. MANAGER</p>
+                        <p className="text-[10px] text-red-600 font-bold mt-0.5">ADM. MANAGER</p>
                       )}
                       {!isDev && user.role === 'ADMINISTRADOR_CERH' && (
-                        <p className="text-xs text-blue-700 font-bold mt-1">ADM. CERH</p>
+                        <p className="text-[10px] text-blue-700 font-bold mt-0.5">ADM. CERH</p>
                       )}
                       {!isDev && user.role === 'ADMINISTRADOR_CARDIOLOGIA' && (
-                        <p className="text-xs text-green-700 font-bold mt-1">ADM. CARDIOLOGIA</p>
+                        <p className="text-[10px] text-green-700 font-bold mt-0.5">ADM. CARDIOLOGIA</p>
                       )}
                       {!isDev && user.role === 'ADMINISTRADOR_TRANSPORTE' && (
-                        <p className="text-xs text-orange-700 font-bold mt-1">ADM. TRANSPORTE</p>
+                        <p className="text-[10px] text-orange-700 font-bold mt-0.5">ADM. TRANSPORTE</p>
                       )}
                       {!isDev && user.role === 'admin' && (
-                        <p className="text-xs text-red-600 font-bold mt-1">ADMINISTRADOR</p>
+                        <p className="text-[10px] text-red-600 font-bold mt-0.5">ADMINISTRADOR</p>
                       )}
                     </div>
                     {(() => {
@@ -416,9 +423,9 @@ export default function Layout({ children, currentPageName }) {
                       if (profissionalLogado) {
                         const prof = JSON.parse(profissionalLogado);
                         return (
-                          <div className="bg-green-50 p-3 rounded-lg mb-3 border border-green-200">
-                            <p className="text-xs text-green-900 font-semibold">{prof.nome}</p>
-                            <p className="text-xs text-green-700">{prof.tipo} - {prof.registro}</p>
+                          <div className="bg-green-50 p-2 rounded-lg mb-2 border border-green-200">
+                            <p className="text-[10px] text-green-900 font-semibold">{prof.nome}</p>
+                            <p className="text-[10px] text-green-700">{prof.tipo} - {prof.registro}</p>
                           </div>
                         );
                       }
@@ -427,10 +434,10 @@ export default function Layout({ children, currentPageName }) {
                     <Button
                       onClick={handleLogout}
                       variant="outline"
-                      className="w-full border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 hover:border-red-300"
+                      className="w-full border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 hover:border-red-300 text-[11px]"
                       size="sm"
                     >
-                      <LogOut className="w-4 h-4 mr-2" />
+                      <LogOut className="w-3 h-3 mr-1" />
                       Sair do Sistema
                     </Button>
                     {sessionStorage.getItem("profissional_logado") && (
@@ -442,10 +449,10 @@ export default function Layout({ children, currentPageName }) {
                           }
                         }}
                         variant="outline"
-                        className="w-full mt-2 border-orange-200 text-orange-700 hover:bg-orange-50"
+                        className="w-full mt-1 border-orange-200 text-orange-700 hover:bg-orange-50 text-[11px]"
                         size="sm"
                       >
-                        <LogOut className="w-4 h-4 mr-2" />
+                        <LogOut className="w-3 h-3 mr-1" />
                         Desconectar Profissional
                       </Button>
                     )}
@@ -455,16 +462,15 @@ export default function Layout({ children, currentPageName }) {
             )}
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-red-200 p-3 bg-gray-50">
-            <div className="space-y-2">
-              <div className="text-[10px] leading-tight">
-                <p className="font-semibold text-gray-900">Desenvolvedor: Walber A. Frazão Jr.</p>
-                <p className="text-gray-600">Enfermeiro Cardio-Emergencista e Auditor.</p>
+          <SidebarFooter className="border-t border-red-200 p-2 bg-gray-50">
+            <div className="space-y-1">
+              <div className="text-[9px] leading-tight">
+                <p className="font-semibold text-gray-900">Dev: Walber A. Frazão Jr.</p>
+                <p className="text-gray-600">Enf. Cardio-Emergencista e Auditor</p>
                 <p className="text-gray-600">COREN 110.238</p>
               </div>
-              <div className="text-[10px] text-gray-500 pt-2 border-t border-gray-200">
+              <div className="text-[9px] text-gray-500 pt-1 border-t border-gray-200">
                 <p>© 2025 - Todos os direitos reservados</p>
-                <p className="mt-1">Uso, cópia ou venda não autorizados são proibidos</p>
               </div>
             </div>
           </SidebarFooter>
