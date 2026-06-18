@@ -19,6 +19,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { gerarCodigoConfirmacao, renderizarRodapeAssinatura } from "@/lib/assinaturaDigital";
 
 const TIPO_ICP_LABELS = {
   imediata: "ICP Imediata",
@@ -105,6 +106,22 @@ export default function HemodinamicaDetalhe() {
         pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
       }
+      // Assinatura digital
+      const codigo = gerarCodigoConfirmacao("hemodinamica");
+      if (user) {
+        base44.entities.AssinaturaDigital.create({
+          documento_tipo: "hemodinamica",
+          documento_id: pacienteId || "",
+          hash_confirmacao: codigo,
+          usuario_nome: user.full_name || user.email,
+          usuario_email: user.email || "",
+          usuario_id: user.id || "",
+          paciente_nome: pacienteData?.nome_completo || "",
+        }).catch(() => {});
+      }
+      pdf.addPage();
+      renderizarRodapeAssinatura(pdf, pdfWidth, pdfHeight, 15, codigo);
+
       const pdfBlob = pdf.output('blob');
       const nome = (pacienteData?.nome_completo || 'Paciente').replace(/\s+/g, '_');
       const arquivo = new File([pdfBlob], `Relatorio_Hemodinamica_${nome}_${format(new Date(), "yyyyMMdd_HHmm")}.pdf`, { type: 'application/pdf' });
@@ -138,6 +155,23 @@ export default function HemodinamicaDetalhe() {
         pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
       }
+      // Assinatura digital
+      const codigo = gerarCodigoConfirmacao("hemodinamica");
+      if (user) {
+        base44.entities.AssinaturaDigital.create({
+          documento_tipo: "hemodinamica",
+          documento_id: pacienteId || "",
+          hash_confirmacao: codigo,
+          usuario_nome: user.full_name || user.email,
+          usuario_email: user.email || "",
+          usuario_id: user.id || "",
+          paciente_nome: paciente?.nome_completo || "",
+          metadata: { tipo: "agendamento" },
+        }).catch(() => {});
+      }
+      pdf.addPage();
+      renderizarRodapeAssinatura(pdf, pdfWidth, pdfHeight, 15, codigo);
+
       const pdfBlob = pdf.output('blob');
       const nome = (paciente?.nome_completo || 'Paciente').replace(/\s+/g, '_');
       const arquivo = new File([pdfBlob], `Agendamento_Hemo_${nome}_${format(new Date(), "yyyyMMdd_HHmm")}.pdf`, { type: 'application/pdf' });
@@ -171,6 +205,23 @@ export default function HemodinamicaDetalhe() {
         pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
       }
+      // Assinatura digital
+      const codigo = gerarCodigoConfirmacao("hemodinamica");
+      if (user) {
+        base44.entities.AssinaturaDigital.create({
+          documento_tipo: "hemodinamica",
+          documento_id: pacienteId || "",
+          hash_confirmacao: codigo,
+          usuario_nome: user.full_name || user.email,
+          usuario_email: user.email || "",
+          usuario_id: user.id || "",
+          paciente_nome: paciente?.nome_completo || "",
+          metadata: { tipo: "transferencia" },
+        }).catch(() => {});
+      }
+      pdf.addPage();
+      renderizarRodapeAssinatura(pdf, pdfWidth, pdfHeight, 15, codigo);
+
       const pdfBlob = pdf.output('blob');
       const nome = (paciente?.nome_completo || 'Paciente').replace(/\s+/g, '_');
       const arquivo = new File([pdfBlob], `Transferencia_Hemo_${nome}_${format(new Date(), "yyyyMMdd_HHmm")}.pdf`, { type: 'application/pdf' });

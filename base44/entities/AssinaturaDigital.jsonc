@@ -10,7 +10,8 @@
         "trombolise",
         "farmacia",
         "formulario_vaga",
-        "exportacao"
+        "exportacao",
+        "hemodinamica"
       ],
       "description": "Tipo de documento assinado"
     },
