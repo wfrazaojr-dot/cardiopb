@@ -324,17 +324,17 @@ export default function Layout({ children, currentPageName }) {
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/8e093c8da_logoSecretariadeEstadodaSade.png" 
               alt="Secretaria de Estado da Saúde" 
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-20 md:h-24 w-auto object-contain"
             />
             <img 
               src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
               alt="CARDIOPB" 
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-20 md:h-24 w-auto object-contain"
             />
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/873a4a563_logo.png" 
               alt="PBSAÚDE" 
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-20 md:h-24 w-auto object-contain"
             />
           </div>
         </header>
@@ -346,7 +346,7 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-24 w-auto"
+                className="h-36 w-auto"
               />
             </div>
           </SidebarHeader>
