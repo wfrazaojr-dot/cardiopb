@@ -59,20 +59,34 @@ export async function registrarAssinatura(base44, { documentoTipo, documentoId, 
  */
 export function renderizarRodapeAssinatura(doc, pageWidth, pageHeight, margin, codigo) {
   const appUrl = typeof window !== 'undefined' ? window.location.origin : 'https://cardiopb.base44.app';
+  const yCentro = pageHeight / 2;
+  
+  // Linha superior decorativa
   doc.setDrawColor(76, 175, 80);
-  doc.setLineWidth(0.3);
-  doc.line(margin, pageHeight - 22, pageWidth - margin, pageHeight - 22);
+  doc.setLineWidth(0.4);
+  doc.line(margin, yCentro - 30, pageWidth - margin, yCentro - 30);
   
-  doc.setFontSize(7);
+  // Título
+  doc.setFontSize(9);
   doc.setTextColor(80, 80, 80);
-  doc.setFont('helvetica', 'bold');
-  doc.text('ASSINATURA DIGITAL CARDIOPB', pageWidth / 2, pageHeight - 17, { align: 'center' });
+  doc.setFont(undefined, 'bold');
+  doc.text('ASSINATURA DIGITAL CARDIOPB', pageWidth / 2, yCentro - 20, { align: 'center' });
   
-  doc.setFont('helvetica', 'normal');
+  // Código
+  doc.setFont(undefined, 'normal');
+  doc.setFontSize(11);
   doc.setTextColor(40, 40, 40);
-  doc.text(`Código de Confirmação: ${codigo}`, pageWidth / 2, pageHeight - 12, { align: 'center' });
+  doc.text(`Código de Confirmação: ${codigo}`, pageWidth / 2, yCentro - 10, { align: 'center' });
   
-  doc.setFontSize(6);
+  // Instrução de verificação
+  doc.setFontSize(7);
   doc.setTextColor(120, 120, 120);
-  doc.text(`Verifique a autenticidade em: ${appUrl}/verificar?codigo=${codigo}`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.text(`Verifique a autenticidade deste documento em:`, pageWidth / 2, yCentro, { align: 'center' });
+  doc.setTextColor(40, 80, 180);
+  doc.text(`${appUrl}/verificar?codigo=${codigo}`, pageWidth / 2, yCentro + 5, { align: 'center' });
+  
+  // Linha inferior decorativa
+  doc.setDrawColor(76, 175, 80);
+  doc.setLineWidth(0.4);
+  doc.line(margin, yCentro + 15, pageWidth - margin, yCentro + 15);
 }

@@ -177,16 +177,15 @@ export default function FormularioVaga() {
       return;
     }
     setUploadingFiles(true);
-    const results = await Promise.all(files.map(file => base44.integrations.Core.UploadPrivateFile({ file })));
-    const fileUris = results.map((r, i) => ({ file_uri: r.file_uri, nome: files[i].name }));
-    setFormData(prev => ({ ...prev, documentos: [...prev.documentos, ...fileUris] }));
+    const results = await Promise.all(files.map(file => base44.integrations.Core.UploadFile({ file })));
+    const docs = results.map((r, i) => ({ file_url: r.file_url, nome: files[i].name }));
+    setFormData(prev => ({ ...prev, documentos: [...prev.documentos, ...docs] }));
     toast.success(`${files.length} arquivo(s) enviado(s) com sucesso!`);
     setUploadingFiles(false);
   };
 
-  const visualizarDocumento = async (file_uri) => {
-    const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri, expires_in: 300 });
-    window.open(signed_url, '_blank');
+  const visualizarDocumento = (file_url) => {
+    window.open(file_url, '_blank');
   };
 
   const removerDocumento = (index) => {
@@ -341,12 +340,13 @@ export default function FormularioVaga() {
             // Adiciona imagem ao PDF
             if (y > 200) { pdf.addPage(); y = 20; }
             const imgWidth = contentW;
-            const imgHeight = 80; // Altura máxima da imagem
-            pdf.addImage(doc.file_url, 'JPEG', margin, y, imgWidth, imgHeight, undefined, 'FAST');
+            const imgHeight = 80;
+            const ext = (doc.file_url || '').split('.').pop()?.toLowerCase() || 'jpeg';
+            const fmt = ext === 'png' ? 'PNG' : ext === 'gif' ? 'GIF' : ext === 'webp' ? 'WEBP' : 'JPEG';
+            pdf.addImage(doc.file_url, fmt, margin, y, imgWidth, imgHeight, undefined, 'FAST');
             y += imgHeight + 4;
             if (y > 270) { pdf.addPage(); y = 20; }
           } catch (err) {
-            // Se falhar ao adicionar imagem, apenas mostra o link
             addRow([[`Link`, doc.file_url]]);
           }
         } else {

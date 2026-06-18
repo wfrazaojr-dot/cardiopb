@@ -1,15 +1,10 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileUp, X, Eye, Loader2 } from "lucide-react";
+import { FileUp, X, Eye } from "lucide-react";
 
 export default function SecaoDocumentos({ formData, handleFileUpload, removerDocumento, uploadingFiles, visualizarDocumento }) {
-  const [loadingIdx, setLoadingIdx] = useState(null);
-
-  const handleVisualizar = async (doc, idx) => {
-    if (!doc.file_uri) return;
-    setLoadingIdx(idx);
-    await visualizarDocumento(doc.file_uri);
-    setLoadingIdx(null);
+  const handleVisualizar = (doc) => {
+    if (!doc.file_url) return;
+    visualizarDocumento(doc.file_url);
   };
   return (
     <div>
@@ -39,9 +34,9 @@ export default function SecaoDocumentos({ formData, handleFileUpload, removerDoc
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-green-900 font-medium truncate flex-1">{doc.nome || `Documento ${idx + 1}`}</span>
                   <div className="flex items-center gap-1 ml-2">
-                    {doc.file_uri && (
-                      <Button type="button" variant="ghost" size="sm" onClick={() => handleVisualizar(doc, idx)} disabled={loadingIdx === idx} className="text-blue-600 hover:text-blue-800">
-                        {loadingIdx === idx ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
+                    {doc.file_url && (
+                      <Button type="button" variant="ghost" size="sm" onClick={() => handleVisualizar(doc)} className="text-blue-600 hover:text-blue-800">
+                        <Eye className="w-4 h-4" />
                       </Button>
                     )}
                     <Button type="button" variant="ghost" size="sm" onClick={() => removerDocumento(idx)} className="text-red-600 hover:text-red-800">
