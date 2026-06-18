@@ -310,7 +310,7 @@ export default function Layout({ children, currentPageName }) {
           --primary-foreground: 0 0% 100%;
           --destructive: 0 84% 60%;
           --destructive-foreground: 0 0% 100%;
-          --sidebar-width: 12rem;
+          --sidebar-width: 9rem;
         }
         
         .ecg-background {
@@ -351,17 +351,17 @@ export default function Layout({ children, currentPageName }) {
 
         <div className="flex flex-1 min-h-0">
         <Sidebar className="border-r border-red-200 bg-white">
-          <SidebarHeader className="border-b border-red-200 p-3 bg-white">
+          <SidebarHeader className="border-b border-red-200 p-2 bg-white">
             <div className="flex items-center justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-24 w-auto"
+                className="h-16 w-auto"
               />
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="p-1">
+          <SidebarContent className="p-0.5">
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs font-semibold text-gray-600 uppercase tracking-wider px-1 py-1">
                 Navegação
@@ -376,9 +376,9 @@ export default function Layout({ children, currentPageName }) {
                           location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
                         }`}
                       >
-                        <Link to={item.url} className="flex items-center gap-2 px-2 py-2 text-xs">
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.title}</span>
+                        <Link to={item.url} className="flex items-center gap-1.5 px-1.5 py-1.5 text-[11px]">
+                          <item.icon className="w-3.5 h-3.5" />
+                          <span className="truncate">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
