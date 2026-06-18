@@ -16,7 +16,7 @@ export default function CardioPB() {
       <header className="bg-white border-b border-gray-200 px-6 py-6 shadow-sm rounded-t-lg">
         <div className="max-w-6xl mx-auto">
           <img 
-            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/9ba212c7d_LOGOCARDIOPB.jpg" 
+            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
             alt="CARDIOPB" 
             className="h-20 w-auto object-contain mb-4"
           />

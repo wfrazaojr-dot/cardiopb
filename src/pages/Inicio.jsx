@@ -87,7 +87,7 @@ export default function Inicio() {
             className="h-16 md:h-20 w-auto object-contain"
           />
           <img 
-            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/9ba212c7d_LOGOCARDIOPB.jpg" 
+            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
             alt="CARDIOPB" 
             className="h-16 md:h-20 w-auto object-contain"
           />
