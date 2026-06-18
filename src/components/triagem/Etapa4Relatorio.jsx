@@ -218,14 +218,6 @@ export default function Etapa4Relatorio({ dadosPaciente, onAnterior, pacienteId,
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border rounded-lg p-4 mb-4 shadow-sm">
-        <div className="flex items-center justify-between gap-4 w-full">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/8e093c8da_logoSecretariadeEstadodaSade.png" alt="Secretaria de Estado da Saúde" className="h-16 md:h-20 w-auto object-contain" />
-          <img src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" alt="CARDIOPB" className="h-16 md:h-20 w-auto object-contain" />
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/006e0d9aa_LogoComplexoregulador.jpg" alt="Complexo Regulador" className="h-16 md:h-20 w-auto object-contain" />
-        </div>
-      </div>
-
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Relatório Final</h2>
         <p className="text-gray-600">Revisão completa do atendimento</p>
