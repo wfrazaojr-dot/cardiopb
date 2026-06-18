@@ -319,12 +319,35 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
       <div className="min-h-screen flex flex-col w-full bg-gray-50 ecg-background">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-2 py-2 shadow-sm relative flex items-center justify-center" style={{ minHeight: "4.8rem" }}>
-          <img 
-            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
-            alt="CARDIOPB" 
-            className="h-[4.4rem] md:h-[6.6rem] object-contain absolute left-1/2 -translate-x-1/2"
-          />
+        <header className="bg-white border-b border-gray-200 px-4 py-2 shadow-sm" style={{ minHeight: "4.8rem" }}>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[2cm] h-full">
+            {/* Logo Secretaria de Estado da Saúde - Esquerda */}
+            <div className="flex justify-end">
+              <img 
+                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/0e16b728d_logoSecretariadeEstadodaSade.png" 
+                alt="Secretaria de Estado da Saúde" 
+                className="h-10 md:h-14 object-contain"
+              />
+            </div>
+
+            {/* Logo CARDIOPB - Centro */}
+            <div className="flex justify-center">
+              <img 
+                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
+                alt="CARDIOPB" 
+                className="h-[4.4rem] md:h-[6.6rem] object-contain"
+              />
+            </div>
+
+            {/* Logo Complexo Regulador - Direita */}
+            <div className="flex justify-start">
+              <img 
+                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/940dd8bd1_LogoComplexoregulador.jpg" 
+                alt="Complexo Regulador" 
+                className="h-10 md:h-14 object-contain"
+              />
+            </div>
+          </div>
         </header>
 
         <div className="flex flex-1 min-h-0">
