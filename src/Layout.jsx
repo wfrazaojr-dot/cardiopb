@@ -346,7 +346,7 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
             <p className="text-xs text-gray-500 mt-1 text-center">App CARDIOPB</p>
