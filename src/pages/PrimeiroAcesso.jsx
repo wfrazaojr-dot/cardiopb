@@ -18,7 +18,7 @@ export default function PrimeiroAcesso() {
             className="h-12 w-auto object-contain"
           />
           <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/fa5f3a17e_LOGOCORAAOPARAIBANO.png"
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/64cc9f6c6_LOGOCARDIOPB.jpg"
             alt="CARDIOPB"
             className="h-12 w-auto object-contain"
           />
