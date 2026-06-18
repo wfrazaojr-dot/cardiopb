@@ -346,15 +346,15 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             </div>
-            <p className="text-xs text-gray-600 mt-2">App CARDIOPB</p>
+            <p className="text-xs text-gray-500 mt-1">App CARDIOPB</p>
           </SidebarHeader>
           
           <SidebarContent className="p-2">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-medium text-gray-500 uppercase tracking-wider px-2 py-2">
+              <SidebarGroupLabel className="text-sm font-semibold text-gray-600 uppercase tracking-wider px-2 py-2">
                 Navegação
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -367,8 +367,8 @@ export default function Layout({ children, currentPageName }) {
                           location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
                         }`}
                       >
-                        <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                          <item.icon className="w-4 h-4" />
+                        <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5 text-sm">
+                          <item.icon className="w-5 h-5" />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -453,18 +453,14 @@ export default function Layout({ children, currentPageName }) {
             )}
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-red-200 p-4 bg-gray-50">
+          <SidebarFooter className="border-t border-red-200 p-3 bg-gray-50">
             <div className="space-y-2">
-              <div className="text-xs">
-                <p className="font-semibold text-gray-900">Desenvolvedor:</p>
-                <p className="text-gray-700">Walber Alves Frazão Júnior</p>
-                <p className="text-gray-600">Enfermeiro Emergencista</p>
+              <div className="text-[10px] leading-tight">
+                <p className="font-semibold text-gray-900">Desenvolvedor: Walber A. Frazão Jr.</p>
+                <p className="text-gray-600">Enfermeiro Cardio-Emergencista e Auditor.</p>
                 <p className="text-gray-600">COREN 110.238</p>
-                <p className="text-gray-500 mt-1">Pós-graduado em Cardiologia,</p>
-                <p className="text-gray-500">Neurologia e Auditoria em</p>
-                <p className="text-gray-500">Serviços de Saúde</p>
               </div>
-              <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
+              <div className="text-[10px] text-gray-500 pt-2 border-t border-gray-200">
                 <p>© 2025 - Todos os direitos reservados</p>
                 <p className="mt-1">Uso, cópia ou venda não autorizados são proibidos</p>
               </div>
