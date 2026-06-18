@@ -11,9 +11,6 @@ import PageNotFound from './lib/PageNotFound';
 import LogsAuditoria from './pages/LogsAuditoria';
 import GestaoTrombolise from './pages/GestaoTrombolise';
 import RelatorioFarmacia from './pages/RelatorioFarmacia';
-import CadastroPerfil from './pages/CadastroPerfil';
-import AcessoPendente from './pages/AcessoPendente';
-import SolicitarAcesso from './pages/SolicitarAcesso';
 import ControleAcessos from './pages/ControleAcessos.jsx';
 import PrimeiroAcesso from './pages/PrimeiroAcesso.jsx';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
@@ -56,15 +53,10 @@ const AuthenticatedApp = () => {
     return null;
   }
 
-  // Render the main app — rotas públicas (sem Layout/sidebar) ficam fora do LayoutWrapper
+  // Render the main app — acesso liberado para todo usuário autenticado
   return (
     <Routes>
-      {/* Rotas sem sidebar: cadastro e acesso pendente */}
-      <Route path="/CadastroPerfil" element={<CadastroPerfil modoSolicitacao />} />
-      <Route path="/AcessoPendente" element={<AcessoPendente />} />
-      <Route path="/SolicitarAcesso" element={<SolicitarAcesso />} />
-
-      {/* Rotas com sidebar — protegidas pelo StatusGuard (exige status_acesso ATIVO) */}
+      {/* Rotas com sidebar — protegidas pelo StatusGuard */}
       <Route path="/*" element={
         <StatusGuard>
         <LayoutWrapper currentPageName={mainPageKey}>

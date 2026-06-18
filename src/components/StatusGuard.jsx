@@ -1,26 +1,19 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 /**
- * StatusGuard — Controla o acesso às rotas protegidas.
+ * StatusGuard — Acesso temporário simplificado.
  *
- * Fluxo (em ordem de prioridade):
- * 1. Dev / admin legado → acesso irrestrito
- * 2. Cadastro não concluído → /CadastroPerfil
- * 3. status_acesso ATIVO → permite acesso
- * 4. Qualquer outro status (PENDENTE, INATIVO, BLOQUEADO) → /AcessoPendente
- *
- * NOTA: A verificação auth_method foi removida pois o login GOV.BR já é
- * a única porta de entrada configurada na plataforma Base44, tornando
- * a checagem redundante e causando loops de logout em usuários válidos.
+ * Enquanto a nova forma de acesso (via equipe técnica do Estado) não é definida,
+ * qualquer usuário autenticado por e-mail tem acesso liberado — sem cadastro
+ * e sem aprovação administrativa.
  */
 export default function StatusGuard({ children }) {
   const { data: user, isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => base44.auth.me(),
-    staleTime: 30_000, // 30s — evita re-fetches desnecessários durante a navegação
+    staleTime: 30_000,
   });
 
   if (isLoading) {
@@ -33,21 +26,6 @@ export default function StatusGuard({ children }) {
 
   if (!user) return null;
 
-  // Acesso irrestrito para desenvolvedor, admin legado e todos os roles administrativos
-  const isDev = user.email?.toLowerCase() === "wfrazaojr@gmail.com";
-  const rolesAdministrativas = ["admin", "ADMINISTRADOR_MANAGER", "ADMINISTRADOR_CERH", "ADMINISTRADOR_CARDIOLOGIA", "ADMINISTRADOR_TRANSPORTE", "DESENVOLVEDOR"];
-  if (isDev || rolesAdministrativas.includes(user.role)) return <>{children}</>;
-
-  // CENÁRIO A: Acesso ATIVO — libera entrada (com ou sem cadastro_completo)
-  if (user.status_acesso === "ATIVO") {
-    return <>{children}</>;
-  }
-
-  // CENÁRIO B: Primeiro acesso — cadastro não concluído e não ATIVO → cadastrar
-  if (!user.cadastro_completo) {
-    return <Navigate to="/CadastroPerfil" replace />;
-  }
-
-  // CENÁRIO C: Cadastrado mas PENDENTE / INATIVO / BLOQUEADO
-  return <Navigate to="/AcessoPendente" replace />;
+  // Acesso liberado para todo usuário autenticado
+  return <>{children}</>;
 }
