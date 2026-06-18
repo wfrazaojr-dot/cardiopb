@@ -303,15 +303,14 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider style={{ "--sidebar-width": "4.5rem" }}>
       <style>{`
         :root {
           --primary: 0 72% 51%;
           --primary-foreground: 0 0% 100%;
           --destructive: 0 84% 60%;
           --destructive-foreground: 0 0% 100%;
-          --sidebar-width: 6.3rem;
-        }
+          }
         
         .ecg-background {
           background-image: url("data:image/svg+xml,%3Csvg width='100' height='60' viewBox='0 0 100 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 L 20 30 L 22 25 L 24 35 L 26 15 L 28 30 L 30 28 L 40 28 L 60 28 L 62 23 L 64 33 L 66 13 L 68 28 L 70 26 L 80 26 L 100 26' stroke='rgba(239, 68, 68, 0.08)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
