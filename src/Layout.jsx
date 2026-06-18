@@ -331,20 +331,20 @@ export default function Layout({ children, currentPageName }) {
 
         <div className="flex flex-1 min-h-0">
         <Sidebar className="border-r border-red-200 bg-white">
-          <SidebarHeader className="border-b border-red-200 p-2 bg-white">
+          <SidebarHeader className="border-b border-red-200 p-1 bg-white">
             <div className="flex items-center justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
-                className="h-16 w-auto"
+                className="h-8 w-auto"
               />
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="p-0.5">
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-semibold text-gray-600 uppercase tracking-wider px-1 py-1">
-                Navegação
+          <SidebarContent className="p-0">
+            <SidebarGroup className="p-0.5">
+              <SidebarGroupLabel className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider px-1 py-0.5">
+                Nav
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -352,13 +352,13 @@ export default function Layout({ children, currentPageName }) {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
                         asChild 
-                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded-lg mb-0.5 ${
+                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded mb-0.5 ${
                           location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
                         }`}
                       >
-                        <Link to={item.url} className="flex items-center gap-1.5 px-1.5 py-1.5 text-[11px]">
+                        <Link to={item.url} className="flex flex-col items-center gap-0 px-0.5 py-1 text-[9px] leading-tight">
                           <item.icon className="w-3.5 h-3.5" />
-                          <span className="truncate">{item.title}</span>
+                          <span className="text-center break-words leading-tight">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -370,88 +370,37 @@ export default function Layout({ children, currentPageName }) {
 
 
             {user && (
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-[10px] font-medium text-gray-500 uppercase tracking-wider px-1 py-1">
-                  Usuário
-                </SidebarGroupLabel>
+              <SidebarGroup className="p-0.5">
                 <SidebarGroupContent>
-                  <div className="px-2 py-1">
-                    <div className="bg-blue-50 p-2 rounded-lg mb-2">
-                      <p className="text-[10px] text-blue-900 font-semibold">{user.full_name}</p>
-                      <p className="text-[10px] text-blue-700">{user.email}</p>
+                  <div className="px-0.5 py-0.5">
+                    <div className="bg-blue-50 p-1 rounded mb-1 text-center">
+                      <p className="text-[8px] text-blue-900 font-semibold truncate">{user.full_name?.split(' ')[0]}</p>
                       {(isDev || user.role === 'DESENVOLVEDOR') && (
-                        <p className="text-[10px] text-purple-700 font-bold mt-0.5">🛠 DESENVOLVEDOR</p>
+                        <p className="text-[7px] text-purple-700 font-bold">DEV</p>
                       )}
-                      {!isDev && user.role === 'ADMINISTRADOR_MANAGER' && (
-                        <p className="text-[10px] text-red-600 font-bold mt-0.5">ADM. MANAGER</p>
-                      )}
-                      {!isDev && user.role === 'ADMINISTRADOR_CERH' && (
-                        <p className="text-[10px] text-blue-700 font-bold mt-0.5">ADM. CERH</p>
-                      )}
-                      {!isDev && user.role === 'ADMINISTRADOR_CARDIOLOGIA' && (
-                        <p className="text-[10px] text-green-700 font-bold mt-0.5">ADM. CARDIOLOGIA</p>
-                      )}
-                      {!isDev && user.role === 'ADMINISTRADOR_TRANSPORTE' && (
-                        <p className="text-[10px] text-orange-700 font-bold mt-0.5">ADM. TRANSPORTE</p>
-                      )}
-                      {!isDev && user.role === 'admin' && (
-                        <p className="text-[10px] text-red-600 font-bold mt-0.5">ADMINISTRADOR</p>
+                      {!isDev && user.role && user.role !== 'user' && (
+                        <p className="text-[7px] text-red-600 font-bold truncate">{user.role}</p>
                       )}
                     </div>
-                    {(() => {
-                      const profissionalLogado = sessionStorage.getItem("profissional_logado");
-                      if (profissionalLogado) {
-                        const prof = JSON.parse(profissionalLogado);
-                        return (
-                          <div className="bg-green-50 p-2 rounded-lg mb-2 border border-green-200">
-                            <p className="text-[10px] text-green-900 font-semibold">{prof.nome}</p>
-                            <p className="text-[10px] text-green-700">{prof.tipo} - {prof.registro}</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
                     <Button
                       onClick={handleLogout}
-                      variant="outline"
-                      className="w-full border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 hover:border-red-300 text-[11px]"
+                      variant="ghost"
+                      className="w-full text-red-600 hover:bg-red-50 text-[9px] h-6 px-1"
                       size="sm"
                     >
-                      <LogOut className="w-3 h-3 mr-1" />
-                      Sair do Sistema
+                      <LogOut className="w-3 h-3" />
                     </Button>
-                    {sessionStorage.getItem("profissional_logado") && (
-                      <Button
-                        onClick={() => {
-                          if (confirm("Deseja desconectar o profissional atual?")) {
-                            sessionStorage.removeItem("profissional_logado");
-                            window.location.reload();
-                          }
-                        }}
-                        variant="outline"
-                        className="w-full mt-1 border-orange-200 text-orange-700 hover:bg-orange-50 text-[11px]"
-                        size="sm"
-                      >
-                        <LogOut className="w-3 h-3 mr-1" />
-                        Desconectar Profissional
-                      </Button>
-                    )}
                   </div>
                 </SidebarGroupContent>
               </SidebarGroup>
             )}
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-red-200 p-2 bg-gray-50">
-            <div className="space-y-1">
-              <div className="text-[9px] leading-tight">
-                <p className="font-semibold text-gray-900">Dev: Walber A. Frazão Jr.</p>
-                <p className="text-gray-600">Enf. Cardio-Emergencista e Auditor</p>
-                <p className="text-gray-600">COREN 110.238</p>
-              </div>
-              <div className="text-[9px] text-gray-500 pt-1 border-t border-gray-200">
-                <p>© 2025 - Todos os direitos reservados</p>
-              </div>
+          <SidebarFooter className="border-t border-red-200 p-1 bg-gray-50">
+            <div className="text-center">
+              <p className="text-[7px] font-semibold text-gray-900">Dev: Walber A. Frazão Jr.</p>
+              <p className="text-[7px] text-gray-500">COREN 110.238</p>
+              <p className="text-[6px] text-gray-400">© 2025</p>
             </div>
           </SidebarFooter>
         </Sidebar>
