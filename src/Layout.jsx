@@ -303,7 +303,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <SidebarProvider style={{ "--sidebar-width": "8rem" }}>
+    <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "8rem" }}>
       <style>{`
         :root {
           --primary: 0 72% 51%;
