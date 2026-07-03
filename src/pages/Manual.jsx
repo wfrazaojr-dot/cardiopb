@@ -13,54 +13,41 @@ export default function Manual() {
 
         <div className="space-y-6">
 
-          {/* NOVO: Acesso ao Sistema */}
+          {/* Acesso ao Sistema */}
           <Card className="shadow-md border-l-4 border-l-blue-500">
             <CardHeader className="bg-blue-50 border-b">
               <CardTitle className="flex items-center gap-2">
                 <LogIn className="w-5 h-5 text-blue-600" />
-                🆕 Como Acessar o Sistema (Novo Fluxo)
+                Como Acessar o Sistema
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-4 text-sm text-gray-700">
                 <div className="p-3 bg-blue-50 rounded border border-blue-200">
-                  <p className="font-semibold text-blue-900 mb-1">O acesso ao sistema é feito exclusivamente via GOV.BR</p>
-                  <p className="text-blue-800">Não há mais login com e-mail e senha diretamente no sistema. A autenticação é centralizada pela plataforma federal de identidade digital.</p>
+                  <p className="font-semibold text-blue-900 mb-1">Acesso atual (temporário)</p>
+                  <p className="text-blue-800">O acesso é feito por autenticação de e-mail. Todo usuário autenticado tem acesso liberado diretamente — sem necessidade de cadastro complementar ou aprovação administrativa. Este é um modelo temporário enquanto a autenticação via GOV.BR não é implementada.</p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</div>
                     <div>
-                      <p className="font-semibold">Faça login com sua conta GOV.BR</p>
-                      <p className="text-gray-600">Utilize seu CPF e senha do GOV.BR para autenticar. Caso não possua conta, acesse gov.br/contagovbr para criar.</p>
+                      <p className="font-semibold">Faça login com seu e-mail</p>
+                      <p className="text-gray-600">Utilize o botão "Entrar" na tela inicial para autenticar com seu e-mail e senha.</p>
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</div>
+                    <div className="w-6 h-6 rounded-full bg-green-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</div>
                     <div>
-                      <p className="font-semibold">Complete seu cadastro no sistema</p>
-                      <p className="text-gray-600">No primeiro acesso, você será redirecionado para preencher seu perfil: nome completo, CPF, perfil de atuação (Unidade de Saúde, ASSCARDIO, CERH, etc.), função e registro profissional (CRM, COREN ou matrícula).</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-yellow-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</div>
-                    <div>
-                      <p className="font-semibold">Aguarde aprovação do Administrador Manager</p>
-                      <p className="text-gray-600">Após o cadastro, sua conta ficará com status <strong>PENDENTE</strong>. Um <strong>Administrador Manager</strong> deverá aprovar (ativar) seu acesso antes que você possa utilizar o sistema.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">4</div>
-                    <div>
-                      <p className="font-semibold">Acesso liberado!</p>
-                      <p className="text-gray-600">Com o status <strong>ATIVO</strong>, você será direcionado automaticamente para o painel correspondente ao seu perfil.</p>
+                      <p className="font-semibold">Acesso liberado</p>
+                      <p className="text-gray-600">Após a autenticação, você será direcionado automaticamente para o painel correspondente ao seu perfil (Unidades de Saúde → Painel Assistencial; CERH/ASSCARDIO/Transporte → Painel de Regulação).</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="p-3 bg-yellow-50 rounded border border-yellow-200 mt-2">
-                  <p className="font-semibold text-yellow-900">⚠️ Status de Acesso</p>
+                  <p className="font-semibold text-yellow-900">📌 Futura autenticação via GOV.BR</p>
+                  <p className="text-yellow-800 mt-1">Está em estudo a substituição do acesso por e-mail pela autenticação federal via GOV.BR (CPF + senha GOV.BR), com cadastro de perfil profissional e aprovação do Administrador Manager. Quando implementado, os status de acesso serão:</p>
                   <ul className="list-disc pl-5 mt-1 text-yellow-800 space-y-1">
                     <li><strong>PENDENTE:</strong> Cadastro realizado, aguardando aprovação do gestor</li>
                     <li><strong>ATIVO:</strong> Acesso liberado e funcionando normalmente</li>
@@ -187,7 +174,7 @@ export default function Manual() {
                     Responsável pela gestão de acessos e supervisão geral do sistema.
                   </p>
                   <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                    <li>Aprovação, inativação ou bloqueio de usuários em <strong>Gerenciar Acessos</strong></li>
+                    <li>Aprovação, inativação ou bloqueio de usuários em <strong>Controle de Acessos</strong></li>
                     <li>Visualização do Painel de Regulação e Indicadores</li>
                     <li>Acesso aos Logs de Auditoria</li>
                     <li>Monitor de Transportes</li>
@@ -394,11 +381,11 @@ export default function Manual() {
             <CardContent className="p-6">
               <div className="space-y-4 text-sm">
                 <div>
-                  <h4 className="font-semibold mb-2">🏠 Acesso Automático por Perfil</h4>
+                  <h4 className="font-semibold mb-2">🏠 Redirecionamento Automático por Perfil</h4>
                   <ul className="list-disc pl-5 text-gray-700">
                     <li>Após o login, o sistema redireciona automaticamente para o painel correto de acordo com o perfil do usuário</li>
-                    <li>Não é mais necessário selecionar equipe manualmente</li>
-                    <li>Usuários com acesso PENDENTE, INATIVO ou BLOQUEADO são direcionados para a tela de status</li>
+                    <li>Usuários de Unidade de Saúde e Administradores → Painel Assistencial (Histórico)</li>
+                    <li>Usuários de CERH, ASSCARDIO, Transporte e Hemodinâmica → Painel de Regulação (Dashboard)</li>
                   </ul>
                 </div>
 
@@ -663,11 +650,10 @@ export default function Manual() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold mb-2">🔐 Autenticação via GOV.BR e Controle de Acesso</h4>
+                  <h4 className="font-semibold mb-2">🔐 Autenticação e Controle de Acesso</h4>
                   <ul className="list-disc pl-5">
-                    <li>Login centralizado via GOV.BR (identidade federal)</li>
-                    <li>Cadastro de perfil profissional obrigatório no primeiro acesso</li>
-                    <li>Aprovação manual pelo Administrador Manager antes do acesso ser liberado</li>
+                    <li>Acesso atual por autenticação de e-mail (modelo temporário)</li>
+                    <li>Futura implementação de login via GOV.BR (identidade federal) — em estudo</li>
                     <li>Rastreabilidade completa com e-mail e nome vinculados a cada ação</li>
                     <li>Logs de auditoria registram todas as operações do sistema</li>
                   </ul>
@@ -686,9 +672,9 @@ export default function Manual() {
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-3 text-sm text-gray-700">
-                <p className="font-semibold">Menu lateral contém:</p>
+                <p className="font-semibold">Menu lateral contém (itens variam conforme o perfil do usuário):</p>
                 <ul className="list-disc pl-5">
-                  <li><strong>Acesso Automático:</strong> Redirecionamento automático ao perfil do usuário após login</li>
+                  <li><strong>Painel Inicial:</strong> Redirecionamento automático ao painel do perfil</li>
                   <li><strong>Painel Assistencial:</strong> Histórico de pacientes (Unidades de Saúde)</li>
                   <li><strong>Painel de Regulação:</strong> Dashboard de casos (CERH/ASSCARDIO/Transporte)</li>
                   <li><strong>Indicadores:</strong> Métricas e estatísticas (Administradores)</li>
@@ -698,8 +684,8 @@ export default function Manual() {
                   <li><strong>Monitor Transportes:</strong> Gestão de transportes em tempo real (Transporte)</li>
                   <li><strong>Formulário/Vaga:</strong> Solicitação de vaga SES</li>
                   <li><strong>Trombólise:</strong> Prescrição e registro de trombolíticos (Unidades de Saúde)</li>
-                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (exclusivo <strong>Desenvolvedor</strong>)</li>
-                  <li><strong>Gerenciar Acessos:</strong> Aprovação e gestão de usuários (Administrador Manager)</li>
+                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Desenvolvedor e Administradores)</li>
+                  <li><strong>Controle de Acessos:</strong> Aprovação e gestão de usuários (Administrador Manager)</li>
                   <li><strong>Administração:</strong> Gestão de profissionais, indicadores e registros completos de trombólise (Administradores)</li>
                 </ul>
                 

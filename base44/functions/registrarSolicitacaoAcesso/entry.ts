@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: emailAdmin,
           subject: "🔔 Nova Solicitação de Acesso — Coração Paraibano",
-          body: `Olá, ${admin.full_name || "Administrador"}!\n\nUma nova solicitação de acesso foi recebida:\n\nNome: ${nome_completo}\nE-mail: ${email}\nCPF: ${cpf || "não informado"}\nPerfil Solicitado: ${PERFIL_LABELS[perfil] || perfil}\nFunção: ${funcao}\n\nAcesse o sistema para aprovar ou rejeitar:\nhttps://coracaoparaibano.base44.app/GerenciarAcessos\n\nAtenciosamente,\nSistema Coração Paraibano`,
+          body: `Olá, ${admin.full_name || "Administrador"}!\n\nUma nova solicitação de acesso foi recebida:\n\nNome: ${nome_completo}\nE-mail: ${email}\nCPF: ${cpf || "não informado"}\nPerfil Solicitado: ${PERFIL_LABELS[perfil] || perfil}\nFunção: ${funcao}\n\nAcesse o sistema para aprovar ou rejeitar:\nhttps://coracaoparaibano.base44.app/ControleAcessos\n\nAtenciosamente,\nSistema Coração Paraibano`,
         });
       }
     }
