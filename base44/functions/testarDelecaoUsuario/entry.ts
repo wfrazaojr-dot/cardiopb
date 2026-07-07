@@ -9,6 +9,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (user.role !== 'admin' && user.email?.toLowerCase() !== 'wfrazaojr@gmail.com') {
+      return Response.json({ error: 'Forbidden — apenas administradores' }, { status: 403 });
+    }
+
     // Buscar um usuário com status_acesso = ATIVO para testar
     const usuarios = await base44.asServiceRole.entities.User.filter({ status_acesso: "ATIVO" }, "-created_date", 1);
     

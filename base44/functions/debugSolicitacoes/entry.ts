@@ -6,6 +6,10 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
+    if (user.role !== 'admin' && user.email?.toLowerCase() !== 'wfrazaojr@gmail.com') {
+      return Response.json({ error: 'Forbidden — apenas administradores' }, { status: 403 });
+    }
+
     const result1 = await base44.asServiceRole.entities.SolicitacaoAcesso.list('-created_date', 50);
     const result2 = await base44.asServiceRole.entities.SolicitacaoAcesso.filter({}, '-created_date', 50);
 
