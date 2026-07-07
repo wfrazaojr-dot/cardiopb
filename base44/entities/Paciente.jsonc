@@ -8,6 +8,10 @@
     "cidade": {
       "type": "string"
     },
+    "uf_origem": {
+      "type": "string",
+      "description": "UF de origem (para unidades de sa\u00fade de outros estados)"
+    },
     "macrorregiao": {
       "type": "string",
       "enum": [

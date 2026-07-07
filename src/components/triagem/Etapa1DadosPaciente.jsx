@@ -22,11 +22,14 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
 
   const [outraUnidade, setOutraUnidade] = useState("");
   const [usarOutraUnidade, setUsarOutraUnidade] = useState(false);
+  const [isOutroEstado, setIsOutroEstado] = useState(false);
+  const [ufOrigem, setUfOrigem] = useState("");
 
   const [dados, setDados] = useState({
     unidade_saude: "",
     cidade: "",
     macrorregiao: "",
+    uf_origem: "",
     nome_completo: "",
     data_nascimento: "",
     sexo: "",
@@ -47,15 +50,26 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
     const unidadeSalva = dadosPaciente.unidade_saude || "";
     const macro = dadosPaciente.macrorregiao || "";
     const cidade = dadosPaciente.cidade || "";
-    // Verifica se a unidade salva está na lista
-    const unidadesDisponiveis = (macro && cidade && UNIDADES_POR_MACRO_CIDADE[macro]?.[cidade]) || [];
-    const estaNaLista = unidadesDisponiveis.includes(unidadeSalva);
-    if (unidadeSalva && !estaNaLista && unidadesDisponiveis.length > 0) {
-      setUsarOutraUnidade(true);
-      setOutraUnidade(unidadeSalva);
-    } else {
+    const ufSalva = dadosPaciente.uf_origem || "";
+    // Verifica se é unidade de outro estado
+    if (ufSalva) {
+      setIsOutroEstado(true);
+      setUfOrigem(ufSalva);
       setUsarOutraUnidade(false);
       setOutraUnidade("");
+    } else {
+      setIsOutroEstado(false);
+      setUfOrigem("");
+      // Verifica se a unidade salva está na lista
+      const unidadesDisponiveis = (macro && cidade && UNIDADES_POR_MACRO_CIDADE[macro]?.[cidade]) || [];
+      const estaNaLista = unidadesDisponiveis.includes(unidadeSalva);
+      if (unidadeSalva && !estaNaLista && unidadesDisponiveis.length > 0) {
+        setUsarOutraUnidade(true);
+        setOutraUnidade(unidadeSalva);
+      } else {
+        setUsarOutraUnidade(false);
+        setOutraUnidade("");
+      }
     }
     setDados({
       unidade_saude: unidadeSalva,
@@ -109,6 +123,11 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    if (isOutroEstado && !ufOrigem.trim()) {
+      alert("Por favor, preencha a UF (Estado) da unidade externa");
+      return;
+    }
+
     if (!dados.unidade_saude || dados.unidade_saude.trim() === "") {
       alert("Por favor, preencha o nome da Unidade de Saúde");
       return;
@@ -150,6 +169,7 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
     onProxima({
       ...dados,
       cidade: dados.cidade,
+      uf_origem: isOutroEstado ? ufOrigem : "",
       idade: idadeCalculada,
       data_hora_chegada: dataChegada,
       data_hora_inicio_sintomas: dataHoraInicioSintomas,
@@ -195,9 +215,9 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
             <button
               key={macro}
               type="button"
-              onClick={() => { if (!modoLeitura) { setDados(prev => ({...prev, macrorregiao: macro, cidade: "", unidade_saude: ""})); setUsarOutraUnidade(false); setOutraUnidade(""); } }}
+              onClick={() => { if (!modoLeitura) { setIsOutroEstado(false); setUfOrigem(""); setDados(prev => ({...prev, macrorregiao: macro, cidade: "", unidade_saude: "", uf_origem: ""})); setUsarOutraUnidade(false); setOutraUnidade(""); } }}
               className={`flex-1 py-3 rounded-lg border-2 font-bold text-sm transition-colors ${
-                dados.macrorregiao === macro
+                dados.macrorregiao === macro && !isOutroEstado
                   ? "bg-teal-600 border-teal-600 text-white"
                   : "bg-white border-teal-300 text-teal-700 hover:bg-teal-50"
               } ${modoLeitura ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
@@ -205,114 +225,75 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
               {macro}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => { if (!modoLeitura) { setIsOutroEstado(true); setUfOrigem(""); setUsarOutraUnidade(false); setOutraUnidade(""); setDados(prev => ({...prev, macrorregiao: "Macro 1", cidade: "", unidade_saude: "", uf_origem: ""})); } }}
+            className={`flex-1 py-3 rounded-lg border-2 font-bold text-sm transition-colors ${
+              isOutroEstado
+                ? "bg-orange-600 border-orange-600 text-white"
+                : "bg-white border-orange-300 text-orange-700 hover:bg-orange-50"
+            } ${modoLeitura ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
+          >
+            OUTRO ESTADO
+          </button>
         </div>
 
+        {isOutroEstado ? (
+          <div className="space-y-4 bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
+            <div className="space-y-1">
+              <Label htmlFor="uf_origem" className="text-sm font-semibold text-orange-900">UF (Estado) *</Label>
+              <Input
+                id="uf_origem"
+                value={ufOrigem}
+                onChange={(e) => { const val = e.target.value.toUpperCase(); setUfOrigem(val); setDados(prev => ({...prev, uf_origem: val})); }}
+                placeholder="Ex: PE, RN, CE..."
+                maxLength={2}
+                className="text-base border-2 border-orange-400 uppercase"
+                disabled={modoLeitura}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="cidade_externa" className="text-sm font-semibold text-orange-900">Cidade da Unidade de Saúde *</Label>
+              <Input
+                id="cidade_externa"
+                value={dados.cidade}
+                onChange={(e) => setDados(prev => ({...prev, cidade: e.target.value}))}
+                placeholder="Digite o nome da cidade"
+                className="text-base border-2 border-orange-400"
+                disabled={modoLeitura}
+              />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-orange-700" />
+                <Label htmlFor="unidade_externa" className="text-sm font-semibold text-orange-900">
+                  Nome da Unidade de Saúde *
+                </Label>
+              </div>
+              <Input
+                id="unidade_externa"
+                value={dados.unidade_saude}
+                onChange={(e) => setDados(prev => ({...prev, unidade_saude: e.target.value}))}
+                placeholder="Digite o nome da unidade de saúde"
+                className="text-base border-2 border-orange-400"
+                disabled={modoLeitura}
+              />
+              <p className="text-xs text-orange-700 mt-1 font-medium">
+                ⚠️ Unidade de outro estado — será direcionada para a CERH Macro 1
+              </p>
+            </div>
+          </div>
+        ) : (
+        <>
         <div className="space-y-1">
           <Label htmlFor="cidade" className="text-sm font-semibold text-teal-900">Cidade da Unidade de Saúde *</Label>
-          {dados.macrorregiao && CIDADES_POR_MACRO[dados.macrorregiao] ? (
-            <select
-              id="cidade"
-              value={dados.cidade}
-              onChange={(e) => { setDados(prev => ({...prev, cidade: e.target.value, unidade_saude: ""})); setUsarOutraUnidade(false); setOutraUnidade(""); }}
-              className="flex h-10 w-full rounded-md border-2 border-teal-400 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              disabled={modoLeitura}
-            >
-              <option value="">Selecione a cidade</option>
-              {CIDADES_POR_MACRO[dados.macrorregiao].map(cidade => (
-                <option key={cidade} value={cidade}>{cidade}</option>
-              ))}
-            </select>
-          ) : (
-            <Input
-              id="cidade"
-              value={dados.cidade}
-              disabled
-              placeholder="Selecione primeiro a Macrorregião acima"
-              className="border-2 border-teal-200 bg-gray-50 text-gray-400"
-            />
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-teal-700" />
-            <Label htmlFor="unidade_saude" className="text-sm font-semibold text-teal-900">
-              Nome da Unidade de Saúde *
-            </Label>
-          </div>
-          {(() => {
-            const unidades = (dados.macrorregiao && dados.cidade && UNIDADES_POR_MACRO_CIDADE[dados.macrorregiao]?.[dados.cidade]) || [];
-            if (unidades.length === 0) {
-              return (
-                <Input
-                  id="unidade_saude"
-                  value={dados.unidade_saude}
-                  onChange={(e) => setDados(prev => ({...prev, unidade_saude: e.target.value}))}
-                  placeholder="Selecione primeiro a Macrorregião e a Cidade acima"
-                  className="text-base border-2 border-teal-400"
-                  disabled={modoLeitura || !dados.cidade}
-                />
-              );
-            }
-            return (
-              <div className="space-y-2">
-                {!usarOutraUnidade ? (
-                  <select
-                    id="unidade_saude"
-                    value={dados.unidade_saude}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === "__outra__") {
-                        setUsarOutraUnidade(true);
-                        setDados(prev => ({...prev, unidade_saude: ""}));
-                      } else {
-                        setDados(prev => ({...prev, unidade_saude: val}));
-                      }
-                    }}
-                    className="flex h-10 w-full rounded-md border-2 border-teal-400 bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    disabled={modoLeitura}
-                  >
-                    <option value="">Selecione a unidade de saúde</option>
-                    {unidades.map(u => (
-                      <option key={u} value={u}>{u}</option>
-                    ))}
-                    <option value="__outra__">Outra (não está na lista)</option>
-                  </select>
-                ) : (
-                  <div className="space-y-2">
-                    <Input
-                      id="unidade_saude_outra"
-                      value={outraUnidade}
-                      onChange={(e) => {
-                        setOutraUnidade(e.target.value);
-                        setDados(prev => ({...prev, unidade_saude: e.target.value}));
-                      }}
-                      placeholder="Digite o nome da unidade de saúde"
-                      className="text-base border-2 border-orange-400"
-                      disabled={modoLeitura}
-                    />
-                    {!modoLeitura && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUsarOutraUnidade(false);
-                          setOutraUnidade("");
-                          setDados(prev => ({...prev, unidade_saude: ""}));
-                        }}
-                        className="text-xs text-teal-700 underline hover:text-teal-900"
-                      >
-                        ← Voltar para a lista
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+...
           <p className="text-xs text-teal-700 mt-1 font-medium">
             ⚠️ Este nome aparecerá nos relatórios e documentos oficiais - campo obrigatório
           </p>
         </div>
+        </>
+        )}
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
