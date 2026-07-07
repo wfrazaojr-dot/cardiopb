@@ -963,5 +963,73 @@
   "required": [
     "nome_completo",
     "sexo"
-  ]
+  ],
+  "rls": {
+    "create": null,
+    "read": null,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "UNIDADE_SAUDE"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "CERH"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ASSCARDIO"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "TRANSPORTE"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "HEMODINAMICA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_CERH"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_CARDIOLOGIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_TRANSPORTE"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "DESENVOLVEDOR"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

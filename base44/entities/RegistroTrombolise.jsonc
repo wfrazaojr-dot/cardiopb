@@ -172,18 +172,11 @@
     "medico_prescritor_crm"
   ],
   "rls": {
-    "create": {},
+    "create": null,
     "read": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "data.unidade_saude": "{{user.data.unidade_saude}}"
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "update": {
       "$or": [
