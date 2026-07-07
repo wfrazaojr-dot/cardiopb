@@ -234,7 +234,7 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
                 : "bg-white border-orange-300 text-orange-700 hover:bg-orange-50"
             } ${modoLeitura ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
           >
-            OUTRO ESTADO
+            OUTRO
           </button>
         </div>
 
