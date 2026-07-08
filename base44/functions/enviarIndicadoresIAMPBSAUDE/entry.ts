@@ -168,6 +168,8 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         source: "CardioPB",
+        macro_region: "todas",
+        reference_period: referencePeriod,
         generated_at: new Date().toISOString(),
         generated_by: user.email,
         indicators: indicators
