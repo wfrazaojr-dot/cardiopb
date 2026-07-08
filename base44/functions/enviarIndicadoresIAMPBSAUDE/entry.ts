@@ -11,6 +11,23 @@ function diffMin(a, b) {
   return isNaN(d) ? null : d;
 }
 
+function parseAdminTime(horarioAdmin, referenceDate) {
+  if (!horarioAdmin) return null;
+  // Tenta parse como data completa
+  let d = new Date(horarioAdmin);
+  if (!isNaN(d.getTime())) return d;
+  // Tenta como string de hora HH:MM ou HH:MM:SS
+  const m = String(horarioAdmin).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+  if (m && referenceDate) {
+    const ref = new Date(referenceDate);
+    if (!isNaN(ref.getTime())) {
+      ref.setHours(parseInt(m[1]), parseInt(m[2]), parseInt(m[3] || 0), 0);
+      return ref;
+    }
+  }
+  return null;
+}
+
 function calcMetric(tempos, meta) {
   const valid = tempos.filter(t => t !== null && !isNaN(t));
   if (valid.length === 0) return { media: 0, min: 0, max: 0, dentro_meta: 0, fora_meta: 0, total: 0 };
@@ -53,6 +70,26 @@ Deno.serve(async (req) => {
     const pacientesPeriodo = todosPacientes.filter(p => {
       if (!p.data_hora_chegada) return false;
       const d = new Date(p.data_hora_chegada);
+      if (d.getFullYear() !== ano) return false;
+      if (mes !== 0 && d.getMonth() + 1 !== mes) return false;
+      return true;
+    });
+
+    // Buscar registros de trombólise (service role)
+    const todosTrombolise = await base44.asServiceRole.entities.RegistroTrombolise.list("-created_date", 5000);
+
+    // Mapa paciente_id -> macrorregiao
+    const macroByPacienteId = {};
+    todosPacientes.forEach(p => {
+      if (p.id) macroByPacienteId[p.id] = p.macrorregiao;
+    });
+
+    // Filtrar trombólise por período e indicação IAM (SCA)
+    const trombolisePeriodo = todosTrombolise.filter(r => {
+      if (r.indicacao !== "IAM") return false;
+      const dataRef = r.data_hora_chegada || r.created_date;
+      if (!dataRef) return false;
+      const d = new Date(dataRef);
       if (d.getFullYear() !== ano) return false;
       if (mes !== 0 && d.getMonth() + 1 !== mes) return false;
       return true;
@@ -117,6 +154,16 @@ Deno.serve(async (req) => {
         diffMin(p.hemodinamica?.data_hora_chegada, p.data_hora_inicio_triagem)
       ), 120);
 
+      // 8. Tempo para terapia fibrinolítica (≤30min) — porta-agulha em SCA
+      const tromboliseFiltered = macro === "todas"
+        ? trombolisePeriodo
+        : trombolisePeriodo.filter(r => macroByPacienteId[r.paciente_id] === macro);
+      const tempoFibrinolitica = calcMetric(tromboliseFiltered.map(r => {
+        const adminTime = parseAdminTime(r.horario_administracao, r.data_hora_prescricao || r.data_hora_chegada);
+        if (!adminTime || !r.data_hora_chegada) return null;
+        return diffMin(adminTime, r.data_hora_chegada);
+      }), 30);
+
       // Distribuição por classificação de risco
       const classificacaoRisco = {
         vermelha: lista.filter(p => p.triagem_enfermagem?.classificacao_risco === "vermelha").length,
@@ -146,7 +193,8 @@ Deno.serve(async (req) => {
           porta_telecardio: portaTelecardio,
           transporte: transporte,
           icp_hemodinamica: icpHemodinamica,
-          fmc_to_device: fmcToDevice
+          fmc_to_device: fmcToDevice,
+          tempo_para_terapia_fibrinolitica: tempoFibrinolitica
         },
         risk_distribution: classificacaoRisco,
         icp_distribution: icpPorTipo

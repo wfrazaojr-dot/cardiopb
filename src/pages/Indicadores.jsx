@@ -285,6 +285,59 @@ export default function Indicadores() {
 
 
 
+  // 8. Tempo para Terapia Fibrinolítica (≤30min) - Chegada na emergência até administração (IAM)
+  const tempoFibrinolitica = useMemo(() => {
+    const filtrados = registrosTrombolise.filter(r => {
+      if (r.indicacao !== "IAM") return false;
+      const dataRef = r.data_hora_chegada || r.created_date;
+      if (!dataRef) return false;
+      const d = new Date(dataRef);
+      if (mesSelecionado === 0) {
+        if (d.getFullYear() !== anoSelecionado) return false;
+      } else {
+        if (d.getFullYear() !== anoSelecionado || d.getMonth() + 1 !== mesSelecionado) return false;
+      }
+      if (macrorregiao !== "todas") {
+        const paciente = pacientes.find(p => p.id === r.paciente_id);
+        if (!paciente || paciente.macrorregiao !== macrorregiao) return false;
+      }
+      return true;
+    });
+
+    const tempos = filtrados.map(r => {
+      if (!r.data_hora_chegada) return null;
+      let adminTime = null;
+      if (r.horario_administracao) {
+        const parsed = new Date(r.horario_administracao);
+        if (!isNaN(parsed.getTime())) {
+          adminTime = parsed;
+        } else {
+          const m = String(r.horario_administracao).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+          if (m) {
+            const ref = new Date(r.data_hora_prescricao || r.data_hora_chegada);
+            if (!isNaN(ref.getTime())) {
+              ref.setHours(parseInt(m[1]), parseInt(m[2]), parseInt(m[3] || 0), 0);
+              adminTime = ref;
+            }
+          }
+        }
+      }
+      if (!adminTime) return null;
+      return differenceInMinutes(adminTime, new Date(r.data_hora_chegada));
+    }).filter(t => t !== null && !isNaN(t));
+
+    if (tempos.length === 0) return { media: 0, min: 0, max: 0, dentroMeta: 0, foraMeta: 0, total: 0 };
+
+    return {
+      media: Math.round(tempos.reduce((a, b) => a + b, 0) / tempos.length),
+      min: Math.min(...tempos),
+      max: Math.max(...tempos),
+      dentroMeta: tempos.filter(t => t <= 30).length,
+      foraMeta: tempos.filter(t => t > 30).length,
+      total: tempos.length
+    };
+  }, [registrosTrombolise, pacientes, anoSelecionado, mesSelecionado, macrorregiao]);
+
   // Distribuição por classificação de risco (campo triagem_enfermagem.classificacao_risco, lowercase)
   const distribuicaoRisco = useMemo(() => {
     const coresMap = [
@@ -637,6 +690,33 @@ export default function Indicadores() {
               </div>
             </CardContent>
           </Card>
+
+          <Card className="shadow-md border-l-4 border-l-teal-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <Pill className="w-4 h-4" />
+                Tempo p/ Terapia Fibrinolítica
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p className="text-3xl font-bold text-gray-900">{tempoFibrinolitica.media} min</p>
+                <p className="text-xs text-gray-600">
+                  Mín: {tempoFibrinolitica.min} | Máx: {tempoFibrinolitica.max}
+                </p>
+                <div className="flex items-center gap-2 text-xs">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>{tempoFibrinolitica.dentroMeta} dentro da meta (≤30min)</span>
+                </div>
+                {tempoFibrinolitica.foraMeta > 0 && (
+                  <div className="flex items-center gap-2 text-xs text-red-600">
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>{tempoFibrinolitica.foraMeta} fora da meta</span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Gráfico */}
@@ -776,6 +856,18 @@ export default function Indicadores() {
                       </span>
                     </td>
                   </tr>
+                  <tr className="border-b hover:bg-gray-50">
+                    <td className="p-3">Tempo p/ Terapia Fibrinolítica</td>
+                    <td className="text-center p-3 font-medium">{tempoFibrinolitica.media} min</td>
+                    <td className="text-center p-3">≤ 30 min</td>
+                    <td className="text-center p-3">
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                        tempoFibrinolitica.media <= 30 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {tempoFibrinolitica.media <= 30 ? '✓ Cumprida' : '✗ Não cumprida'}
+                      </span>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -865,6 +957,7 @@ export default function Indicadores() {
               <p><strong>• Transporte (≤90min):</strong> Início do transporte até chegada ao destino</p>
               <p><strong>• ICP-Hemodinâmica (≤15min):</strong> Chegada na hemodinâmica até início da ICP</p>
               <p><strong>• FMC-to-device (≤120min):</strong> Início da triagem até chegada na hemodinâmica</p>
+              <p><strong>• Tempo p/ Terapia Fibrinolítica (≤30min):</strong> Chegada na emergência até administração da trombólise (IAM)</p>
               <p><strong>• ICP Imediata:</strong> Estratégia 1 – ICP realizada imediatamente (IAMCEST ou alto risco imediato)</p>
               <p><strong>• Estratégia Invasiva Precoce:</strong> Estratégia 2 – Invasiva em até 24 horas (SCASESST alto risco)</p>
               <p><strong>• Invasiva Durante Internamento:</strong> Estratégia 3 – Invasiva em até 72 horas (SCASESST risco intermediário)</p>
