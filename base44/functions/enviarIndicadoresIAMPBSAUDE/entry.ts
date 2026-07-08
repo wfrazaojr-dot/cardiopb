@@ -153,8 +153,13 @@ Deno.serve(async (req) => {
       };
     });
 
+    // Garantir URL completa do endpoint
+    const fullUrl = INGEST_URL.endsWith('/functions/ingestCardioPBIndicators')
+      ? INGEST_URL
+      : `${INGEST_URL.replace(/\/$/, '')}/functions/ingestCardioPBIndicators`;
+
     // Enviar para o IAMPBSAUDE
-    const response = await fetch(INGEST_URL, {
+    const response = await fetch(fullUrl, {
       method: 'POST',
       headers: {
         'x-api-key': API_KEY,
@@ -175,7 +180,7 @@ Deno.serve(async (req) => {
     return Response.json({
       success: response.ok,
       status: response.status,
-      sent_to: INGEST_URL,
+      sent_to: fullUrl,
       reference_period: referencePeriod,
       macros_sent: indicators.length,
       total_cases_all: indicators.find(i => i.macro_region === "todas")?.total_cases || 0,
