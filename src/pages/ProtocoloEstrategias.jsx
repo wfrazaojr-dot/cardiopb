@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import BotaoExportarPDF from "@/components/common/BotaoExportarPDF";
 
 export default function ProtocoloEstrategias() {
   const [selectedCenario, setSelectedCenario] = useState("cenario1");
+  const contentRef = useRef(null);
 
   const cenario1 = {
     titulo: "Cenário 1: Estratégia 1 em Hospital Sem Hemodinâmica",
@@ -295,12 +297,16 @@ export default function ProtocoloEstrategias() {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Condutas Iniciais</h1>
-          <p className="text-gray-600">Protocolo CARDIOPB - Secretaria de Estado da Saúde</p>
-          <p className="text-sm text-gray-500 mt-2">Fonte: Protocolo CARDIOPB, 2026</p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Condutas Iniciais</h1>
+            <p className="text-gray-600">Protocolo CARDIOPB - Secretaria de Estado da Saúde</p>
+            <p className="text-sm text-gray-500 mt-2">Fonte: Protocolo CARDIOPB, 2026</p>
+          </div>
+          <BotaoExportarPDF contentRef={contentRef} nomeArquivo="Estrategias_Condutas_CARDIOPB" titulo="Baixar Estratégias" />
         </div>
 
+      <div ref={contentRef} className="bg-white p-4 md:p-6 rounded-lg">
         {/* Tabs de Cenários */}
         <Tabs value={selectedCenario} onValueChange={setSelectedCenario} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
@@ -354,6 +360,7 @@ export default function ProtocoloEstrategias() {
             Rua Roberto dos Santos Correia, S/N, Várzea Nova, Santa Rita – PB | CEP: 58.034-500
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

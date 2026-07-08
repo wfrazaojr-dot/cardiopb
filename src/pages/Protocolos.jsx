@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Activity, Truck, AlertTriangle } from "lucide-react";
+import BotaoExportarPDF from "@/components/common/BotaoExportarPDF";
 
 export default function Protocolos() {
+  const contentRef = useRef(null);
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Protocolo de Dor Torácica - CARDIOPB 2026</h1>
-          <p className="text-gray-600 font-semibold mb-2">Resumo Clínico</p>
-          <p className="text-sm text-gray-700 mb-3">
-            Documento institucional da Secretaria de Estado da Saúde, para orientação teórica e prática a Médicos e Equipe Multiprofissional na abordagem dos pacientes com início agudo de sintomas sugestivos de Síndrome Coronária Aguda (SCA).
-          </p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Protocolo de Dor Torácica - CARDIOPB 2026</h1>
+            <p className="text-gray-600 font-semibold mb-2">Resumo Clínico</p>
+            <p className="text-sm text-gray-700 mb-3">
+              Documento institucional da Secretaria de Estado da Saúde, para orientação teórica e prática a Médicos e Equipe Multiprofissional na abordagem dos pacientes com início agudo de sintomas sugestivos de Síndrome Coronária Aguda (SCA).
+            </p>
+          </div>
+          <BotaoExportarPDF contentRef={contentRef} nomeArquivo="Protocolo_Dor_Toracica_CARDIOPB" titulo="Baixar Protocolo" />
         </div>
 
-        <div className="space-y-6">
+        <div ref={contentRef} className="space-y-6 bg-white p-4 md:p-6 rounded-lg">
           {/* INDICAÇÃO */}
           <Card className="shadow-md">
             <CardHeader className="bg-red-50 border-b">

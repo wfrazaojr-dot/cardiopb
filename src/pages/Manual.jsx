@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Users, Stethoscope, FileText, Activity, AlertTriangle, Radio, Heart, Truck, Building2, LogIn, ShieldCheck, UserCheck, RotateCcw } from "lucide-react";
+import BotaoExportarPDF from "@/components/common/BotaoExportarPDF";
 
 export default function Manual() {
+  const contentRef = useRef(null);
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Manual do Sistema CARDIOPB</h1>
-          <p className="text-gray-600">Guia completo de uso do sistema integrado de regulação cardiológica</p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Manual do Sistema CARDIOPB</h1>
+            <p className="text-gray-600">Guia completo de uso do sistema integrado de regulação cardiológica</p>
+          </div>
+          <BotaoExportarPDF contentRef={contentRef} nomeArquivo="Manual_CARDIOPB" titulo="Baixar Manual" />
         </div>
 
-        <div className="space-y-6">
+      <div ref={contentRef} className="space-y-6 bg-white p-4 md:p-6 rounded-lg">
 
           {/* Acesso ao Sistema */}
           <Card className="shadow-md border-l-4 border-l-blue-500">
