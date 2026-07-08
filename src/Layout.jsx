@@ -311,7 +311,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "8rem" }}>
+    <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "12rem" }}>
       <style>{`
         :root {
           --primary: 0 72% 51%;
@@ -378,13 +378,13 @@ export default function Layout({ children, currentPageName }) {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
                         asChild 
-                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded mb-0.5 ${
+                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded mb-1.5 ${
                           location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
                         }`}
                       >
-                        <Link to={item.url} className="flex items-center gap-1.5 px-1.5 py-1 text-[10px]">
-                          <item.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                          <span className="truncate">{item.title}</span>
+                        <Link to={item.url} className="flex items-center gap-2 px-3 py-2 text-[12px] leading-tight">
+                          <item.icon className="w-4 h-4 flex-shrink-0" />
+                          <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
