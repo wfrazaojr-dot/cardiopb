@@ -432,7 +432,7 @@ export default function Manual() {
                   <h4 className="font-semibold mb-2">📊 Indicadores</h4>
                   <p className="text-gray-700 mb-2">Para Administradores e perfis com acesso gerencial:</p>
                   <ul className="list-disc pl-5 text-gray-700">
-                    <li>Indicadores de Qualidade: Porta-ECG, Porta Decisão, Regulação, Porta-Telecardio, Transporte, ICP-Hemodinâmica e FMC-to-device</li>
+                    <li>Indicadores de Qualidade: Porta-ECG, Porta Decisão, Regulação, Porta-Telecardio, Transporte, ICP-Hemodinâmica, FMC-to-device e Tempo Porta-Agulha</li>
                     <li>Filtros por <strong>mês</strong> (incluindo opção "Todos" para visão anual), <strong>ano</strong>, <strong>macrorregião</strong> e <strong>tipo de SCA</strong></li>
                     <li>Análise Epidemiológica com dados demográficos dos pacientes</li>
                     <li>Painel de Trombólise com estatísticas de uso por medicamento e indicação</li>
@@ -487,6 +487,10 @@ export default function Manual() {
                 <div className="p-3 bg-indigo-50 rounded border border-indigo-200">
                   <p className="font-semibold text-indigo-900">⏱️ FMC-to-device (≤120min)</p>
                   <p className="text-indigo-800">Início da triagem até chegada na hemodinâmica</p>
+                </div>
+                <div className="p-3 bg-teal-50 rounded border border-teal-200">
+                  <p className="font-semibold text-teal-900">⏱️ Tempo Porta-Agulha (≤30min)</p>
+                  <p className="text-teal-800">Chegada na emergência até administração da trombólise (IAM)</p>
                 </div>
                 <div className="p-3 bg-green-50 rounded border border-green-200">
                   <p className="font-semibold text-green-900">⏱️ Janela terapêutica ≤ 12 horas</p>

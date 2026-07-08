@@ -285,7 +285,7 @@ export default function Indicadores() {
 
 
 
-  // 8. Tempo para Terapia Fibrinolítica (≤30min) - Chegada na emergência até administração (IAM)
+  // 8. Tempo Porta-Agulha (≤30min) - Chegada na emergência até administração da trombólise (IAM)
   const tempoFibrinolitica = useMemo(() => {
     const filtrados = registrosTrombolise.filter(r => {
       if (r.indicacao !== "IAM") return false;
@@ -695,7 +695,7 @@ export default function Indicadores() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <Pill className="w-4 h-4" />
-                Tempo p/ Terapia Fibrinolítica
+                Tempo Porta-Agulha
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -857,7 +857,7 @@ export default function Indicadores() {
                     </td>
                   </tr>
                   <tr className="border-b hover:bg-gray-50">
-                    <td className="p-3">Tempo p/ Terapia Fibrinolítica</td>
+                    <td className="p-3">Tempo Porta-Agulha</td>
                     <td className="text-center p-3 font-medium">{tempoFibrinolitica.media} min</td>
                     <td className="text-center p-3">≤ 30 min</td>
                     <td className="text-center p-3">
@@ -957,7 +957,7 @@ export default function Indicadores() {
               <p><strong>• Transporte (≤90min):</strong> Início do transporte até chegada ao destino</p>
               <p><strong>• ICP-Hemodinâmica (≤15min):</strong> Chegada na hemodinâmica até início da ICP</p>
               <p><strong>• FMC-to-device (≤120min):</strong> Início da triagem até chegada na hemodinâmica</p>
-              <p><strong>• Tempo p/ Terapia Fibrinolítica (≤30min):</strong> Chegada na emergência até administração da trombólise (IAM)</p>
+              <p><strong>• Tempo Porta-Agulha (≤30min):</strong> Chegada na emergência até administração da trombólise (IAM)</p>
               <p><strong>• ICP Imediata:</strong> Estratégia 1 – ICP realizada imediatamente (IAMCEST ou alto risco imediato)</p>
               <p><strong>• Estratégia Invasiva Precoce:</strong> Estratégia 2 – Invasiva em até 24 horas (SCASESST alto risco)</p>
               <p><strong>• Invasiva Durante Internamento:</strong> Estratégia 3 – Invasiva em até 72 horas (SCASESST risco intermediário)</p>
