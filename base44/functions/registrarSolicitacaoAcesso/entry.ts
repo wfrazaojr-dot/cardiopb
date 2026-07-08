@@ -100,6 +100,7 @@ Deno.serve(async (req) => {
       TRANSPORTE: "Transporte", HEMODINAMICA: "Hemodinâmica",
       ADMINISTRADOR_MANAGER: "Adm. Manager", ADMINISTRADOR_CERH: "Adm. CERH",
       ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia", ADMINISTRADOR_TRANSPORTE: "Adm. Transporte",
+      ADMINISTRADOR_FARMACIA: "Adm. Farmácia",
     };
 
     // Buscar admins para notificar

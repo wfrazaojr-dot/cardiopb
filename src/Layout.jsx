@@ -167,6 +167,14 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
 
+    // ADMINISTRADOR_FARMACIA: acesso exclusivo ao Relatório Farmacêutico
+    if (user?.role === 'ADMINISTRADOR_FARMACIA') {
+      return [
+        ...menuBase,
+        { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },
+      ];
+    }
+
     // Novo sistema: verificar role ASSCARDIO diretamente
     if (user?.role === 'ASSCARDIO') {
       return [

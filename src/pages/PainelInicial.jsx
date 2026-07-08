@@ -25,7 +25,9 @@ export default function PainelInicial() {
       "CERH", "ASSCARDIO", "TRANSPORTE", "HEMODINAMICA",
     ];
 
-    if (equipesRegulacao.includes(perfil)) {
+    if (user.role === 'ADMINISTRADOR_FARMACIA') {
+      navigate(createPageUrl("RelatorioFarmacia"), { replace: true });
+    } else if (equipesRegulacao.includes(perfil)) {
       navigate(createPageUrl("Dashboard"), { replace: true });
     } else {
       // unidade de saúde, admin, dev e demais → Painel Assistencial

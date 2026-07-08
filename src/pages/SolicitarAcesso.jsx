@@ -17,6 +17,7 @@ const PERFIS_OPCOES = [
   { value: "ADMINISTRADOR_CERH", label: "Administrador CERH" },
   { value: "ADMINISTRADOR_CARDIOLOGIA", label: "Administrador Cardiologia" },
   { value: "ADMINISTRADOR_TRANSPORTE", label: "Administrador Transporte" },
+  { value: "ADMINISTRADOR_FARMACIA", label: "Administrador Farmácia" },
 ];
 
 const FUNCOES_POR_PERFIL = {
@@ -29,6 +30,7 @@ const FUNCOES_POR_PERFIL = {
   ADMINISTRADOR_CERH: ["medico", "enfermeiro"],
   ADMINISTRADOR_CARDIOLOGIA: ["medico"],
   ADMINISTRADOR_TRANSPORTE: ["operador_frota", "administrativo"],
+  ADMINISTRADOR_FARMACIA: ["farmaceutico"],
 };
 
 const FUNCAO_LABELS = {
@@ -37,12 +39,14 @@ const FUNCAO_LABELS = {
   assistente_social: "Assistente Social",
   operador_frota: "Operador de Frota",
   administrativo: "Administrativo",
+  farmaceutico: "Farmacêutico",
 };
 
 const REGISTRO_TIPO = {
   medico: "CRM",
   enfermeiro: "COREN",
   assistente_social: "CRESS",
+  farmaceutico: "CRF",
 };
 
 function formatCPF(value) {
@@ -72,7 +76,7 @@ export default function SolicitarAcesso() {
   // (Não há autenticação GOV.BR implementada)
 
   const funcoesDoPerfil = form.perfil ? FUNCOES_POR_PERFIL[form.perfil] || [] : [];
-  const precisaRegistro = ["medico", "enfermeiro", "assistente_social"].includes(form.funcao);
+  const precisaRegistro = ["medico", "enfermeiro", "assistente_social", "farmaceutico"].includes(form.funcao);
   const precisaMatricula = ["operador_frota", "administrativo"].includes(form.funcao);
 
   const handleSubmit = async (e) => {

@@ -122,6 +122,7 @@ export default function RelatorioFarmacia() {
 
   const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
   const isDevRole = user?.role === 'DESENVOLVEDOR' || user?.role === 'admin';
+  const isAdmFarmacia = user?.role === 'ADMINISTRADOR_FARMACIA';
 
   if (loadingUser) {
     return (
@@ -131,14 +132,14 @@ export default function RelatorioFarmacia() {
     );
   }
 
-  if (!isDev && !isDevRole) {
+  if (!isDev && !isDevRole && !isAdmFarmacia) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-8">
         <div className="bg-white rounded-xl shadow-lg p-10 max-w-md w-full text-center border-l-4 border-red-600">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Acesso Negado</h2>
           <p className="text-gray-600">Você não tem permissão para acessar o <strong>Relatório Farmacêutico</strong>.</p>
-          <p className="text-sm text-gray-400 mt-3">Esta área é restrita ao Desenvolvedor do sistema.</p>
+          <p className="text-sm text-gray-400 mt-3">Esta área é restrita ao Administrador Farmácia e ao Desenvolvedor do sistema.</p>
         </div>
       </div>
     );
