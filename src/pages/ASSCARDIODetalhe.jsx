@@ -19,6 +19,8 @@ import LinhaTempo from "@/components/regulacao/LinhaTempo";
 import MonitorTransporte from "@/components/regulacao/MonitorTransporte";
 import ChatInterno from "@/components/ChatInterno";
 import RecomendacoesTrombolise from "@/components/asscardio/RecomendacoesTrombolise";
+import ParecerRetificado from "@/components/regulacao/ParecerRetificado";
+import { useQuery as useUserQuery } from "@tanstack/react-query";
 import jsPDF from "jspdf";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -40,6 +42,11 @@ export default function ASSCARDIODetalhe() {
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const pacienteId = urlParams.get("id");
+
+  const { data: currentUser } = useUserQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
 
   const { data: paciente, isLoading } = useQuery({
     queryKey: ["paciente", pacienteId],
@@ -408,6 +415,9 @@ export default function ASSCARDIODetalhe() {
 
           {/* Coluna Direita */}
           <div className="lg:col-span-2 space-y-4">
+
+            {/* Parecer Retificado - Reavaliação de Conduta */}
+            <ParecerRetificado paciente={paciente} user={currentUser} equipe="asscardio" />
 
             {/* Relatório já gerado */}
             {paciente.relatorio_asscardio_url && (

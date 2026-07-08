@@ -805,7 +805,8 @@
         "Em Transporte",
         "Aguardando Hemodin\u00e2mica",
         "Em Procedimento",
-        "Conclu\u00eddo"
+        "Conclu\u00eddo",
+        "Reavalia\u00e7\u00e3o de Conduta"
       ],
       "default": "Em Triagem"
     },
@@ -834,6 +835,99 @@
           "data_hora": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      }
+    },
+    "solicitacao_reavaliacao": {
+      "type": "object",
+      "description": "Solicita\u00e7\u00e3o de reavalia\u00e7\u00e3o de conduta emitida pela unidade de sa\u00fade",
+      "properties": {
+        "data_hora": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "medico_nome": {
+          "type": "string"
+        },
+        "medico_email": {
+          "type": "string"
+        },
+        "unidade_saude": {
+          "type": "string"
+        },
+        "motivo": {
+          "type": "string",
+          "enum": [
+            "Sem garantia de transporte",
+            "Melhora do quadro de Instabilidade para transporte",
+            "Outro"
+          ]
+        },
+        "detalhes_outros": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pendente",
+            "atendida"
+          ],
+          "default": "pendente"
+        },
+        "status_anterior": {
+          "type": "string",
+          "description": "Status do paciente antes da solicita\u00e7\u00e3o, para restaura\u00e7\u00e3o ap\u00f3s retifica\u00e7\u00e3o"
+        },
+        "atendido_por": {
+          "type": "string"
+        },
+        "atendido_em": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "historico_pareceres": {
+      "type": "array",
+      "description": "Hist\u00f3rico de pareceres retificados emitidos pela CERH e ASSCARDIO",
+      "items": {
+        "type": "object",
+        "properties": {
+          "data_hora": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "usuario_nome": {
+            "type": "string"
+          },
+          "usuario_email": {
+            "type": "string"
+          },
+          "usuario_equipe": {
+            "type": "string",
+            "enum": [
+              "cerh",
+              "asscardio"
+            ]
+          },
+          "motivo_retificacao": {
+            "type": "string"
+          },
+          "detalhes_outros": {
+            "type": "string"
+          },
+          "parecer_anterior": {
+            "type": "string"
+          },
+          "parecer_novo": {
+            "type": "string"
+          },
+          "conduta_anterior": {
+            "type": "string"
+          },
+          "conduta_nova": {
+            "type": "string"
           }
         }
       }

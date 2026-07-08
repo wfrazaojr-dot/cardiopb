@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Search, ExternalLink, RefreshCw, Filter, Plus, Loader2, AlertTriangle } from "lucide-react";
 import ExportarDados from "@/components/common/ExportarDados";
+import SolicitarReavaliacao from "@/components/regulacao/SolicitarReavaliacao";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,7 +31,8 @@ const statusColors = {
   "Em Transporte": "bg-blue-100 text-blue-800 border-blue-300",
   "Aguardando Hemodinâmica": "bg-pink-100 text-pink-800 border-pink-300",
   "Em Procedimento": "bg-indigo-100 text-indigo-800 border-indigo-300",
-  "Concluído": "bg-green-100 text-green-800 border-green-300"
+  "Concluído": "bg-green-100 text-green-800 border-green-300",
+  "Reavaliação de Conduta": "bg-orange-100 text-orange-800 border-orange-400 border-2 animate-pulse"
 };
 
 export default function Historico() {
@@ -133,6 +135,7 @@ export default function Historico() {
     "Aguardando Hemodinâmica": pacientes.filter(p => p.status === "Aguardando Hemodinâmica").length,
     "Em Procedimento": pacientes.filter(p => p.status === "Em Procedimento").length,
     "Concluído": pacientes.filter(p => p.status === "Concluído").length,
+    "Reavaliação de Conduta": pacientes.filter(p => p.status === "Reavaliação de Conduta").length,
   };
 
   if (!user) {
@@ -293,6 +296,9 @@ export default function Historico() {
                    <SelectItem value="Concluído">
                      🟢 Concluído ({contadores["Concluído"]})
                    </SelectItem>
+                   <SelectItem value="Reavaliação de Conduta">
+                     🟠 Reavaliação de Conduta ({contadores["Reavaliação de Conduta"]})
+                   </SelectItem>
                  </SelectContent>
                </Select>
              </div>
@@ -443,6 +449,10 @@ export default function Historico() {
                       </div>
 
                       <div className="flex items-center gap-2 flex-wrap justify-end">
+                       {/* Solicitar Reavaliação - Unidade de Saúde */}
+                       {(user?.equipe === 'unidade_saude' || user?.role === 'admin') && (
+                         <SolicitarReavaliacao paciente={paciente} user={user} />
+                       )}
                         {paciente.alerta_formulario_vaga && !paciente.formulario_vaga?.data_envio && (
                           <Button
                             size="sm"

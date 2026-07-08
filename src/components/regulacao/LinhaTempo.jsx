@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Activity, Heart, Radio, Truck, FileText } from "lucide-react";
+import { Clock, Activity, Heart, Radio, Truck, FileText, FileEdit } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -118,6 +118,19 @@ export default function LinhaTempo({ paciente }) {
       dataHora: paciente.hemodinamica.data_hora_inicio_procedimento,
       icone: Activity,
       cor: "text-red-600"
+    });
+  }
+
+  // Pareceres retificados
+  if (paciente.historico_pareceres && paciente.historico_pareceres.length > 0) {
+    paciente.historico_pareceres.forEach((p) => {
+      eventos.push({
+        tipo: `Parecer Retificado (${p.usuario_equipe === "asscardio" ? "ASSCARDIO" : "CERH"})`,
+        dataHora: p.data_hora,
+        icone: FileEdit,
+        cor: "text-teal-600",
+        detalhe: `Por: ${p.usuario_nome} — Nova conduta: ${p.conduta_nova || p.parecer_novo || "—"}`
+      });
     });
   }
 

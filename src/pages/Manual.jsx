@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Users, Stethoscope, FileText, Activity, AlertTriangle, Radio, Heart, Truck, Building2, LogIn, ShieldCheck, UserCheck } from "lucide-react";
+import { BookOpen, Users, Stethoscope, FileText, Activity, AlertTriangle, Radio, Heart, Truck, Building2, LogIn, ShieldCheck, UserCheck, RotateCcw } from "lucide-react";
 
 export default function Manual() {
   return (
@@ -589,6 +589,73 @@ export default function Manual() {
             </CardContent>
           </Card>
 
+          {/* Parecer Retificado */}
+          <Card className="shadow-md border-l-4 border-l-orange-500">
+            <CardHeader className="bg-orange-50 border-b">
+              <CardTitle className="flex items-center gap-2">
+                <RotateCcw className="w-5 h-5 text-orange-600" />
+                Parecer Retificado e Reavaliação de Conduta
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4 text-sm text-gray-700">
+                <p>
+                  O <strong>Parecer Retificado</strong> é um mecanismo formal e técnico que permite a atualização
+                  da conduta clínica de um paciente quando há mudanças nas condições logísticas ou clínicas
+                  após a regulação inicial. <strong>Substitui a comunicação via chat</strong> entre o médico da
+                  unidade de saúde e o médico regulador, garantindo segurança jurídica e rastreabilidade total.
+                </p>
+
+                <div className="border-l-4 border-yellow-500 pl-4">
+                  <h4 className="font-semibold mb-2">🏥 Quando a Unidade de Saúde Solicita</h4>
+                  <p className="mb-2">O médico da unidade de saúde pode solicitar reavaliação nos seguintes motivos:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li><strong>Sem garantia de transporte</strong> — quando não há transporte disponível para a transferência</li>
+                    <li><strong>Melhora do quadro de Instabilidade para transporte</strong> — quando o transporte havia sido contraindicado pelo sistema, mas houve melhora clínica</li>
+                    <li><strong>Outro</strong> — motivo detalhado em texto livre</li>
+                  </ul>
+                  <p className="mt-2 text-orange-700 font-medium">
+                    Ao solicitar, o paciente entra em status "Reavaliação de Conduta" e a CERH e ASSCARDIO são notificadas por e-mail.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-indigo-500 pl-4">
+                  <h4 className="font-semibold mb-2">📡 Quem Emite o Parecer Retificado</h4>
+                  <p className="mb-2">Tanto o médico regulador da <strong>CERH</strong> quanto o médico cardiologista da <strong>ASSCARDIO</strong> podem emitir o Parecer Retificado:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>O sistema não exige validação conjunta — o último parecer emitido torna-se a conduta vigente</li>
+                    <li>Quando a CERH emite, a ASSCARDIO é notificada (e vice-versa)</li>
+                    <li>A Unidade de Saúde é sempre notificada por e-mail quando o parecer é emitido</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-teal-500 pl-4">
+                  <h4 className="font-semibold mb-2">📋 O Que o Parecer Retificado Registra</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li><strong>Parecer anterior:</strong> conduta ou parecer que estava vigente antes da retificação</li>
+                    <li><strong>Novo parecer:</strong> nova conduta técnica emitida</li>
+                    <li><strong>Motivo da retificação:</strong> vinculado à solicitação da unidade de saúde</li>
+                    <li><strong>Responsável:</strong> nome, e-mail e equipe (CERH ou ASSCARDIO) de quem emitiu</li>
+                    <li><strong>Data e hora:</strong> timestamp preciso da emissão</li>
+                  </ul>
+                  <p className="mt-2 text-teal-700 font-medium">
+                    O histórico de pareceres retificados fica permanentemente registrado no prontuário do paciente, acessível na Linha do Tempo e no painel de detalhes da CERH e ASSCARDIO.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-red-500 pl-4">
+                  <h4 className="font-semibold mb-2">⚠️ Importante</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>O Parecer Retificado <strong>não substitui</strong> o parecer original — ambos ficam registrados</li>
+                    <li>A conduta vigente é sempre a do <strong>último</strong> parecer retificado emitido</li>
+                    <li>Todas as retificações são registradas no <strong>Log de Auditoria</strong></li>
+                    <li>O status do paciente é restaurado para o status anterior após a emissão do parecer</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Chat Interno */}
           <Card className="shadow-md">
             <CardHeader className="bg-teal-50 border-b">
@@ -609,6 +676,11 @@ export default function Manual() {
                   <li>Todas as mensagens ficam registradas no prontuário do paciente</li>
                   <li>Identificação automática da equipe que enviou a mensagem</li>
                 </ul>
+                <div className="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
+                  <p className="text-xs text-orange-800 font-semibold">
+                    💡 Para alterações formais de conduta clínica, utilize o <strong>Parecer Retificado</strong> em vez do chat.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>

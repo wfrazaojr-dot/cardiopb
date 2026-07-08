@@ -7,7 +7,7 @@ import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Clock, Users, Activity, Eye, FileText, Search, X } from "lucide-react";
+import { AlertTriangle, Clock, Users, Activity, Eye, FileText, Search, X, RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { format, differenceInHours } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -115,6 +115,9 @@ export default function Dashboard() {
     p.status === "Aguardando Hemodinâmica"
   );
   const dentroDaJanela = pacientesRegulacao.filter(p => p.janelaTerapeutica?.dentroJanela);
+  const reavaliacaoPendente = pacientesRegulacao.filter(p =>
+    p.solicitacao_reavaliacao?.status === "pendente"
+  );
 
   // Aplicar filtro de status
   let pacientesFiltrados = pacientesRegulacao;
@@ -125,6 +128,7 @@ export default function Dashboard() {
   if (filtroSelecionado === "aguardando_cerh") pacientesFiltrados = aguardandoCERH;
   if (filtroSelecionado === "aguardando_transporte") pacientesFiltrados = aguardandoTransporte;
   if (filtroSelecionado === "aguardando_hemodinamica") pacientesFiltrados = aguardandoHemodinamica;
+  if (filtroSelecionado === "reavaliacao_pendente") pacientesFiltrados = reavaliacaoPendente;
   if (filtroSelecionado === "janela_terapeutica") pacientesFiltrados = dentroDaJanela;
 
   if (filtroMacro) {
@@ -297,6 +301,19 @@ export default function Dashboard() {
               <p className="text-xs text-gray-500 mt-1">Hemodinâmica pendente</p>
             </CardContent>
           </Card>
+
+          <Card 
+            className={`cursor-pointer transition-all ${filtroSelecionado === 'reavaliacao_pendente' ? 'ring-2 ring-orange-500' : ''} ${reavaliacaoPendente.length > 0 ? 'animate-pulse' : ''}`}
+            onClick={() => setFiltroSelecionado(filtroSelecionado === 'reavaliacao_pendente' ? 'todos' : 'reavaliacao_pendente')}
+          >
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Reavaliação Pendente</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">{reavaliacaoPendente.length}</div>
+              <p className="text-xs text-gray-500 mt-1">Parecer retificado</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Barra de Busca e Filtros */}
@@ -406,6 +423,12 @@ export default function Dashboard() {
                             <Badge className="bg-green-600">
                               <Clock className="w-3 h-3 mr-1" />
                               Janela ≤12h
+                            </Badge>
+                          )}
+                          {paciente.solicitacao_reavaliacao?.status === "pendente" && (
+                            <Badge className="bg-orange-500 text-white animate-pulse">
+                              <RotateCcw className="w-3 h-3 mr-1" />
+                              Reavaliação Solicitada
                             </Badge>
                           )}
                         </div>

@@ -16,6 +16,8 @@ import LinhaTempo from "@/components/regulacao/LinhaTempo";
 import MonitorTransporte from "@/components/regulacao/MonitorTransporte";
 import { Badge } from "@/components/ui/badge";
 import ChatInterno from "@/components/ChatInterno";
+import ParecerRetificado from "@/components/regulacao/ParecerRetificado";
+import { useQuery as useUserQuery } from "@tanstack/react-query";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { format } from "date-fns";
@@ -27,6 +29,11 @@ export default function CERHDetalhe() {
   const urlParams = new URLSearchParams(window.location.search);
   const pacienteId = urlParams.get('id');
   const relatorioRef = useRef(null);
+
+  const { data: currentUser } = useUserQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
 
   const [formData, setFormData] = useState({
     medico_regulador_nome: "",
@@ -430,6 +437,9 @@ export default function CERHDetalhe() {
                 </CardContent>
               </Card>
             )}
+
+            {/* Parecer Retificado - Reavaliação de Conduta */}
+            <ParecerRetificado paciente={paciente} user={currentUser} equipe="cerh" />
 
             {/* Parecer ASSCARDIO */}
             {paciente.assessoria_cardiologia && (
