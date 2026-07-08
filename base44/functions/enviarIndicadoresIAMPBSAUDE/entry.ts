@@ -158,11 +158,12 @@ Deno.serve(async (req) => {
       ? INGEST_URL
       : `${INGEST_URL.replace(/\/$/, '')}/functions/ingestCardioPBIndicators`;
 
-    // Enviar para o IAMPBSAUDE
+    // Enviar para o IAMPBSAUDE — tentar x-api-key e Authorization: Bearer
     const response = await fetch(fullUrl, {
       method: 'POST',
       headers: {
         'x-api-key': API_KEY,
+        'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
