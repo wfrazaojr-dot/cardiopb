@@ -121,7 +121,6 @@ export default function RelatorioFarmacia() {
   }, [registrosFiltrados]);
 
   const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
-  const isDevRole = user?.role === 'DESENVOLVEDOR' || user?.role === 'admin';
   const isAdmFarmacia = user?.role === 'ADMINISTRADOR_FARMACIA';
 
   if (loadingUser) {
@@ -132,7 +131,7 @@ export default function RelatorioFarmacia() {
     );
   }
 
-  if (!isDev && !isDevRole && !isAdmFarmacia) {
+  if (!isDev && !isAdmFarmacia) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-8">
         <div className="bg-white rounded-xl shadow-lg p-10 max-w-md w-full text-center border-l-4 border-red-600">

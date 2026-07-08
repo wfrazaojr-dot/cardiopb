@@ -98,11 +98,11 @@ export default function Layout({ children, currentPageName }) {
           url: createPageUrl("GestaoTrombolise"),
           icon: Pill,
         },
-        {
+        ...(isDev ? [{
           title: "Relatório Farmacêutico",
           url: createPageUrl("RelatorioFarmacia"),
           icon: FlaskConical,
-        },
+        }] : []),
         {
           title: "Logs de Auditoria",
           url: createPageUrl("LogsAuditoria"),
