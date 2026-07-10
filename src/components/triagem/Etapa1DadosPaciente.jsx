@@ -287,11 +287,68 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
         <>
         <div className="space-y-1">
           <Label htmlFor="cidade" className="text-sm font-semibold text-teal-900">Cidade da Unidade de Saúde *</Label>
-...
-          <p className="text-xs text-teal-700 mt-1 font-medium">
-            ⚠️ Este nome aparecerá nos relatórios e documentos oficiais - campo obrigatório
-          </p>
+          <select
+            id="cidade"
+            value={dados.cidade}
+            onChange={(e) => { setDados(prev => ({...prev, cidade: e.target.value, unidade_saude: ""})); setUsarOutraUnidade(false); setOutraUnidade(""); }}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            disabled={modoLeitura || !dados.macrorregiao}
+          >
+            <option value="">{dados.macrorregiao ? "Selecione a cidade" : "Selecione a macrorregião primeiro"}</option>
+            {(CIDADES_POR_MACRO[dados.macrorregiao] || []).map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
         </div>
+        {dados.cidade && (
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-teal-700" />
+              <Label htmlFor="unidade_saude" className="text-sm font-semibold text-teal-900">
+                Nome da Unidade de Saúde *
+              </Label>
+            </div>
+            {!usarOutraUnidade ? (
+              <select
+                id="unidade_saude"
+                value={dados.unidade_saude}
+                onChange={(e) => {
+                  if (e.target.value === "__outra__") {
+                    setUsarOutraUnidade(true);
+                    setOutraUnidade("");
+                    setDados(prev => ({...prev, unidade_saude: ""}));
+                  } else {
+                    setDados(prev => ({...prev, unidade_saude: e.target.value}));
+                  }
+                }}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                disabled={modoLeitura}
+              >
+                <option value="">Selecione a unidade</option>
+                {(UNIDADES_POR_MACRO_CIDADE[dados.macrorregiao]?.[dados.cidade] || []).map((u) => (
+                  <option key={u} value={u}>{u}</option>
+                ))}
+                <option value="__outra__">+ Outra unidade</option>
+              </select>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  value={outraUnidade}
+                  onChange={(e) => { setOutraUnidade(e.target.value); setDados(prev => ({...prev, unidade_saude: e.target.value})); }}
+                  placeholder="Digite o nome da unidade"
+                  className="text-base"
+                  disabled={modoLeitura}
+                />
+                <Button type="button" variant="outline" size="sm" onClick={() => { setUsarOutraUnidade(false); setOutraUnidade(""); setDados(prev => ({...prev, unidade_saude: ""})); }}>
+                  Voltar
+                </Button>
+              </div>
+            )}
+            <p className="text-xs text-teal-700 mt-1 font-medium">
+              ⚠️ Este nome aparecerá nos relatórios e documentos oficiais - campo obrigatório
+            </p>
+          </div>
+        )}
         </>
         )}
       </div>
