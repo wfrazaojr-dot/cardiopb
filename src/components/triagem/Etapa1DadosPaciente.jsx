@@ -7,6 +7,7 @@ import { format, differenceInMinutes } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CIDADES_POR_MACRO } from "@/components/data/cidadesParaiba";
 import { UNIDADES_POR_MACRO_CIDADE } from "@/components/data/unidadesSaude";
+import { UF_MUNICIPIOS, UFS } from "@/components/data/ufMunicipios";
 
 
 export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnterior, modoLeitura = false, permitirNavegacao = false }) {
@@ -242,26 +243,29 @@ export default function Etapa1DadosPaciente({ dadosPaciente, onProxima, onAnteri
           <div className="space-y-4 bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
             <div className="space-y-1">
               <Label htmlFor="uf_origem" className="text-sm font-semibold text-orange-900">UF (Estado) *</Label>
-              <Input
+              <select
                 id="uf_origem"
                 value={ufOrigem}
-                onChange={(e) => { const val = e.target.value.toUpperCase(); setUfOrigem(val); setDados(prev => ({...prev, uf_origem: val})); }}
-                placeholder="Ex: PE, RN, CE..."
-                maxLength={2}
-                className="text-base border-2 border-orange-400 uppercase"
+                onChange={(e) => { const val = e.target.value; setUfOrigem(val); setDados(prev => ({...prev, uf_origem: val, cidade: ""})); }}
+                className="flex h-10 w-full rounded-md border-2 border-orange-400 bg-background px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 disabled={modoLeitura}
-              />
+              >
+                <option value="">Selecione o Estado</option>
+                {UFS.map(uf => <option key={uf} value={uf}>{uf}</option>)}
+              </select>
             </div>
             <div className="space-y-1">
               <Label htmlFor="cidade_externa" className="text-sm font-semibold text-orange-900">Cidade da Unidade de Saúde *</Label>
-              <Input
+              <select
                 id="cidade_externa"
                 value={dados.cidade}
                 onChange={(e) => setDados(prev => ({...prev, cidade: e.target.value}))}
-                placeholder="Digite o nome da cidade"
-                className="text-base border-2 border-orange-400"
-                disabled={modoLeitura}
-              />
+                className="flex h-10 w-full rounded-md border-2 border-orange-400 bg-background px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={modoLeitura || !ufOrigem}
+              >
+                <option value="">{ufOrigem ? "Selecione a cidade" : "Selecione o Estado primeiro"}</option>
+                {(UF_MUNICIPIOS[ufOrigem] || []).map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
