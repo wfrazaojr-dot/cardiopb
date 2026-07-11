@@ -175,9 +175,9 @@ export default function InfoTransporte({ dados, onChange }) {
         <SimNao fieldName="marcapasso_transcutaneo" value={d.marcapasso_transcutaneo} onChange={(v) => onChange("marcapasso_transcutaneo", v)} />
       </div>
 
-      {/* Contraindicações ao Transporte */}
+      {/* Riscos para Contraindicações ao Transporte */}
       <div className="border-2 border-red-300 rounded-lg p-4 bg-red-50 space-y-3">
-        <h4 className="text-sm font-bold text-red-900">⚠️ Contraindicações ao Transporte (avalie cada item)</h4>
+        <h4 className="text-sm font-bold text-red-900">⚠️ Riscos para Contraindicações ao Transporte (avalie cada item)</h4>
         <div className="space-y-2">
           {CONTRAIND_FIELDS.map(({ key, label }) => (
             <div key={key} className="flex items-center justify-between gap-4">
@@ -186,19 +186,6 @@ export default function InfoTransporte({ dados, onChange }) {
             </div>
           ))}
         </div>
-        {CONTRAIND_FIELDS.some(({ key }) => d[key] === true) && (
-          <div className="mt-4 bg-red-100 border-2 border-red-600 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-6 h-6 text-red-700 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold text-red-900 text-sm mb-1">⚠️ Alerta! Transporte Contraindicado</p>
-                <p className="text-red-800 text-sm">
-                  Após o envio desta solicitação, estabilize o paciente e, em seguida, atualize este relatório e envie e-mail para Central de Regulação (CERH) da sua Macrorregião, atualizando e declarando a estabilização clínica para liberação da Vaga e transporte em USA com o novo relatório gerado em PDF.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
