@@ -245,8 +245,8 @@ export default function Etapa3_2_SCASESST_ComTroponina({ dadosPaciente, onProxim
       return;
     }
 
-    if (dados.heart_score.total === 0) {
-      alert("Complete o HEART Score");
+    if (dados.heart_score.historia_clinica === null || dados.heart_score.ecg === null || dados.heart_score.idade === null || dados.heart_score.troponina === null) {
+      alert("Complete todos os campos do HEART Score");
       return;
     }
 
