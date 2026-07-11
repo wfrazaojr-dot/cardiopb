@@ -484,7 +484,7 @@ export default function Historico() {
                             return (
                               <Button
                                 size="sm"
-                                onClick={() => navigate(`${createPageUrl('NovaTriagem')}?id=${paciente.id}`)}
+                                onClick={() => navigate(`${createPageUrl('NovaTriagem')}?id=${paciente.id}&retriagem=true`)}
                                 className="bg-red-700 hover:bg-red-800 text-white"
                               >
                                 <AlertTriangle className="w-4 h-4 mr-1" />
