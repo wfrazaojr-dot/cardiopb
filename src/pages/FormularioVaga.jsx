@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import SecaoResumoClinico from "@/components/formularioVaga/SecaoResumoClinico";
 
 export default function FormularioVaga() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const pacienteId = urlParams.get('id');
 
@@ -514,6 +515,8 @@ Enviado por: ${user?.full_name} (${user?.email}) em ${new Date().toLocaleString(
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pacientes'] });
+      queryClient.invalidateQueries({ queryKey: ['paciente', pacienteId] });
       alert(`✅ Formulário registrado no sistema com sucesso!\n\nPaciente: ${getNomePaciente()}\nDestinatário CERH: ${getEmailCERH()}\n\nO cliente de e-mail será aberto para você enviar o formulário manualmente com o PDF anexado.`);
       navigate(createPageUrl("Historico"));
     },
