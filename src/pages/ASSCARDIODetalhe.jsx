@@ -31,10 +31,12 @@ const arrayParaString = (arr) => {
   return arr.join(",");
 };
 
-// Converte string → array ao carregar do banco
-const stringParaArray = (str) => {
-  if (!str || typeof str !== "string") return [];
-  return str.split(",").filter(Boolean);
+// Converte string ou array → array ao carregar do banco
+const stringParaArray = (val) => {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.filter(Boolean);
+  if (typeof val === "string") return val.split(",").filter(Boolean);
+  return [];
 };
 
 export default function ASSCARDIODetalhe() {
