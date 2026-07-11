@@ -91,7 +91,12 @@ export default function SecaoDadosPessoais({ formData, setFormData, paciente, ca
         </div>
         <div>
           <Label>UF</Label>
-          <Input value={formData.uf_rg} onChange={(e) => setFormData({ ...formData, uf_rg: e.target.value })} maxLength={2} />
+          <Select value={formData.uf_rg || ""} onValueChange={(v) => setFormData({ ...formData, uf_rg: v })}>
+            <SelectTrigger><SelectValue placeholder="Selecione a UF" /></SelectTrigger>
+            <SelectContent>
+              {UFS.map(uf => <SelectItem key={uf} value={uf}>{uf}</SelectItem>)}
+            </SelectContent>
+          </Select>
         </div>
         <div>
           <Label>CPF nº</Label>
