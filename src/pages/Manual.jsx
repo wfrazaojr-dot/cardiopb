@@ -238,12 +238,14 @@ export default function Manual() {
                     </div>
                     <div>
                       <p className="font-semibold">Etapa 3: Avaliação Clínica</p>
+                      <p className="text-xs text-gray-500 mt-1 mb-1">Subdividida conforme o tipo de SCA selecionado na Etapa 2:</p>
                       <ul className="list-disc pl-5 mt-1">
-                        <li>Antecedentes clínicos</li>
-                        <li>Quadro atual e hipótese diagnóstica</li>
-                        <li>Cálculo do HEART Score (história, ECG, idade, fatores de risco, troponina)</li>
-                        <li>Prescrição de medicamentos</li>
-                        <li>Solicitação de exames</li>
+                        <li><strong>3.1 SCACESST</strong> (SCA COM Supra de ST): antecedentes, quadro atual, hipótese diagnóstica, prescrição medicamentosa, requisição de exames com resultados, informações de transporte</li>
+                        <li><strong>3.2 SCASESST com Troponina</strong> (SCA SEM Supra de ST COM Troponina): todos os campos da 3.1 + cálculo automático do HEART Score (história, ECG, idade, fatores de risco, troponina) com LSN do laboratório</li>
+                        <li><strong>3.3 SCASESST sem Troponina</strong> (SCA SEM Supra de ST SEM Troponina quantitativa): todos os campos da 3.1 + avaliação de risco qualitativa para ASSCARDIO (história clínica, ECG, idade, fatores de risco)</li>
+                        <li>Temporizadores em todas as sub-etapas: Tempo de Dor, Tempo ECG, Tempo Porta-Agulha (≤30min) e FMC-to-device (≤120min)</li>
+                        <li>Informações de Transporte: Glasgow, suporte ventilatório, drogas vasoativas, contraindicações</li>
+                        <li><strong>Retriagem:</strong> o botão "Retriagem" e "Atualizar Inf. Transporte" abrem a etapa em modo de edição; "Ver Detalhes" abre em modo somente leitura</li>
                       </ul>
                     </div>
                     <div>
@@ -404,7 +406,7 @@ export default function Manual() {
                     <li>Visualização de tempos de atendimento</li>
                     <li>🚨 Alerta visual "ENVIE FORMULÁRIO/VAGA" para pacientes regulados</li>
                     <li>Botão direto para acessar Formulário/Vaga</li>
-                    <li>Botão "Ver Detalhes" e "Retriagem"</li>
+                    <li>Botão "Ver Detalhes" (somente leitura), "Retriagem" (modo edição) e "Atualizar Inf. Transporte" (modo edição para pacientes com contraindicação de transporte)</li>
                   </ul>
                 </div>
 

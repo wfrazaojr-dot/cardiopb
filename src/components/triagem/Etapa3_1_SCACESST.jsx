@@ -469,7 +469,7 @@ export default function Etapa3_1_SCACESST({ dadosPaciente, onProxima, onAnterior
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button type="button" onClick={() => onProxima({ avaliacao_clinica: dados })} className="bg-blue-600 hover:bg-blue-700">
+          <Button type="button" onClick={() => onProxima({ avaliacao_clinica: dados }, true)} className="bg-blue-600 hover:bg-blue-700">
             Próxima Etapa
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>

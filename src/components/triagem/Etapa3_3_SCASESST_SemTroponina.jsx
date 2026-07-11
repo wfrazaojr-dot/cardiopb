@@ -163,8 +163,8 @@ export default function Etapa3_3_SCASESST_SemTroponina({ dadosPaciente, onProxim
 
       {/* Temporizadores Porta-Agulha e FMC-to-device */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <TempoPortaAgulhaEtapa3 dataHoraChegada={dadosPaciente.data_hora_chegada} />
-        <TempoPortaBalaoEtapa3 dataHoraChegada={dadosPaciente.data_hora_chegada} />
+        <TempoPortaAgulhaEtapa3 dataHoraInicioTriagem={dadosPaciente.data_hora_chegada} />
+        <TempoPortaBalaoEtapa3 dataHoraInicioTriagem={dadosPaciente.data_hora_chegada} />
       </div>
 
       {/* Alerta sobre uso de inibidor da fosfodiesterase */}
@@ -532,7 +532,7 @@ export default function Etapa3_3_SCASESST_SemTroponina({ dadosPaciente, onProxim
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button type="button" onClick={() => onProxima({ avaliacao_clinica: dados })} className="bg-blue-600 hover:bg-blue-700">
+          <Button type="button" onClick={() => onProxima({ avaliacao_clinica: dados }, true)} className="bg-blue-600 hover:bg-blue-700">
             Próxima Etapa
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
