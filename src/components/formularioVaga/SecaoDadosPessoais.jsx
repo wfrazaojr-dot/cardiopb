@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UF_MUNICIPIOS, UFS } from "@/components/data/ufMunicipios";
+import SecaoEndereco from "./SecaoEndereco";
 
 export default function SecaoDadosPessoais({ formData, setFormData, paciente, calcularIdade, formatarCPF, formatarTelefone }) {
   return (
@@ -106,10 +107,7 @@ export default function SecaoDadosPessoais({ formData, setFormData, paciente, ca
           <Label>CNS nº</Label>
           <Input value={formData.cns} onChange={(e) => setFormData({ ...formData, cns: e.target.value })} />
         </div>
-        <div className="md:col-span-2">
-          <Label>Endereço Completo</Label>
-          <Input value={formData.endereco} onChange={(e) => setFormData({ ...formData, endereco: e.target.value })} />
-        </div>
+        <SecaoEndereco formData={formData} setFormData={setFormData} />
         <div className="md:col-span-2">
           <Label>Telefone de Contato do Responsável</Label>
           <Input value={formData.telefone_responsavel} onChange={(e) => setFormData({ ...formData, telefone_responsavel: formatarTelefone(e.target.value) })} maxLength={14} placeholder="83 98877-3344" />
