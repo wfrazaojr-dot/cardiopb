@@ -191,14 +191,22 @@ export default function FormularioVaga() {
     if (files.length === 0) return;
     if (formData.documentos.length + files.length > 4) {
       toast.error("Você pode adicionar no máximo 4 arquivos!");
+      e.target.value = "";
       return;
     }
     setUploadingFiles(true);
-    const results = await Promise.all(files.map(file => base44.integrations.Core.UploadFile({ file })));
-    const docs = results.map((r, i) => ({ file_url: r.file_url, nome: files[i].name }));
-    setFormData(prev => ({ ...prev, documentos: [...prev.documentos, ...docs] }));
-    toast.success(`${files.length} arquivo(s) enviado(s) com sucesso!`);
-    setUploadingFiles(false);
+    try {
+      const results = await Promise.all(files.map(file => base44.integrations.Core.UploadFile({ file })));
+      const docs = results.map((r, i) => ({ file_url: r.file_url, nome: files[i].name }));
+      setFormData(prev => ({ ...prev, documentos: [...prev.documentos, ...docs] }));
+      toast.success(`${files.length} arquivo(s) enviado(s) com sucesso!`);
+    } catch (err) {
+      console.error("Erro no upload:", err);
+      toast.error("Erro ao enviar arquivo(s). Tente novamente.");
+    } finally {
+      setUploadingFiles(false);
+      e.target.value = "";
+    }
   };
 
   const visualizarDocumento = (file_url) => {
