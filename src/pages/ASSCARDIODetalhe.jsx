@@ -312,6 +312,57 @@ export default function ASSCARDIODetalhe() {
       estratArr.forEach((k) => ln(`  • ${estrategiasMap[k] || k}`));
     }
 
+    if (estratArr.includes("6")) {
+      divisor();
+      ln("RECOMENDAÇÕES PARA TROMBÓLISE", 12, true, [128, 0, 128]);
+      ln("Após a administração da terapia inicial, incluindo analgesia e anti-agregação plaquetária, identificar as contraindicações ao uso do trombolítico.");
+
+      ln("CONTRAINDICAÇÕES ABSOLUTAS:", 10, true, [180, 0, 0]);
+      [
+        "História de AVC hemorrágico prévio ou AVC isquêmico nos últimos seis meses; malformação arteriovenosa, dano ou neoplasia em sistema nervoso central;",
+        "Trauma de face ou cabeça nos últimos 30 dias;",
+        "Punção não compressível há menos de 24 horas (exemplos: biópsia renal ou hepática, punção liquórica);",
+        "Sangramento ativo; sangramento em trato gastrointestinal nos últimos 30 dias;",
+        "Suspeita de dissecção aguda de aorta.",
+      ].forEach((c) => ln(`  • ${c}`));
+
+      ln("CONTRAINDICAÇÕES RELATIVAS:", 10, true, [200, 100, 0]);
+      [
+        "PA > 180/110mmHg;",
+        "Uso prévio de anticoagulante;",
+        "Doença hepática avançada;",
+        "Úlcera péptica ativa;",
+        "Ressuscitação cardíaca prolongada;",
+        "Endocardite infecciosa;",
+        "Gravidez e primeira semana de puerpério;",
+        "Ataque isquêmico transitório nos últimos seis meses.",
+      ].forEach((c) => ln(`  • ${c}`));
+
+      ln("TERAPIA PERITROMBÓLISE", 10, true, [0, 0, 180]);
+      ln("1 - TERAPIA ANTICOAGULANTE — Enoxaparina Injetável:", 10, true);
+      ln("  • < 75 anos: 30mg EV em bolus; após 15 minutos, 1mg/kg SC 12/12 horas (máximo de 100mg/dose);");
+      ln("  • ≥ 75 anos: 0,75mg/kg SC 12/12 horas (máximo de 100mg/dose, omite-se a dose de ataque).");
+      ln("2 – FIBRINÓLISE", 10, true);
+      ln("2.1 – ALTEPLASE (Início dos sintomas há menos de seis horas):", 10, true);
+      ln("  • 15mg EV em bolus, seguidos de infusão de 0,75mg/kg (não excedendo 50mg) em 30 minutos e, por fim, mais 0,50mg/kg (não excedendo 35mg) nos próximos 60 minutos.");
+      ln("2.2 – ALTEPLASE (Início dos sintomas entre seis e 12 horas):", 10, true);
+      ln("  • 10mg EV em bolus, seguidos de infusão de 50mg em 60 minutos e, por fim, mais 35mg nos próximos 120 minutos. Naqueles com menos de 65kg, a dose total não deve exceder 1,5mg/kg.");
+      ln("3.1 – TENECTEPLASE (Ampola de 40mg até 80Kg):", 10, true);
+      ln("  • Até 60kg: 30mg;");
+      ln("  • 60kg a 70kg: 35mg;");
+      ln("  • 71kg a 80kg: 40mg.");
+      ln("  • Nos idosos com mais de 75 anos, faz-se somente metade da dose.");
+      ln("3.2 – TENECTEPLASE (Ampola de 50mg > 80Kg):", 10, true);
+      ln("  • 81kg a 90kg: 45mg;");
+      ln("  • 90kg: 50mg.");
+      ln("  • Nos idosos com mais de 75 anos, faz-se somente metade da dose.");
+
+      ln("CUIDADOS PERITROMBÓLISE", 10, true, [200, 150, 0]);
+      ln("O paciente deve permanecer sob monitorização hemodinâmica contínua, com verificação dos sinais vitais 15/15 min durante as primeiras duas horas; 30/30 min nas próximas quatro horas; e de 60/60 min por 18 horas.");
+      ln("Devem ser evitados procedimentos invasivos dentro de 24 horas, sobretudo dentro das primeiras seis horas após o término do trombolítico, tais como: cateterização venosa central ou punção arterial; sondagem vesical; sondagem nasoenteral ou nasogástrica.");
+      ln("Observar os critérios de reperfusão, verificados após 90 minutos do início do trombolítico (melhora súbita da dor, regressão superior a 50% do supradesnível de ST, pico precoce de marcadores de necrose e/ou arritmias de reperfusão).");
+    }
+
     if (md.parecer_cardiologista) {
       y += 2;
       ln("PARECER DO CARDIOLOGISTA:", 10, true);
