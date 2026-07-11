@@ -107,7 +107,7 @@ export default function FormularioVaga() {
 
   useEffect(() => {
     if (paciente) {
-      if (paciente.formulario_vaga?.data_envio) {
+      if (paciente.formulario_vaga) {
         const fv = paciente.formulario_vaga;
         setFormData(prev => ({
           ...prev,
@@ -142,6 +142,10 @@ export default function FormularioVaga() {
           medicacoes_descricao: fv.medicacoes_descricao || "",
           comorbidades: fv.comorbidades || [],
           comorbidades_outras: fv.comorbidades_outras || "",
+          solicita_leito: fv.solicita_leito || "",
+          macrorregiao: fv.macrorregiao || "",
+          cidade: fv.cidade || "",
+          uf_origem: fv.uf_origem || "",
           medico_solicitante: fv.medico_solicitante || "",
           crm_solicitante: fv.crm_solicitante || "",
           documentos: fv.documentos || [],
