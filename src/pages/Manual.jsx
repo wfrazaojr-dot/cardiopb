@@ -58,6 +58,7 @@ export default function Manual() {
                     <li><strong>ATIVO:</strong> Acesso liberado e funcionando normalmente</li>
                     <li><strong>INATIVO:</strong> Acesso suspenso temporariamente pelo gestor</li>
                     <li><strong>BLOQUEADO:</strong> Acesso bloqueado com justificativa pelo gestor</li>
+                    <li><strong>EXCLUÍDO:</strong> Usuário removido permanentemente do sistema pelo Administrador Master (ação restrita, irreversível — o histórico de ações do usuário é preservado para fins de auditoria)</li>
                   </ul>
                 </div>
               </div>
