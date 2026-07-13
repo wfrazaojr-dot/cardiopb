@@ -437,7 +437,7 @@ export default function Manual() {
 
                 <div>
                   <h4 className="font-semibold mb-2">📋 Painel Assistencial (Histórico)</h4>
-                  <p className="text-gray-700 mb-2">Para Unidades de Saúde e Administradores:</p>
+                  <p className="text-gray-700 mb-2">Para Unidades de Saúde e Administradores (TI Secretaria, Master, CERH e ASSCARDIO):</p>
                   <ul className="list-disc pl-5 text-gray-700">
                     <li>Lista de todos os pacientes cadastrados</li>
                     <li>Busca por nome do paciente</li>
@@ -464,7 +464,7 @@ export default function Manual() {
 
                 <div>
                   <h4 className="font-semibold mb-2">🚑 Monitor de Transportes</h4>
-                  <p className="text-gray-700 mb-2">Para equipe de Transporte e Administradores:</p>
+                  <p className="text-gray-700 mb-2">Para equipe de Transporte, TI Secretaria e Master:</p>
                   <ul className="list-disc pl-5 text-gray-700">
                     <li>Visualização em tempo real de todos os transportes</li>
                     <li>Status: Aguardando, Em Deslocamento, Concluído, Com Intercorrência</li>
@@ -476,7 +476,7 @@ export default function Manual() {
 
                 <div>
                   <h4 className="font-semibold mb-2">📊 Indicadores</h4>
-                  <p className="text-gray-700 mb-2">Para Administradores e perfis com acesso gerencial:</p>
+                  <p className="text-gray-700 mb-2">Para Administradores (TI Secretaria, Master, CERH, ASSCARDIO) e perfis com acesso gerencial:</p>
                   <ul className="list-disc pl-5 text-gray-700">
                     <li>Indicadores de Qualidade: Porta-ECG, Porta Decisão, Regulação, Porta-Telecardio, Transporte, ICP-Hemodinâmica, FMC-to-device e Tempo Porta-Agulha</li>
                     <li>Filtros por <strong>mês</strong> (incluindo opção "Todos" para visão anual), <strong>ano</strong>, <strong>macrorregião</strong> e <strong>tipo de SCA</strong></li>
@@ -806,8 +806,8 @@ export default function Manual() {
                   <li><strong>Monitor Transportes:</strong> Gestão de transportes em tempo real (Transporte)</li>
                   <li><strong>Formulário/Vaga:</strong> Solicitação de vaga SES</li>
                   <li><strong>Trombólise:</strong> Prescrição e registro de trombolíticos (Unidades de Saúde)</li>
-                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Desenvolvedor e Administradores)</li>
-                  <li><strong>Controle de Acessos:</strong> Aprovação e gestão de usuários (Administrador Manager)</li>
+                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Administrador TI da Secretaria e Desenvolvedor)</li>
+                  <li><strong>Controle de Acessos:</strong> Aprovação e gestão de usuários (Administrador TI da Secretaria e Master)</li>
                   <li><strong>Administração:</strong> Gestão de profissionais, indicadores e registros completos de trombólise (Administradores)</li>
                 </ul>
                 

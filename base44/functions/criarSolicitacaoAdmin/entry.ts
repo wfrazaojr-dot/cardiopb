@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const isDev = user.email?.toLowerCase() === 'wfrazaojr@gmail.com';
-    const rolesPermitidos = ['admin', 'ADMINISTRADOR_MANAGER', 'DESENVOLVEDOR'];
+    const rolesPermitidos = ['admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MANAGER', 'DESENVOLVEDOR'];
     if (!isDev && !rolesPermitidos.includes(user.role)) {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }

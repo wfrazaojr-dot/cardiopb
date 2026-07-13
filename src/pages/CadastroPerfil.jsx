@@ -14,10 +14,10 @@ const PERFIS_OPCOES = [
   { value: "ASSCARDIO", label: "ASSCARDIO - Assessoria Cardiológica" },
   { value: "TRANSPORTE", label: "Transporte" },
   { value: "HEMODINAMICA", label: "Hemodinâmica" },
-  { value: "ADMINISTRADOR_MANAGER", label: "Administrador Manager" },
+  { value: "ADMIN_TI_SECRETARIA", label: "Administrador TI da Secretaria de Saúde" },
+  { value: "ADMINISTRADOR_MASTER", label: "Administrador Master" },
   { value: "ADMINISTRADOR_CERH", label: "Administrador CERH" },
-  { value: "ADMINISTRADOR_CARDIOLOGIA", label: "Administrador Cardiologia" },
-  { value: "ADMINISTRADOR_TRANSPORTE", label: "Administrador Transporte" },
+  { value: "ADMINISTRADOR_ASSCARDIO", label: "Administrador ASSCARDIO" },
 ];
 
 const FUNCOES_POR_PERFIL = {
@@ -26,10 +26,10 @@ const FUNCOES_POR_PERFIL = {
   ASSCARDIO: ["medico", "enfermeiro"],
   TRANSPORTE: ["operador_frota", "enfermeiro", "medico"],
   HEMODINAMICA: ["medico", "enfermeiro"],
-  ADMINISTRADOR_MANAGER: ["administrativo"],
+  ADMIN_TI_SECRETARIA: ["administrativo"],
+  ADMINISTRADOR_MASTER: ["administrativo"],
   ADMINISTRADOR_CERH: ["medico", "enfermeiro"],
-  ADMINISTRADOR_CARDIOLOGIA: ["medico"],
-  ADMINISTRADOR_TRANSPORTE: ["operador_frota", "administrativo"],
+  ADMINISTRADOR_ASSCARDIO: ["medico"],
 };
 
 const FUNCAO_LABELS = {
@@ -52,10 +52,10 @@ const EQUIPE_MAP = {
   ASSCARDIO: "asscardio",
   TRANSPORTE: "transporte",
   HEMODINAMICA: "hemodinamica",
-  ADMINISTRADOR_MANAGER: "admin",
+  ADMIN_TI_SECRETARIA: "admin",
+  ADMINISTRADOR_MASTER: "admin",
   ADMINISTRADOR_CERH: "cerh",
-  ADMINISTRADOR_CARDIOLOGIA: "asscardio",
-  ADMINISTRADOR_TRANSPORTE: "transporte",
+  ADMINISTRADOR_ASSCARDIO: "asscardio",
 };
 
 function formatCPF(value) {

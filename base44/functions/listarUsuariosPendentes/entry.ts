@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const ROLES_PERMITIDOS = ['admin', 'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_CERH', 'ADMINISTRADOR_CARDIOLOGIA', 'ADMINISTRADOR_TRANSPORTE', 'DESENVOLVEDOR'];
+    const ROLES_PERMITIDOS = ['admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_MASTER', 'ADMINISTRADOR_CERH', 'ADMINISTRADOR_ASSCARDIO', 'ADMINISTRADOR_CARDIOLOGIA', 'ADMINISTRADOR_TRANSPORTE', 'DESENVOLVEDOR'];
     const isDev = user.email?.toLowerCase() === 'wfrazaojr@gmail.com';
 
     if (!isDev && !ROLES_PERMITIDOS.includes(user.role)) {
@@ -25,8 +25,11 @@ Deno.serve(async (req) => {
     // Fusionar SolicitacaoAcesso com User (priorizando SEMPRE SolicitacaoAcesso)
     const EQUIPE_MAP = {
       UNIDADE_SAUDE: "unidade_saude", CERH: "cerh", ASSCARDIO: "asscardio",
-      TRANSPORTE: "transporte", HEMODINAMICA: "hemodinamica", ADMINISTRADOR_MANAGER: "admin",
-      ADMINISTRADOR_CERH: "cerh", ADMINISTRADOR_CARDIOLOGIA: "asscardio", ADMINISTRADOR_TRANSPORTE: "transporte"
+      TRANSPORTE: "transporte", HEMODINAMICA: "hemodinamica",
+      ADMIN_TI_SECRETARIA: "admin", ADMINISTRADOR_MASTER: "admin",
+      ADMINISTRADOR_CERH: "cerh", ADMINISTRADOR_ASSCARDIO: "asscardio",
+      ADMINISTRADOR_MANAGER: "admin", ADMINISTRADOR_CARDIOLOGIA: "asscardio",
+      ADMINISTRADOR_TRANSPORTE: "transporte"
     };
 
     // 1️⃣ Usuários que têm SolicitacaoAcesso (prioritário)

@@ -20,8 +20,10 @@ import jsPDF from "jspdf";
 const DEV_EMAIL = "wfrazaojr@gmail.com";
 
 const ROLES_COM_ACESSO = [
-  "admin", "ADMINISTRADOR_MANAGER", "ADMINISTRADOR_CERH",
-  "ADMINISTRADOR_CARDIOLOGIA", "ADMINISTRADOR_TRANSPORTE", "DESENVOLVEDOR"
+  "admin", "ADMIN_TI_SECRETARIA", "ADMINISTRADOR_MANAGER",
+  "ADMINISTRADOR_MASTER", "ADMINISTRADOR_CERH",
+  "ADMINISTRADOR_ASSCARDIO", "ADMINISTRADOR_CARDIOLOGIA",
+  "ADMINISTRADOR_TRANSPORTE", "DESENVOLVEDOR"
 ];
 
 const STATUS_CONFIG = {
@@ -37,10 +39,14 @@ const PERFIL_LABELS = {
   ASSCARDIO:                 "ASSCARDIO",
   TRANSPORTE:                "Transporte",
   HEMODINAMICA:              "Hemodinâmica",
-  ADMINISTRADOR_MANAGER:     "Adm. Manager",
+  ADMIN_TI_SECRETARIA:       "Adm. TI Secretaria",
+  ADMINISTRADOR_MANAGER:     "Adm. Manager (legado)",
+  ADMINISTRADOR_MASTER:      "Adm. Master",
   ADMINISTRADOR_CERH:        "Adm. CERH",
-  ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia",
-  ADMINISTRADOR_TRANSPORTE:  "Adm. Transporte",
+  ADMINISTRADOR_ASSCARDIO:   "Adm. ASSCARDIO",
+  ADMINISTRADOR_CARDIOLOGIA:"Adm. Cardiologia (legado)",
+  ADMINISTRADOR_TRANSPORTE:  "Adm. Transporte (legado)",
+  ADMINISTRADOR_FARMACIA:    "Adm. Farmácia",
 };
 
 const FUNCAO_LABELS = {
@@ -93,7 +99,7 @@ export default function ControleAcessos() {
 
   const podeGerenciar = (u) => {
     if (isDev) return true;
-    if (u.role === "ADMINISTRADOR_MANAGER") return false;
+    if (u.role === "ADMIN_TI_SECRETARIA" || u.role === "admin") return false;
     return isManager;
   };
 

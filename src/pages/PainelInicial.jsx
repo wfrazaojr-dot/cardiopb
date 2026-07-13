@@ -25,8 +25,16 @@ export default function PainelInicial() {
       "CERH", "ASSCARDIO", "TRANSPORTE", "HEMODINAMICA",
     ];
 
+    const rolesAdminRedirecionar = [
+      'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MASTER', 'ADMINISTRADOR_CERH',
+      'ADMINISTRADOR_ASSCARDIO', 'ADMINISTRADOR_FARMACIA',
+      'admin', 'DESENVOLVEDOR', 'ADMINISTRADOR_MANAGER',
+    ];
+
     if (user.role === 'ADMINISTRADOR_FARMACIA') {
       navigate(createPageUrl("RelatorioFarmacia"), { replace: true });
+    } else if (rolesAdminRedirecionar.includes(user.role) || user.email?.toLowerCase() === 'wfrazaojr@gmail.com') {
+      navigate(createPageUrl("Dashboard"), { replace: true });
     } else if (equipesRegulacao.includes(perfil)) {
       navigate(createPageUrl("Dashboard"), { replace: true });
     } else {

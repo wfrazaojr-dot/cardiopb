@@ -94,15 +94,18 @@ Deno.serve(async (req) => {
     const PERFIL_LABELS = {
       UNIDADE_SAUDE: "Unidade de Saúde", CERH: "CERH", ASSCARDIO: "ASSCARDIO",
       TRANSPORTE: "Transporte", HEMODINAMICA: "Hemodinâmica",
-      ADMINISTRADOR_MANAGER: "Adm. Manager", ADMINISTRADOR_CERH: "Adm. CERH",
-      ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia", ADMINISTRADOR_TRANSPORTE: "Adm. Transporte",
+      ADMIN_TI_SECRETARIA: "Adm. TI Secretaria", ADMINISTRADOR_MASTER: "Adm. Master",
+      ADMINISTRADOR_CERH: "Adm. CERH", ADMINISTRADOR_ASSCARDIO: "Adm. ASSCARDIO",
       ADMINISTRADOR_FARMACIA: "Adm. Farmácia",
+      ADMINISTRADOR_MANAGER: "Adm. Manager (legado)", ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia (legado)",
+      ADMINISTRADOR_TRANSPORTE: "Adm. Transporte (legado)",
     };
 
     // Buscar admins para notificar
     const admins = await base44.asServiceRole.entities.User.filter({ status_acesso: "ATIVO" });
     const adminsParaNotificar = admins.filter(u =>
-      u.role === "ADMINISTRADOR_MANAGER" || u.role === "admin" || u.email?.toLowerCase() === "wfrazaojr@gmail.com"
+      u.role === "ADMIN_TI_SECRETARIA" || u.role === "ADMINISTRADOR_MANAGER" ||
+      u.role === "admin" || u.email?.toLowerCase() === "wfrazaojr@gmail.com"
     );
 
     for (const admin of adminsParaNotificar) {
