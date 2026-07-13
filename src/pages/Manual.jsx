@@ -203,13 +203,20 @@ export default function Manual() {
                 <div className="border-l-4 border-indigo-500 pl-4">
                   <h4 className="font-semibold mb-2">🔑 Administrador Master</h4>
                   <p className="text-gray-700 mb-2">
-                    Acesso a todas as páginas e painéis de navegação, exceto Relatório Farmacêutico.
+                    Acesso a todas as páginas e painéis de navegação, exceto Relatório Farmacêutico. Possui atribuições ampliadas de governança, controle e melhoria contínua do sistema.
                   </p>
                   <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                    <li>Painel Assistencial, Painel de Regulação e Indicadores</li>
-                    <li>Monitor de Transportes, Trombólise e Administração</li>
-                    <li>Controle de Acessos e Logs de Auditoria</li>
-                    <li>Protocolos, Estratégias e Condutas, Manual</li>
+                    <li><strong>Módulos de Navegação:</strong> Painel Assistencial, Painel de Regulação, Indicadores, Monitor de Transportes, Trombólise, Administração, Controle de Acessos, Logs de Auditoria, Protocolos, Estratégias e Condutas, Manual</li>
+                    <li><strong>Gestão de Protocolos e Estratégias:</strong> cadastro e atualização de versões de protocolos de atendimento e diretrizes clínicas (ex: atualizações da SBC), mantendo o sistema alinhado às evidências vigentes</li>
+                    <li><strong>Gestão Estruturada de Saúde:</strong> cadastro e manutenção da lista oficial de Unidades de Saúde (nomes, macrorregiões, endereços), garantindo dados limpos e atualizados nos formulários</li>
+                    <li><strong>Cadastro de Equipes e Especialistas:</strong> configuração de novos perfis de acesso (reguladores CERH, consultores ASSCARDIO, equipes de hemodinâmica) com permissões específicas, sem depender de TI</li>
+                    <li><strong>Configuração de Metas e KPIs:</strong> definição e ajuste dos tempos-alvo de qualidade (ex: Porta-ECG, Porta Decisão, Regulação, Transporte, FMC-to-device, Porta-Agulha), permitindo adaptar o sistema a mudanças na política de saúde</li>
+                    <li><strong>Gerenciador de Alertas Críticos:</strong> cadastro de novos gatilhos de notificação automática (ex: alertas personalizados por macrorregião ou tempo excedido)</li>
+                    <li><strong>Modelos de Parecer e Relatórios:</strong> gestão de templates de relatórios e estruturas de PDFs gerados pelo sistema, garantindo padronização institucional</li>
+                    <li><strong>Gestão de Documentos Normativos:</strong> repositório de portarias, fluxogramas e documentos institucionais com controle de versão, acessível aos demais perfis</li>
+                    <li><strong>Configuração de Acessos Dinâmicos (RBAC):</strong> atribuição granular de permissões por módulo, permitindo criar perfis de acesso customizados sob demanda</li>
+                    <li>Controle de Acessos: aprova, bloqueia ou exclui usuários (exceto Administrador TI da Secretaria)</li>
+                    <li>Logs de Auditoria: visualização completa de todas as ações do sistema</li>
                     <li><strong>Exceção:</strong> sem acesso ao Relatório Farmacêutico</li>
                   </ul>
                 </div>
