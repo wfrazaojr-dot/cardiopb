@@ -9,6 +9,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (user.role !== 'admin' && user.role !== 'DESENVOLVEDOR') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     // Emails de teste a deletar
     const emailsTeste = [
       "teste.maria@gov.br",

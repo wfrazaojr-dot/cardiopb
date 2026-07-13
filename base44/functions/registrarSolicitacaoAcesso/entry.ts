@@ -63,35 +63,31 @@ Deno.serve(async (req) => {
       console.error(`[AUDITORIA] Falha ao registrar log: ${auditError.message}`);
     }
 
-    // 2. ✅ GARANTIA CRÍTICA: SINCRONIZAR com User com EXATAMENTE o nome_completo do formulário
-    // Nunca extrair nome do email. O nome que importa é nome_completo digitado pelo usuário.
+    // 2. ✅ GARANTIA CRÍTICA: SINCRONIZAR com User — apenas se o solicitante autenticado for dono do e-mail
     try {
-      const userFiltered = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
-      if (userFiltered && userFiltered.length > 0) {
-        const existingUser = userFiltered[0];
-        
-        // Log para auditoria (remover em produção se necessário)
-        console.log(`[SALVAMENTO] Atualizando User ${existingUser.id} com nome: "${nome_completo}" (email: ${email})`);
-        
-        // ⚠️ POLÍTICA ABSOLUTA: full_name = EXATAMENTE nome_completo do formulário
-        await base44.asServiceRole.entities.User.update(existingUser.id, {
-          full_name: nome_completo.trim(), // NUNCA extrair do email
-          cpf: cpf?.trim() || null,
-          telefone: telefone?.trim() || null,
-          perfil: perfil,
-          funcao: funcao,
-          equipe: equipe || "unidade_saude",
-          unidade_saude: unidade_saude?.trim() || null,
-          registro_profissional_tipo: registro_profissional_tipo || null,
-          registro_profissional_numero: registro_profissional_numero?.trim() || null,
-          matricula: matricula?.trim() || null,
-          status_acesso: "PENDENTE",
-          cadastro_completo: true,
-        });
+      const currentUser = await base44.auth.me();
+      if (currentUser && currentUser.email?.toLowerCase() === email.toLowerCase()) {
+        const userFiltered = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
+        if (userFiltered && userFiltered.length > 0) {
+          const existingUser = userFiltered[0];
+          await base44.asServiceRole.entities.User.update(existingUser.id, {
+            full_name: nome_completo.trim(),
+            cpf: cpf?.trim() || null,
+            telefone: telefone?.trim() || null,
+            perfil: perfil,
+            funcao: funcao,
+            equipe: equipe || "unidade_saude",
+            unidade_saude: unidade_saude?.trim() || null,
+            registro_profissional_tipo: registro_profissional_tipo || null,
+            registro_profissional_numero: registro_profissional_numero?.trim() || null,
+            matricula: matricula?.trim() || null,
+            status_acesso: "PENDENTE",
+            cadastro_completo: true,
+          });
+        }
       }
     } catch (userError) {
       console.error(`[ERRO] Falha ao atualizar User: ${userError.message}`);
-      // Continua mesmo assim - SolicitacaoAcesso já foi criada
     }
 
     // Notificar administradores por e-mail

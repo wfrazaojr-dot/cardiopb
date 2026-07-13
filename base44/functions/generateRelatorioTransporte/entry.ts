@@ -27,8 +27,13 @@ Deno.serve(async (req) => {
     let y = 20;
 
     // Carregar logomarcas
+    const ALLOWED_IMAGE_HOSTS = ['qtrypzzcjebvfcihiynt.supabase.co', 'media.base44.com'];
     const fetchImageBase64 = async (url) => {
       try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== 'https:' || !ALLOWED_IMAGE_HOSTS.includes(parsed.hostname)) {
+          return null;
+        }
         const res = await fetch(url);
         const buffer = await res.arrayBuffer();
         const bytes = new Uint8Array(buffer);
