@@ -12,6 +12,14 @@ import { Input } from "@/components/ui/input";
 import { format, differenceInHours } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+const ADMIN_ROLES = [
+  'admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MASTER',
+  'ADMINISTRADOR_CERH', 'ADMINISTRADOR_ASSCARDIO',
+  'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_CARDIOLOGIA',
+  'ADMINISTRADOR_TRANSPORTE', 'DESENVOLVEDOR',
+];
+const isAdmin = (role) => ADMIN_ROLES.includes(role);
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [filtroSelecionado, setFiltroSelecionado] = useState("todos");
@@ -26,7 +34,7 @@ export default function Dashboard() {
 
   // Redirecionar Unidade de Saúde para Painel Inicial
   React.useEffect(() => {
-    if (user?.equipe === 'unidade_saude' && user?.role !== 'admin') {
+    if (user?.equipe === 'unidade_saude' && !isAdmin(user?.role)) {
       navigate(createPageUrl("PainelInicial"));
     }
   }, [user, navigate]);
@@ -35,7 +43,7 @@ export default function Dashboard() {
     queryKey: ['pacientes-regulacao', user?.email, user?.macrorregiao],
     queryFn: async () => {
       // Admin vê todos
-      if (user?.role === 'admin') {
+      if (isAdmin(user?.role)) {
         return base44.entities.Paciente.list("-created_date");
       }
       
@@ -178,7 +186,7 @@ export default function Dashboard() {
             {user?.equipe === 'hemodinamica' && <span className="ml-2 px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs font-semibold">HEMODINÂMICA</span>}
             {user?.equipe === 'transporte' && <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">TRANSPORTE</span>}
             {user?.macrorregiao && <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-semibold">{user.macrorregiao}</span>}
-            {user?.role === 'admin' && <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-semibold">ADMINISTRADOR</span>}
+            {isAdmin(user?.role) && <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-semibold">ADMINISTRADOR</span>}
             {['cerh','asscardio','hemodinamica'].includes(user?.equipe) && !user?.macrorregiao && (
               <span className="ml-2 px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-semibold">⚠️ Sem macrorregião definida — exibindo todos</span>
             )}
@@ -503,7 +511,7 @@ export default function Dashboard() {
                           </Button>
                         )}
 
-                        {(user?.equipe === 'cerh' || user?.role === 'admin') && (
+                        {(user?.equipe === 'cerh' || isAdmin(user?.role)) && (
                           <Button
                             size="sm"
                             variant="outline"
@@ -515,7 +523,7 @@ export default function Dashboard() {
                           </Button>
                         )}
 
-                        {(user?.equipe === 'asscardio' || user?.role === 'admin') && (
+                        {(user?.equipe === 'asscardio' || isAdmin(user?.role)) && (
                           <Button
                             size="sm"
                             onClick={() => navigate(createPageUrl("ASSCARDIODetalhe") + `?id=${paciente.id}`)}
@@ -526,7 +534,7 @@ export default function Dashboard() {
                           </Button>
                         )}
 
-                        {(user?.equipe === 'cerh' || user?.role === 'admin') && (
+                        {(user?.equipe === 'cerh' || isAdmin(user?.role)) && (
                           <Button
                             size="sm"
                             onClick={() => navigate(createPageUrl("CERHDetalhe") + `?id=${paciente.id}`)}
@@ -537,7 +545,7 @@ export default function Dashboard() {
                           </Button>
                         )}
 
-                        {(user?.equipe === 'transporte' || user?.role === 'admin') && (
+                        {(user?.equipe === 'transporte' || isAdmin(user?.role)) && (
                           <Button
                             size="sm"
                             onClick={() => navigate(createPageUrl("TransporteDetalhe") + `?id=${paciente.id}`)}
@@ -548,7 +556,7 @@ export default function Dashboard() {
                           </Button>
                         )}
 
-                        {(user?.equipe === 'hemodinamica' || user?.role === 'admin') && (
+                        {(user?.equipe === 'hemodinamica' || isAdmin(user?.role)) && (
                           <Button
                             size="sm"
                             onClick={() => navigate(createPageUrl("HemodinamicaDetalhe") + `?id=${paciente.id}`)}

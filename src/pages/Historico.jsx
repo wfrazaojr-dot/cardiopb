@@ -35,6 +35,14 @@ const statusColors = {
   "Reavaliação de Conduta": "bg-orange-100 text-orange-800 border-orange-400 border-2 animate-pulse"
 };
 
+const ADMIN_ROLES = [
+  'admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MASTER',
+  'ADMINISTRADOR_CERH', 'ADMINISTRADOR_ASSCARDIO',
+  'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_CARDIOLOGIA',
+  'ADMINISTRADOR_TRANSPORTE', 'DESENVOLVEDOR',
+];
+const isAdmin = (role) => ADMIN_ROLES.includes(role);
+
 export default function Historico() {
   const navigate = useNavigate();
   const [busca, setBusca] = useState("");
@@ -50,13 +58,13 @@ export default function Historico() {
 
   const verificarAcessoPaciente = (paciente) => {
     if (!paciente) return false;
-    if (user?.role === 'admin') return true;
+    if (isAdmin(user?.role)) return true;
     if (user?.equipe === 'unidade_saude') return paciente.created_by === user.email;
     return true;
   };
 
   const verificarProfissional = (url) => {
-    if (user?.role === 'admin' || user?.equipe === 'unidade_saude') return true;
+    if (isAdmin(user?.role) || user?.equipe === 'unidade_saude') return true;
     const profissionalLogado = sessionStorage.getItem("profissional_logado");
     if (!profissionalLogado) {
       sessionStorage.setItem("redirect_after_pin", url);
@@ -84,7 +92,7 @@ export default function Historico() {
     queryKey: ['pacientes', user?.email, user?.equipe],
     queryFn: async () => {
       const equipe = user?.equipe || 'unidade_saude';
-      if (user?.role === 'admin') return base44.entities.Paciente.list("-created_date");
+      if (isAdmin(user?.role)) return base44.entities.Paciente.list("-created_date");
       if (equipe === 'unidade_saude') return base44.entities.Paciente.filter({ created_by: user.email }, "-created_date");
       return base44.entities.Paciente.list("-created_date");
     },
@@ -156,14 +164,14 @@ export default function Historico() {
               {user?.equipe === 'unidade_saude' && 'Registro de atendimentos da sua unidade'}
               {user?.equipe === 'cerh' && 'Registro consolidado de pacientes com assessoria cardiológica'}
               {user?.equipe === 'asscardio' && 'Registro consolidado de pacientes com regulação central'}
-              {user?.role === 'admin' && 'Registro completo de todos os pacientes atendidos no sistema'}
+              {isAdmin(user?.role) && 'Registro completo de todos os pacientes atendidos no sistema'}
             </p>
             <p className="text-sm text-blue-600 mt-1">
               👤 {user.full_name} • {user.email}
               {user?.equipe === 'cerh' && <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">CERH</span>}
               {user?.equipe === 'asscardio' && <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold">ASSCARDIO</span>}
               {user?.equipe === 'unidade_saude' && <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">UNIDADE DE SAÚDE</span>}
-              {user?.role === 'admin' && <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-semibold">ADMINISTRADOR</span>}
+              {isAdmin(user?.role) && <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-semibold">ADMINISTRADOR</span>}
             </p>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
@@ -186,7 +194,7 @@ export default function Historico() {
               {isFetching ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
               Atualizar
             </Button>
-            {(user?.equipe === 'unidade_saude' || user?.role === 'admin') && (
+            {(user?.equipe === 'unidade_saude' || isAdmin(user?.role)) && (
             <Link to={createPageUrl("NovaTriagem")}>
               <Button className="bg-red-600 hover:bg-red-700 shadow-lg">
                 <Plus className="w-5 h-5 mr-2" />
@@ -450,7 +458,7 @@ export default function Historico() {
 
                       <div className="flex items-center gap-2 flex-wrap justify-end">
                        {/* Solicitar Reavaliação - Unidade de Saúde */}
-                       {(user?.equipe === 'unidade_saude' || user?.role === 'admin') && (
+                       {(user?.equipe === 'unidade_saude' || isAdmin(user?.role)) && (
                          <SolicitarReavaliacao paciente={paciente} user={user} />
                        )}
                         {paciente.alerta_formulario_vaga && !paciente.formulario_vaga?.data_envio && (
