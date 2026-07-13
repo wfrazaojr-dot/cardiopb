@@ -1,13 +1,17 @@
 import React from "react";
+import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 /**
- * StatusGuard — Acesso temporário simplificado.
+ * StatusGuard — Verifica o status de cadastro do usuário autenticado.
  *
- * Enquanto a nova forma de acesso (via equipe técnica do Estado) não é definida,
- * qualquer usuário autenticado por e-mail tem acesso liberado — sem cadastro
- * e sem aprovação administrativa.
+ * Fluxo:
+ * 1. Dev (wfrazaojr@gmail.com) → acesso liberado
+ * 2. status_acesso BLOQUEADO/INATIVO → redireciona para AcessoPendente
+ * 3. cadastro_completo=true e status_acesso PENDENTE → redireciona para AcessoPendente
+ * 4. Sem perfil e role='user' (primeira vez) → redireciona para CadastroPerfil
+ * 5. Demais usuários (com perfil/role definido) → acesso liberado
  */
 export default function StatusGuard({ children }) {
   const { data: user, isLoading } = useQuery({
@@ -26,6 +30,27 @@ export default function StatusGuard({ children }) {
 
   if (!user) return null;
 
-  // Acesso liberado para todo usuário autenticado
+  // Bypass para desenvolvedor
+  const isDev = user.email?.toLowerCase() === "wfrazaojr@gmail.com";
+  if (isDev) return <>{children}</>;
+
+  // Usuário bloqueado ou inativo → tela de acesso pendente
+  if (user.status_acesso === "BLOQUEADO" || user.status_acesso === "INATIVO") {
+    return <Navigate to="/AcessoPendente" replace />;
+  }
+
+  // Cadastro enviado, aguardando aprovação → tela de acesso pendente
+  if (user.cadastro_completo === true && user.status_acesso === "PENDENTE") {
+    return <Navigate to="/AcessoPendente" replace />;
+  }
+
+  // Primeira vez: sem perfil definido e role ainda é 'user' → formulário de cadastro
+  const temPerfil = user.perfil || user.equipe;
+  const temRoleReal = user.role && user.role !== "user";
+  if (!temPerfil && !temRoleReal) {
+    return <Navigate to="/CadastroPerfil" replace />;
+  }
+
+  // Usuário com perfil/role definido → acesso liberado
   return <>{children}</>;
 }

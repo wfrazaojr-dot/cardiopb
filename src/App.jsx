@@ -14,6 +14,9 @@ import RelatorioFarmacia from './pages/RelatorioFarmacia';
 import ControleAcessos from './pages/ControleAcessos.jsx';
 import PrimeiroAcesso from './pages/PrimeiroAcesso.jsx';
 import VerificarAssinatura from './pages/VerificarAssinatura.jsx';
+import BoasVindas from './pages/BoasVindas.jsx';
+import CadastroPerfil from './pages/CadastroPerfil.jsx';
+import AcessoPendente from './pages/AcessoPendente.jsx';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import StatusGuard from '@/components/StatusGuard';
@@ -48,15 +51,18 @@ const AuthenticatedApp = () => {
     }
   }
 
-  // Usuário não autenticado: redirecionar para login GOV.BR (única forma de entrar)
+  // Usuário não autenticado: exibir página de boas-vindas com botão GOV.BR
   if (!isAuthenticated) {
-    navigateToLogin();
-    return null;
+    return <BoasVindas />;
   }
 
-  // Render the main app — acesso liberado para todo usuário autenticado
+  // Render the main app
   return (
     <Routes>
+      {/* Cadastro de perfil — standalone, sem Layout, para primeiros acessos */}
+      <Route path="/CadastroPerfil" element={<CadastroPerfil />} />
+      {/* Acesso pendente — standalone, sem Layout, para usuários aguardando aprovação */}
+      <Route path="/AcessoPendente" element={<AcessoPendente />} />
       {/* Rotas com sidebar — protegidas pelo StatusGuard */}
       <Route path="/*" element={
         <StatusGuard>

@@ -18,6 +18,7 @@ const PERFIS_OPCOES = [
   { value: "ADMINISTRADOR_MASTER", label: "Administrador Master" },
   { value: "ADMINISTRADOR_CERH", label: "Administrador CERH" },
   { value: "ADMINISTRADOR_ASSCARDIO", label: "Administrador ASSCARDIO" },
+  { value: "ADMINISTRADOR_FARMACIA", label: "Administrador Farmácia" },
 ];
 
 const FUNCOES_POR_PERFIL = {
@@ -30,6 +31,7 @@ const FUNCOES_POR_PERFIL = {
   ADMINISTRADOR_MASTER: ["administrativo"],
   ADMINISTRADOR_CERH: ["medico", "enfermeiro"],
   ADMINISTRADOR_ASSCARDIO: ["medico"],
+  ADMINISTRADOR_FARMACIA: ["farmaceutico"],
 };
 
 const FUNCAO_LABELS = {
@@ -38,12 +40,14 @@ const FUNCAO_LABELS = {
   assistente_social: "Assistente Social",
   operador_frota: "Operador de Frota",
   administrativo: "Administrativo",
+  farmaceutico: "Farmacêutico",
 };
 
 const REGISTRO_TIPO_MAP = {
   medico: "CRM",
   enfermeiro: "COREN",
   assistente_social: "CRESS",
+  farmaceutico: "CRF",
 };
 
 const EQUIPE_MAP = {
@@ -56,6 +60,7 @@ const EQUIPE_MAP = {
   ADMINISTRADOR_MASTER: "admin",
   ADMINISTRADOR_CERH: "cerh",
   ADMINISTRADOR_ASSCARDIO: "asscardio",
+  ADMINISTRADOR_FARMACIA: "admin",
 };
 
 function formatCPF(value) {
@@ -175,7 +180,7 @@ export default function CadastroPerfil() {
 
 
   const funcoesDoPerfil = form.perfil ? FUNCOES_POR_PERFIL[form.perfil] || [] : [];
-  const precisaRegistro = ["medico", "enfermeiro", "assistente_social"].includes(form.funcao);
+  const precisaRegistro = ["medico", "enfermeiro", "assistente_social", "farmaceutico"].includes(form.funcao);
   const precisaMatricula = ["operador_frota", "administrativo"].includes(form.funcao);
   const emailExibido = form.email;
 
