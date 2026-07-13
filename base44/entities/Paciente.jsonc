@@ -1070,6 +1070,46 @@
         },
         {
           "user_condition": {
+            "role": "ADMIN_TI_SECRETARIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MASTER"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_CERH"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_ASSCARDIO"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_CARDIOLOGIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_TRANSPORTE"
+          }
+        },
+        {
+          "user_condition": {
             "role": "UNIDADE_SAUDE"
           }
         },
@@ -1092,25 +1132,19 @@
           "user_condition": {
             "role": "HEMODINAMICA"
           }
-        },
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
         {
           "user_condition": {
-            "role": "ADMINISTRADOR_CERH"
+            "role": "admin"
           }
         },
         {
           "user_condition": {
-            "role": "ADMINISTRADOR_CARDIOLOGIA"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "ADMINISTRADOR_TRANSPORTE"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "ADMINISTRADOR_MANAGER"
+            "role": "ADMIN_TI_SECRETARIA"
           }
         },
         {
@@ -1119,11 +1153,6 @@
           }
         }
       ]
-    },
-    "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
     }
   }
 }
