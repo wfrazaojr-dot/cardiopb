@@ -11,6 +11,7 @@ import { format, differenceInMinutes, startOfMonth, endOfMonth, isWithinInterval
 import { ptBR } from "date-fns/locale";
 import ExportarRelatorio from "@/components/indicadores/ExportarRelatorio";
 import ExportarPDFIndicadores from "@/components/indicadores/ExportarPDFIndicadores";
+import ExportarTrombolise from "@/components/indicadores/ExportarTrombolise";
 
 const COLORS = {
   success: "#16A34A",
@@ -998,6 +999,17 @@ export default function Indicadores() {
                 ))}
               </SelectContent>
             </Select>
+            <div className="ml-auto">
+              <ExportarTrombolise
+                dados={{
+                  tromboliticosPorTipo,
+                  trombolisPorIndicacao,
+                  trombolisPorMes,
+                  registros: registrosTrombolise,
+                }}
+                ano={anoSelecionado}
+              />
+            </div>
           </div>
 
           {/* Totais por indicação */}
