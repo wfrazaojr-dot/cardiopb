@@ -26,10 +26,10 @@
         "ASSCARDIO",
         "TRANSPORTE",
         "HEMODINAMICA",
-        "ADMINISTRADOR_MANAGER",
+        "ADMIN_TI_SECRETARIA",
+        "ADMINISTRADOR_MASTER",
         "ADMINISTRADOR_CERH",
-        "ADMINISTRADOR_CARDIOLOGIA",
-        "ADMINISTRADOR_TRANSPORTE",
+        "ADMINISTRADOR_ASSCARDIO",
         "ADMINISTRADOR_FARMACIA"
       ],
       "description": "Perfil solicitado"
@@ -94,12 +94,17 @@
         },
         {
           "user_condition": {
-            "role": "ADMINISTRADOR_MANAGER"
+            "role": "ADMIN_TI_SECRETARIA"
           }
         },
         {
           "user_condition": {
             "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
           }
         },
         {
@@ -116,12 +121,17 @@
         },
         {
           "user_condition": {
-            "role": "ADMINISTRADOR_MANAGER"
+            "role": "ADMIN_TI_SECRETARIA"
           }
         },
         {
           "user_condition": {
             "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
           }
         }
       ]
@@ -135,12 +145,17 @@
         },
         {
           "user_condition": {
-            "role": "ADMINISTRADOR_MANAGER"
+            "role": "ADMIN_TI_SECRETARIA"
           }
         },
         {
           "user_condition": {
             "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
           }
         }
       ]
