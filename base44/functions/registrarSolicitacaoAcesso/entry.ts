@@ -5,7 +5,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
 
-    const { email, nome_completo, cpf, telefone, perfil, funcao,
+    const { email, nome_completo, data_nascimento, cpf, telefone, perfil, funcao,
             registro_profissional_tipo, registro_profissional_numero,
             matricula, unidade_saude, equipe } = body;
 
@@ -27,6 +27,7 @@ Deno.serve(async (req) => {
     const solicitacao = await base44.asServiceRole.entities.SolicitacaoAcesso.create({
       email,
       nome_completo, // EXATAMENTE como o usuário digitou
+      data_nascimento: data_nascimento || null,
       cpf: cpf || null,
       telefone: telefone || null,
       perfil,
@@ -48,6 +49,7 @@ Deno.serve(async (req) => {
         dados_novos: {
           email,
           nome_completo,
+          data_nascimento,
           cpf,
           telefone,
           perfil,
@@ -72,6 +74,7 @@ Deno.serve(async (req) => {
           const existingUser = userFiltered[0];
           await base44.asServiceRole.entities.User.update(existingUser.id, {
             full_name: nome_completo.trim(),
+            data_nascimento: data_nascimento || null,
             cpf: cpf?.trim() || null,
             telefone: telefone?.trim() || null,
             perfil: perfil,
@@ -96,7 +99,8 @@ Deno.serve(async (req) => {
       TRANSPORTE: "Transporte", HEMODINAMICA: "Hemodinâmica",
       ADMIN_TI_SECRETARIA: "Adm. TI Secretaria", ADMINISTRADOR_MASTER: "Adm. Master",
       ADMINISTRADOR_CERH: "Adm. CERH", ADMINISTRADOR_ASSCARDIO: "Adm. ASSCARDIO",
-      ADMINISTRADOR_FARMACIA: "Adm. Farmácia",
+      GESTOR_DE_FARMACIA: "Gestor de Farmácia",
+      DESENVOLVEDOR: "Adm. Desenvolvedor",
       ADMINISTRADOR_MANAGER: "Adm. Manager (legado)", ADMINISTRADOR_CARDIOLOGIA: "Adm. Cardiologia (legado)",
       ADMINISTRADOR_TRANSPORTE: "Adm. Transporte (legado)",
     };

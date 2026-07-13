@@ -27,11 +27,11 @@ export default function PainelInicial() {
 
     const rolesAdminRedirecionar = [
       'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MASTER', 'ADMINISTRADOR_CERH',
-      'ADMINISTRADOR_ASSCARDIO', 'ADMINISTRADOR_FARMACIA',
+      'ADMINISTRADOR_ASSCARDIO', 'GESTOR_DE_FARMACIA',
       'admin', 'DESENVOLVEDOR', 'ADMINISTRADOR_MANAGER',
     ];
 
-    if (user.role === 'ADMINISTRADOR_FARMACIA') {
+    if (user.role === 'GESTOR_DE_FARMACIA') {
       navigate(createPageUrl("RelatorioFarmacia"), { replace: true });
     } else if (rolesAdminRedirecionar.includes(user.role) || user.email?.toLowerCase() === 'wfrazaojr@gmail.com') {
       navigate(createPageUrl("Dashboard"), { replace: true });

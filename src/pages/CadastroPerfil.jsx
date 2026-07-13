@@ -10,28 +10,30 @@ import { jsPDF } from "jspdf";
 
 const PERFIS_OPCOES = [
   { value: "UNIDADE_SAUDE", label: "Unidade de Saúde" },
-  { value: "CERH", label: "CERH - Central Estadual de Regulação em Hemodinâmica" },
-  { value: "ASSCARDIO", label: "ASSCARDIO - Assessoria Cardiológica" },
+  { value: "CERH", label: "CERH" },
+  { value: "ASSCARDIO", label: "ASSCARDIO" },
   { value: "TRANSPORTE", label: "Transporte" },
   { value: "HEMODINAMICA", label: "Hemodinâmica" },
-  { value: "ADMIN_TI_SECRETARIA", label: "Administrador TI da Secretaria de Saúde" },
+  { value: "GESTOR_DE_FARMACIA", label: "Gestor de Farmácia" },
+  { value: "ADMIN_TI_SECRETARIA", label: "Administrador Gerência de TI da Secretaria de Saúde" },
+  { value: "DESENVOLVEDOR", label: "Administrador Desenvolvedor" },
   { value: "ADMINISTRADOR_MASTER", label: "Administrador Master" },
   { value: "ADMINISTRADOR_CERH", label: "Administrador CERH" },
   { value: "ADMINISTRADOR_ASSCARDIO", label: "Administrador ASSCARDIO" },
-  { value: "ADMINISTRADOR_FARMACIA", label: "Administrador Farmácia" },
 ];
 
 const FUNCOES_POR_PERFIL = {
   UNIDADE_SAUDE: ["medico", "enfermeiro", "assistente_social", "administrativo"],
   CERH: ["medico", "enfermeiro"],
   ASSCARDIO: ["medico", "enfermeiro"],
-  TRANSPORTE: ["operador_frota", "enfermeiro", "medico"],
+  TRANSPORTE: ["medico", "enfermeiro", "administrativo"],
   HEMODINAMICA: ["medico", "enfermeiro"],
+  GESTOR_DE_FARMACIA: ["administrativo"],
   ADMIN_TI_SECRETARIA: ["administrativo"],
+  DESENVOLVEDOR: ["administrativo"],
   ADMINISTRADOR_MASTER: ["administrativo"],
   ADMINISTRADOR_CERH: ["medico", "enfermeiro"],
   ADMINISTRADOR_ASSCARDIO: ["medico"],
-  ADMINISTRADOR_FARMACIA: ["farmaceutico"],
 };
 
 const FUNCAO_LABELS = {
@@ -56,11 +58,12 @@ const EQUIPE_MAP = {
   ASSCARDIO: "asscardio",
   TRANSPORTE: "transporte",
   HEMODINAMICA: "hemodinamica",
+  GESTOR_DE_FARMACIA: "farmacia",
   ADMIN_TI_SECRETARIA: "admin",
+  DESENVOLVEDOR: "admin",
   ADMINISTRADOR_MASTER: "admin",
   ADMINISTRADOR_CERH: "cerh",
   ADMINISTRADOR_ASSCARDIO: "asscardio",
-  ADMINISTRADOR_FARMACIA: "admin",
 };
 
 function formatCPF(value) {
@@ -106,6 +109,7 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
   // Dados do usuário
   const dados = [
     { label: "Nome Completo", valor: form.nome_completo },
+    { label: "Data de Nascimento", valor: form.data_nascimento ? new Date(form.data_nascimento + "T00:00:00").toLocaleDateString("pt-BR") : "—" },
     { label: "CPF", valor: form.cpf },
     { label: "E-mail", valor: emailExibido },
     { label: "Telefone", valor: form.telefone || "—" },
@@ -163,6 +167,7 @@ export default function CadastroPerfil() {
   const [form, setForm] = useState({
     perfil: "",
     nome_completo: "",
+    data_nascimento: "",
     email: "",
     cpf: "",
     funcao: "",
@@ -188,7 +193,7 @@ export default function CadastroPerfil() {
     e.preventDefault();
     setErro("");
 
-    if (!form.perfil || !form.nome_completo || !form.cpf || !form.funcao) {
+    if (!form.perfil || !form.nome_completo || !form.data_nascimento || !form.cpf || !form.funcao) {
       setErro("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -217,6 +222,7 @@ export default function CadastroPerfil() {
     const dadosParaSalvar = {
       email: emailExibido,
       nome_completo: form.nome_completo.trim(), // Valor digitado pelo usuário
+      data_nascimento: form.data_nascimento || null,
       cpf: form.cpf.trim(),
       telefone: form.telefone?.trim() || null,
       perfil: form.perfil,
@@ -234,6 +240,7 @@ export default function CadastroPerfil() {
       // ✅ Preservar EXATAMENTE o que foi salvo
       setDadosSalvos({
         nome_completo: form.nome_completo,
+        data_nascimento: form.data_nascimento,
         cpf: form.cpf,
         email: emailExibido,
         telefone: form.telefone,
@@ -277,6 +284,12 @@ export default function CadastroPerfil() {
                   <span className="font-medium">Nome Completo:</span>
                   <span className="font-semibold text-gray-900">{dadosSalvos.nome_completo}</span>
                 </div>
+                {dadosSalvos.data_nascimento && (
+                  <div className="flex justify-between border-b pb-2">
+                    <span className="font-medium">Data de Nascimento:</span>
+                    <span className="text-gray-900">{new Date(dadosSalvos.data_nascimento + "T00:00:00").toLocaleDateString("pt-BR")}</span>
+                  </div>
+                )}
                 <div className="flex justify-between border-b pb-2">
                   <span className="font-medium">CPF:</span>
                   <span className="text-gray-900">{dadosSalvos.cpf}</span>
@@ -358,6 +371,12 @@ export default function CadastroPerfil() {
                 <span className="font-semibold text-gray-700">Nome Completo:</span>
                 <span className="text-gray-900 font-medium">{form.nome_completo}</span>
               </div>
+              {form.data_nascimento && (
+                <div className="flex justify-between border-b pb-3">
+                  <span className="font-semibold text-gray-700">Data de Nascimento:</span>
+                  <span className="text-gray-900">{new Date(form.data_nascimento + "T00:00:00").toLocaleDateString("pt-BR")}</span>
+                </div>
+              )}
               <div className="flex justify-between border-b pb-3">
                 <span className="font-semibold text-gray-700">CPF:</span>
                 <span className="text-gray-900">{form.cpf}</span>
@@ -469,6 +488,16 @@ export default function CadastroPerfil() {
                 placeholder="Digite seu nome completo"
                 value={form.nome_completo}
                 onChange={e => setForm({ ...form, nome_completo: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <Label>Data de Nascimento *</Label>
+              <Input
+                className="mt-1"
+                type="date"
+                value={form.data_nascimento}
+                onChange={e => setForm({ ...form, data_nascimento: e.target.value })}
               />
             </div>
 

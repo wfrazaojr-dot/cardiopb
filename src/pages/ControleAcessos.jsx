@@ -39,14 +39,15 @@ const PERFIL_LABELS = {
   ASSCARDIO:                 "ASSCARDIO",
   TRANSPORTE:                "Transporte",
   HEMODINAMICA:              "Hemodinâmica",
+  GESTOR_DE_FARMACIA:        "Gestor de Farmácia",
   ADMIN_TI_SECRETARIA:       "Adm. TI Secretaria",
+  DESENVOLVEDOR:             "Adm. Desenvolvedor",
   ADMINISTRADOR_MANAGER:     "Adm. Manager (legado)",
   ADMINISTRADOR_MASTER:      "Adm. Master",
   ADMINISTRADOR_CERH:        "Adm. CERH",
   ADMINISTRADOR_ASSCARDIO:   "Adm. ASSCARDIO",
   ADMINISTRADOR_CARDIOLOGIA:"Adm. Cardiologia (legado)",
   ADMINISTRADOR_TRANSPORTE:  "Adm. Transporte (legado)",
-  ADMINISTRADOR_FARMACIA:    "Adm. Farmácia",
 };
 
 const FUNCAO_LABELS = {

@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const ROLES_PERMITIDOS = ['admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_MASTER', 'ADMINISTRADOR_CERH', 'ADMINISTRADOR_ASSCARDIO', 'ADMINISTRADOR_CARDIOLOGIA', 'ADMINISTRADOR_TRANSPORTE', 'ADMINISTRADOR_FARMACIA', 'DESENVOLVEDOR'];
+const ROLES_PERMITIDOS = ['admin', 'ADMIN_TI_SECRETARIA', 'ADMINISTRADOR_MANAGER', 'ADMINISTRADOR_MASTER', 'ADMINISTRADOR_CERH', 'ADMINISTRADOR_ASSCARDIO', 'ADMINISTRADOR_CARDIOLOGIA', 'ADMINISTRADOR_TRANSPORTE', 'GESTOR_DE_FARMACIA', 'DESENVOLVEDOR'];
 const DEV_EMAIL = 'wfrazaojr@gmail.com';
 
 const EQUIPE_MAP = {
@@ -8,7 +8,8 @@ const EQUIPE_MAP = {
   TRANSPORTE: "transporte", HEMODINAMICA: "hemodinamica",
   ADMIN_TI_SECRETARIA: "admin", ADMINISTRADOR_MASTER: "admin",
   ADMINISTRADOR_CERH: "cerh", ADMINISTRADOR_ASSCARDIO: "asscardio",
-  ADMINISTRADOR_FARMACIA: "farmacia",
+  GESTOR_DE_FARMACIA: "farmacia",
+  DESENVOLVEDOR: "admin",
   ADMINISTRADOR_MANAGER: "admin", ADMINISTRADOR_CARDIOLOGIA: "asscardio",
   ADMINISTRADOR_TRANSPORTE: "transporte",
 };
@@ -49,6 +50,7 @@ Deno.serve(async (req) => {
         const dadosNovos = {
           full_name: nomeFinal,
           email: sol.email,
+          data_nascimento: sol.data_nascimento || null,
           cpf: sol.cpf?.trim() || "",
           telefone: sol.telefone?.trim() || "",
           perfil: sol.perfil,
@@ -181,6 +183,7 @@ Deno.serve(async (req) => {
            if (!usuarioAlvo.cpf && sol.cpf)              dadosPerfil.cpf        = sol.cpf?.trim() || null;
            if (!usuarioAlvo.telefone && sol.telefone)    dadosPerfil.telefone   = sol.telefone?.trim() || null;
            if (!usuarioAlvo.unidade_saude && sol.unidade_saude) dadosPerfil.unidade_saude = sol.unidade_saude?.trim() || null;
+           if (!usuarioAlvo.data_nascimento && sol.data_nascimento) dadosPerfil.data_nascimento = sol.data_nascimento;
            if (Object.keys(dadosPerfil).length > 0) {
              await base44.asServiceRole.entities.User.update(userId, dadosPerfil);
            }

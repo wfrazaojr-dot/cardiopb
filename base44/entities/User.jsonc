@@ -10,7 +10,7 @@
         "ADMINISTRADOR_MASTER",
         "ADMINISTRADOR_CERH",
         "ADMINISTRADOR_ASSCARDIO",
-        "ADMINISTRADOR_FARMACIA",
+        "GESTOR_DE_FARMACIA",
         "UNIDADE_SAUDE",
         "CERH",
         "ASSCARDIO",
@@ -26,6 +26,11 @@
       "type": "string",
       "description": "CPF do usu\u00e1rio (123.456.789-00)"
     },
+    "data_nascimento": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de nascimento do usu\u00e1rio"
+    },
     "perfil": {
       "type": "string",
       "enum": [
@@ -35,10 +40,11 @@
         "TRANSPORTE",
         "HEMODINAMICA",
         "ADMIN_TI_SECRETARIA",
+        "DESENVOLVEDOR",
         "ADMINISTRADOR_MASTER",
         "ADMINISTRADOR_CERH",
         "ADMINISTRADOR_ASSCARDIO",
-        "ADMINISTRADOR_FARMACIA"
+        "GESTOR_DE_FARMACIA"
       ],
       "description": "Perfil principal do usu\u00e1rio"
     },
@@ -71,6 +77,14 @@
     "matricula": {
       "type": "string",
       "description": "Matr\u00edcula para operadores de frota e administrativos"
+    },
+    "telefone": {
+      "type": "string",
+      "description": "Telefone de contato"
+    },
+    "unidade_saude": {
+      "type": "string",
+      "description": "Unidade de sa\u00fade do usu\u00e1rio"
     },
     "status_acesso": {
       "type": "string",

@@ -28,33 +28,46 @@ export default function Manual() {
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-4 text-sm text-gray-700">
-                <div className="p-3 bg-blue-50 rounded border border-blue-200">
-                  <p className="font-semibold text-blue-900 mb-1">Acesso atual (temporário)</p>
-                  <p className="text-blue-800">O acesso é feito por autenticação de e-mail. Todo usuário autenticado tem acesso liberado diretamente — sem necessidade de cadastro complementar ou aprovação administrativa. Este é um modelo temporário enquanto a autenticação via GOV.BR não é implementada.</p>
+                <div className="p-3 bg-green-50 rounded border border-green-200">
+                  <p className="font-semibold text-green-900 mb-1">Acesso via GOV.BR</p>
+                  <p className="text-green-800">O acesso ao sistema é feito através da autenticação federal via GOV.BR. Após o login, o usuário é direcionado para uma tela de seleção onde deve escolher entre "Usuário Novo" (primeiro acesso) ou "Usuário Cadastrado" (acesso já aprovado).</p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</div>
                     <div>
-                      <p className="font-semibold">Faça login com seu e-mail</p>
-                      <p className="text-gray-600">Utilize o botão "Entrar" na tela inicial para autenticar com seu e-mail e senha.</p>
+                      <p className="font-semibold">Tela de Boas-Vindas</p>
+                      <p className="text-gray-600">Na tela inicial, clique no botão "GOV.BR" para autenticar com sua conta federal (CPF + senha GOV.BR).</p>
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</div>
+                    <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</div>
                     <div>
-                      <p className="font-semibold">Acesso liberado</p>
-                      <p className="text-gray-600">Após a autenticação, você será direcionado automaticamente para o painel correspondente ao seu perfil (Unidades de Saúde → Painel Assistencial; CERH/ASSCARDIO/Transporte → Painel de Regulação).</p>
+                      <p className="font-semibold">Seleção de Usuário</p>
+                      <p className="text-gray-600">Após a autenticação, o sistema apresenta a tela "Bem-vindo ao CARDIOPB" com duas opções: <strong>USUÁRIO NOVO</strong> (primeiro acesso, para cadastro) ou <strong>USUÁRIO CADASTRADO</strong> (acesso já aprovado pelo Administrador Master).</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-yellow-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</div>
+                    <div>
+                      <p className="font-semibold">Usuário Novo — Cadastro</p>
+                      <p className="text-gray-600">O novo usuário preenche o formulário com: Perfil, Nome, Data de Nascimento, CPF, Telefone, E-mail e Profissão (com registro profissional CRM/COREN/CRESS ou matrícula). Ao enviar, os dados vão para análise do <strong>Administrador Master</strong> no Controle de Acessos.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-green-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">4</div>
+                    <div>
+                      <p className="font-semibold">Usuário Cadastrado — Acesso</p>
+                      <p className="text-gray-600">Após a aprovação do Administrador Master, o usuário seleciona "USUÁRIO CADASTRADO" e é direcionado automaticamente para o painel correspondente ao seu perfil aprovado.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3 bg-yellow-50 rounded border border-yellow-200 mt-2">
-                  <p className="font-semibold text-yellow-900">📌 Futura autenticação via GOV.BR</p>
-                  <p className="text-yellow-800 mt-1">Está em estudo a substituição do acesso por e-mail pela autenticação federal via GOV.BR (CPF + senha GOV.BR), com cadastro de perfil profissional e aprovação do Administrador Manager. Quando implementado, os status de acesso serão:</p>
-                  <ul className="list-disc pl-5 mt-1 text-yellow-800 space-y-1">
-                    <li><strong>PENDENTE:</strong> Cadastro realizado, aguardando aprovação do gestor</li>
+                <div className="p-3 bg-blue-50 rounded border border-blue-200 mt-2">
+                  <p className="font-semibold text-blue-900">📋 Status de Acesso</p>
+                  <ul className="list-disc pl-5 mt-1 text-blue-800 space-y-1">
+                    <li><strong>PENDENTE:</strong> Cadastro realizado, aguardando aprovação do Administrador Master</li>
                     <li><strong>ATIVO:</strong> Acesso liberado e funcionando normalmente</li>
                     <li><strong>INATIVO:</strong> Acesso suspenso temporariamente pelo gestor</li>
                     <li><strong>BLOQUEADO:</strong> Acesso bloqueado com justificativa pelo gestor</li>
@@ -242,6 +255,19 @@ export default function Manual() {
                     <li>Painel Assistencial, Painel de Regulação e Indicadores</li>
                     <li>Trombólise, Administração, Protocolos e Manual</li>
                     <li><strong>Exceções:</strong> sem acesso a Controle de Acessos, Logs de Auditoria, Relatório Farmacêutico e Monitor de Transporte</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-teal-500 pl-4">
+                  <h4 className="font-semibold mb-2">💊 Gestor de Farmácia</h4>
+                  <p className="text-gray-700 mb-2">
+                    Profissional responsável pela gestão farmacêutica. Acesso restrito ao Relatório Farmacêutico.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    <li><strong>Acesso exclusivo:</strong> Painel Inicial e Relatório Farmacêutico</li>
+                    <li>Consolidação de registros de trombólise por medicamento, unidade, lote e período</li>
+                    <li>Exportação de dados em PDF e Excel (XLSX)</li>
+                    <li>Rastreabilidade por unidade, cardiologista, prescritor e lote</li>
                   </ul>
                 </div>
               </div>
@@ -782,8 +808,8 @@ export default function Manual() {
                 <div>
                   <h4 className="font-semibold mb-2">🔐 Autenticação e Controle de Acesso</h4>
                   <ul className="list-disc pl-5">
-                    <li>Acesso atual por autenticação de e-mail (modelo temporário)</li>
-                    <li>Futura implementação de login via GOV.BR (identidade federal) — em estudo</li>
+                    <li>Acesso por autenticação federal via GOV.BR (CPF + senha)</li>
+                    <li>Novos usuários devem ser aprovados pelo Administrador Master</li>
                     <li>Rastreabilidade completa com e-mail e nome vinculados a cada ação</li>
                     <li>Logs de auditoria registram todas as operações do sistema</li>
                   </ul>
@@ -814,7 +840,7 @@ export default function Manual() {
                   <li><strong>Monitor Transportes:</strong> Gestão de transportes em tempo real (Transporte)</li>
                   <li><strong>Formulário/Vaga:</strong> Solicitação de vaga SES</li>
                   <li><strong>Trombólise:</strong> Prescrição e registro de trombolíticos (Unidades de Saúde)</li>
-                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Administrador TI da Secretaria e Desenvolvedor)</li>
+                  <li><strong>Relatório Farmacêutico:</strong> Consolidação de registros por medicamento/unidade/lote (Gestor de Farmácia, Administrador Desenvolvedor e Administrador Gerência de TI da Secretaria de Saúde)</li>
                   <li><strong>Controle de Acessos:</strong> Aprovação e gestão de usuários (Administrador TI da Secretaria e Master)</li>
                   <li><strong>Administração:</strong> Gestão de profissionais, indicadores e registros completos de trombólise (Administradores)</li>
                 </ul>

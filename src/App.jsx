@@ -17,6 +17,7 @@ import VerificarAssinatura from './pages/VerificarAssinatura.jsx';
 import BoasVindas from './pages/BoasVindas.jsx';
 import CadastroPerfil from './pages/CadastroPerfil.jsx';
 import AcessoPendente from './pages/AcessoPendente.jsx';
+import SelecaoUsuario from './pages/SelecaoUsuario.jsx';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import StatusGuard from '@/components/StatusGuard';
@@ -63,6 +64,7 @@ const AuthenticatedApp = () => {
       <Route path="/CadastroPerfil" element={<CadastroPerfil />} />
       {/* Acesso pendente — standalone, sem Layout, para usuários aguardando aprovação */}
       <Route path="/AcessoPendente" element={<AcessoPendente />} />
+      <Route path="/SelecaoUsuario" element={<SelecaoUsuario />} />
       {/* Rotas com sidebar — protegidas pelo StatusGuard */}
       <Route path="/*" element={
         <StatusGuard>

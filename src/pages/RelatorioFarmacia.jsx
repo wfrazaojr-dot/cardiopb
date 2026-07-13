@@ -121,7 +121,7 @@ export default function RelatorioFarmacia() {
   }, [registrosFiltrados]);
 
   const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
-  const isAdmFarmacia = user?.role === 'ADMINISTRADOR_FARMACIA';
+  const isAdmFarmacia = ['GESTOR_DE_FARMACIA', 'DESENVOLVEDOR', 'ADMIN_TI_SECRETARIA'].includes(user?.role);
 
   if (loadingUser) {
     return (

@@ -68,10 +68,14 @@ export default function Layout({ children, currentPageName }) {
     const filterExcluding = (exclusions) =>
       allItems.filter(item => !exclusions.includes(item.title));
 
-    // 1. ADMIN_TI_SECRETARIA, admin, DESENVOLVEDOR (ou e-mail dev): ACESSO PLENO
-    if (isDev || role === 'DESENVOLVEDOR' || role === 'ADMIN_TI_SECRETARIA' ||
-        role === 'admin' || role === 'ADMINISTRADOR_MANAGER') {
+    // 1. DESENVOLVEDOR, ADMIN_TI_SECRETARIA (ou e-mail dev): ACESSO PLENO com Relatório Farmacêutico
+    if (isDev || role === 'DESENVOLVEDOR' || role === 'ADMIN_TI_SECRETARIA') {
       return allItems;
+    }
+
+    // 1b. admin, ADMINISTRADOR_MANAGER: ACESSO PLENO sem Relatório Farmacêutico
+    if (role === 'admin' || role === 'ADMINISTRADOR_MANAGER') {
+      return filterExcluding(["Relatório Farmacêutico"]);
     }
 
     // 2. ADMINISTRADOR_MASTER: TUDO exceto Relatório Farmacêutico
@@ -89,8 +93,8 @@ export default function Layout({ children, currentPageName }) {
       return filterExcluding(["Controle de Acessos", "Logs de Auditoria", "Relatório Farmacêutico", "Monitor Transportes"]);
     }
 
-    // 5. ADMINISTRADOR_FARMACIA: apenas Painel Inicial + Relatório Farmacêutico
-    if (role === 'ADMINISTRADOR_FARMACIA') {
+    // 5. GESTOR_DE_FARMACIA: apenas Painel Inicial + Relatório Farmacêutico
+    if (role === 'GESTOR_DE_FARMACIA') {
       return [
         { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
         { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },

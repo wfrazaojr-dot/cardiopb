@@ -44,11 +44,11 @@ export default function StatusGuard({ children }) {
     return <Navigate to="/AcessoPendente" replace />;
   }
 
-  // Primeira vez: sem perfil definido e role ainda é 'user' → formulário de cadastro
+  // Primeira vez: sem perfil definido e role ainda é 'user' → página de seleção
   const temPerfil = user.perfil || user.equipe;
   const temRoleReal = user.role && user.role !== "user";
   if (!temPerfil && !temRoleReal) {
-    return <Navigate to="/CadastroPerfil" replace />;
+    return <Navigate to="/SelecaoUsuario" replace />;
   }
 
   // Usuário com perfil/role definido → acesso liberado
