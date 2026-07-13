@@ -10,6 +10,7 @@ import AnaliseEpidemiologica from "@/components/indicadores/AnaliseEpidemiologic
 import { format, differenceInMinutes, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import ExportarRelatorio from "@/components/indicadores/ExportarRelatorio";
+import ExportarPDFIndicadores from "@/components/indicadores/ExportarPDFIndicadores";
 
 const COLORS = {
   success: "#16A34A",
@@ -488,13 +489,31 @@ export default function Indicadores() {
                 </div>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-3">
               <ExportarRelatorio
                 pacientes={pacientesFiltrados}
                 mesSelecionado={mesSelecionado}
                 anoSelecionado={anoSelecionado}
                 macrorregiao={macrorregiao}
                 tipoSca={tipoScaFiltro}
+              />
+              <ExportarPDFIndicadores
+                pacientesFiltrados={pacientesFiltrados}
+                qualidade={{
+                  portaEcg,
+                  portaDecisao,
+                  regulacao,
+                  portaTelecardio,
+                  transporte,
+                  icpHemodinamica,
+                  fmcToDevice,
+                  tempoFibrinolitica,
+                }}
+                icpPorTipo={icpPorTipo}
+                distribuicaoRisco={distribuicaoRisco}
+                trombolise={{ tromboliticosPorTipo, trombolisPorIndicacao, trombolisPorMes }}
+                filtros={{ mesSelecionado, anoSelecionado, macrorregiao, tipoSca: tipoScaFiltro }}
+                user={user}
               />
             </div>
           </CardContent>
