@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { MapPin, Building2, Users, Activity, Calendar } from "lucide-react";
 import { startOfDay, endOfDay, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval } from "date-fns";
+import ExportarEpidemiologia from "@/components/indicadores/ExportarEpidemiologia";
 
 const CORES_MACRO = { "Macro 1": "#2563EB", "Macro 2": "#16A34A", "Macro 3": "#DC2626" };
 const CORES_SCA = { SCACESST: "#DC2626", SCASESST_COM_TROPONINA: "#EA580C", SCASESST_SEM_TROPONINA: "#CA8A04" };
@@ -139,6 +140,24 @@ export default function AnaliseEpidemiologica({ pacientes = [] }) {
 
   const CORES_PIE = ["#2563EB", "#DC2626", "#16A34A", "#CA8A04", "#7C3AED", "#DB2777"];
 
+  const periodoInfo = useMemo(() => {
+    if (periodo === "diario") return { label: `Dia ${diaSel.split("-").reverse().join("/")}` };
+    if (periodo === "mensal") return { label: `${meses[mesSel - 1]} ${anoSel}` };
+    return { label: `Ano ${anoSel}` };
+  }, [periodo, diaSel, mesSel, anoSel]);
+
+  const dadosExport = useMemo(() => ({
+    total,
+    porMacro,
+    porSCA,
+    topCidades,
+    topUnidades,
+    unidadesPorSCA,
+    porSexo,
+    porIdade,
+    fatoresRisco,
+  }), [total, porMacro, porSCA, topCidades, topUnidades, unidadesPorSCA, porSexo, porIdade, fatoresRisco]);
+
   return (
     <div className="space-y-6">
       {/* Filtros de Período */}
@@ -210,6 +229,12 @@ export default function AnaliseEpidemiologica({ pacientes = [] }) {
               <p className="text-3xl font-bold text-teal-800">{total}</p>
             </div>
           </div>
+
+          {total > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <ExportarEpidemiologia dados={dadosExport} periodoInfo={periodoInfo} />
+            </div>
+          )}
         </CardContent>
       </Card>
 
