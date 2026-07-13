@@ -515,9 +515,10 @@ export default function Manual() {
                     <li>Indicadores de Qualidade: Porta-ECG, Porta Decisão, Regulação, Porta-Telecardio, Transporte, ICP-Hemodinâmica, FMC-to-device e Tempo Porta-Agulha</li>
                     <li>Filtros por <strong>mês</strong> (incluindo opção "Todos" para visão anual), <strong>ano</strong>, <strong>macrorregião</strong> e <strong>tipo de SCA</strong></li>
                     <li>Análise Epidemiológica com dados demográficos dos pacientes (macrorregião, tipo de SCA, cidades, unidades, perfil por sexo/faixa etária e fatores de risco)</li>
-                    <li>Painel de Trombólise com estatísticas de uso por medicamento e indicação</li>
+                    <li>Painel de Trombólise com estatísticas de uso por medicamento, indicação e evolução mensal</li>
                     <li>Exportação de dados em CSV (Indicadores de Qualidade)</li>
                     <li>Exportação da Análise Epidemiológica em <strong>PDF</strong> e <strong>Excel (XLSX)</strong> com tabelas e gráficos</li>
+                    <li>Exportação dos Indicadores de Trombólise em <strong>PDF</strong> e <strong>Excel (XLSX)</strong> — inclui totais por indicação (IAM/TEP/AVC), uso por classe e apresentação de medicamento, evolução mensal e registros detalhados</li>
                     <li>Distribuição por classificação de risco (vermelha, laranja, amarela, verde)</li>
                     <li>Gráficos de ICP por tipo e macrorregião</li>
                   </ul>
