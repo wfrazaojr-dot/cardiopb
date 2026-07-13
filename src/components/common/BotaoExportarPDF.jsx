@@ -19,32 +19,54 @@ export default function BotaoExportarPDF({ contentRef, nomeArquivo, titulo = "Ex
     if (!contentRef?.current) return;
     setExportando(true);
     try {
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 1.8,
-        logging: false,
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: "#ffffff",
-        imageTimeout: 15000,
-        removeContainer: true,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+      const margin = 5;
+      const usableWidth = pdfWidth - margin * 2;
+      let cursorY = margin;
 
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-      heightLeft -= pdfHeight;
+      // Captura cada card separadamente para evitar limite de canvas em páginas longas
+      const cards = contentRef.current.querySelectorAll(":scope > *");
+      const elements = cards.length > 0 ? Array.from(cards) : [contentRef.current];
 
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
+      for (let i = 0; i < elements.length; i++) {
+        const canvas = await html2canvas(elements[i], {
+          scale: 1.5,
+          logging: false,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: "#ffffff",
+          imageTimeout: 15000,
+          removeContainer: true,
+        });
+
+        const imgData = canvas.toDataURL("image/jpeg", 0.92);
+        const imgHeight = (canvas.height * usableWidth) / canvas.width;
+
+        if (cursorY + imgHeight > pdfHeight - margin && cursorY > margin) {
+          pdf.addPage();
+          cursorY = margin;
+        }
+
+        // Se o card for maior que uma página inteira, divide
+        if (imgHeight > pdfHeight - margin * 2) {
+          let heightLeft = imgHeight;
+          let position = cursorY;
+          pdf.addImage(imgData, "JPEG", margin, position, usableWidth, imgHeight);
+          heightLeft -= pdfHeight - margin - cursorY;
+
+          while (heightLeft > 0) {
+            pdf.addPage();
+            position = margin - (imgHeight - heightLeft);
+            pdf.addImage(imgData, "JPEG", margin, position, usableWidth, imgHeight);
+            heightLeft -= pdfHeight - margin * 2;
+          }
+          cursorY = pdfHeight - margin;
+        } else {
+          pdf.addImage(imgData, "JPEG", margin, cursorY, usableWidth, imgHeight);
+          cursorY += imgHeight + 2;
+        }
       }
 
       pdf.save(`${nomeArquivo}.pdf`);
