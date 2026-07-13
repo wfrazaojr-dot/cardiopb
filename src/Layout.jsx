@@ -45,140 +45,72 @@ export default function Layout({ children, currentPageName }) {
   const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
 
   const getNavigationItems = () => {
-    // Menu padrão com Painel Inicial (sempre disponível para todos)
-    const menuBase = [
-      {
-        title: "Painel Inicial",
-        url: createPageUrl("PainelInicial"),
-        icon: Activity,
-      },
+    const role = user?.role;
+
+    // Lista completa de todos os itens de menu
+    const allItems = [
+      { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+      { title: "Painel Assistencial", url: createPageUrl("Historico"), icon: History },
+      { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+      { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
+      { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+      { title: "Estratégias e Condutas", url: createPageUrl("ProtocoloEstrategias"), icon: FileText },
+      { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+      { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
+      { title: "Trombólise", url: createPageUrl("GestaoTrombolise"), icon: Pill },
+      { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },
+      { title: "Logs de Auditoria", url: createPageUrl("LogsAuditoria"), icon: ClipboardList },
+      { title: "Controle de Acessos", url: "/ControleAcessos", icon: Shield },
+      { title: "Administração", url: createPageUrl("Administracao"), icon: Shield },
     ];
 
-    // DESENVOLVEDOR ou Admin legado: acesso pleno
-    if (isDev || user?.role === 'DESENVOLVEDOR' || user?.role === 'admin') {
-      return [
-        ...menuBase,
-        {
-          title: "Painel Assistencial",
-          url: createPageUrl("Historico"),
-          icon: History,
-        },
-        {
-          title: "Painel de Regulação",
-          url: createPageUrl("Dashboard"),
-          icon: Activity,
-        },
-        {
-          title: "Indicadores",
-          url: createPageUrl("Indicadores"),
-          icon: TrendingUp,
-        },
-        {
-          title: "Protocolos",
-          url: createPageUrl("Protocolos"),
-          icon: BookOpen,
-        },
-        {
-          title: "Estratégias e Condutas",
-          url: createPageUrl("ProtocoloEstrategias"),
-          icon: FileText,
-        },
-        {
-          title: "Manual",
-          url: createPageUrl("Manual"),
-          icon: FileText,
-        },
-        {
-          title: "Monitor Transportes",
-          url: createPageUrl("MonitorTransportes"),
-          icon: Truck,
-        },
-        {
-          title: "Trombólise",
-          url: createPageUrl("GestaoTrombolise"),
-          icon: Pill,
-        },
-        ...(isDev ? [{
-          title: "Relatório Farmacêutico",
-          url: createPageUrl("RelatorioFarmacia"),
-          icon: FlaskConical,
-        }] : []),
-        {
-          title: "Logs de Auditoria",
-          url: createPageUrl("LogsAuditoria"),
-          icon: ClipboardList,
-        },
-        {
-          title: "Controle de Acessos",
-          url: "/ControleAcessos",
-          icon: Shield,
-        },
-        {
-          title: "Administração",
-          url: createPageUrl("Administracao"),
-          icon: Shield,
-        },
-      ];
+    // Filtra itens por lista de exclusão
+    const filterExcluding = (exclusions) =>
+      allItems.filter(item => !exclusions.includes(item.title));
+
+    // 1. ADMIN_TI_SECRETARIA, admin, DESENVOLVEDOR (ou e-mail dev): ACESSO PLENO
+    if (isDev || role === 'DESENVOLVEDOR' || role === 'ADMIN_TI_SECRETARIA' ||
+        role === 'admin' || role === 'ADMINISTRADOR_MANAGER') {
+      return allItems;
     }
 
-    // ADMINISTRADOR_MANAGER: visão geral + gerenciamento de acessos
-    if (user?.role === 'ADMINISTRADOR_MANAGER') {
-      return [
-        ...menuBase,
-        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
-        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
-        { title: "Controle de Acessos", url: "/ControleAcessos", icon: Shield },
-        { title: "Logs de Auditoria", url: createPageUrl("LogsAuditoria"), icon: ClipboardList },
-        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
-      ];
+    // 2. ADMINISTRADOR_MASTER: TUDO exceto Relatório Farmacêutico
+    if (role === 'ADMINISTRADOR_MASTER') {
+      return filterExcluding(["Relatório Farmacêutico"]);
     }
 
-    // ADMINISTRADOR_CERH: acesso CERH + indicadores
-    if (user?.role === 'ADMINISTRADOR_CERH') {
-      return [
-        ...menuBase,
-        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
-        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
-        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
-        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
-        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
-      ];
+    // 3. ADMINISTRADOR_CERH: TUDO exceto Controle de Acessos, Logs de Auditoria, Relatório Farmacêutico, Monitor Transportes
+    if (role === 'ADMINISTRADOR_CERH') {
+      return filterExcluding(["Controle de Acessos", "Logs de Auditoria", "Relatório Farmacêutico", "Monitor Transportes"]);
     }
 
-    // ADMINISTRADOR_CARDIOLOGIA: ASSCARDIO + Trombólise + Hemodinâmica
-    if (user?.role === 'ADMINISTRADOR_CARDIOLOGIA') {
-      return [
-        ...menuBase,
-        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
-        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
-        { title: "Gestão de Trombólise", url: createPageUrl("GestaoTrombolise"), icon: Pill },
-        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
-        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
-      ];
+    // 4. ADMINISTRADOR_ASSCARDIO (ou legado ADMINISTRADOR_CARDIOLOGIA): mesmas exceções do CERH
+    if (role === 'ADMINISTRADOR_ASSCARDIO' || role === 'ADMINISTRADOR_CARDIOLOGIA') {
+      return filterExcluding(["Controle de Acessos", "Logs de Auditoria", "Relatório Farmacêutico", "Monitor Transportes"]);
     }
 
-    // ADMINISTRADOR_TRANSPORTE: Transporte + indicadores
-    if (user?.role === 'ADMINISTRADOR_TRANSPORTE') {
+    // 5. ADMINISTRADOR_FARMACIA: apenas Painel Inicial + Relatório Farmacêutico
+    if (role === 'ADMINISTRADOR_FARMACIA') {
       return [
-        ...menuBase,
-        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
-        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
-        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
-      ];
-    }
-
-    // ADMINISTRADOR_FARMACIA: acesso exclusivo ao Relatório Farmacêutico
-    if (user?.role === 'ADMINISTRADOR_FARMACIA') {
-      return [
-        ...menuBase,
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
         { title: "Relatório Farmacêutico", url: createPageUrl("RelatorioFarmacia"), icon: FlaskConical },
       ];
     }
 
-    // Novo sistema: verificar role ASSCARDIO diretamente
-    if (user?.role === 'ASSCARDIO') {
+    // 6. ADMINISTRADOR_TRANSPORTE (legado): Transporte + Regulação + Indicadores
+    if (role === 'ADMINISTRADOR_TRANSPORTE') {
       return [
-        ...menuBase,
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Indicadores", url: createPageUrl("Indicadores"), icon: TrendingUp },
+      ];
+    }
+
+    // 7. ASSCARDIO operacional
+    if (role === 'ASSCARDIO') {
+      return [
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
         { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
         { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
         { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
@@ -192,113 +124,49 @@ export default function Layout({ children, currentPageName }) {
     // Menu para Transporte
     if (equipe === 'transporte') {
       return [
-        ...menuBase,
-        {
-          title: "Monitor Transportes",
-          url: createPageUrl("MonitorTransportes"),
-          icon: Truck,
-        },
-        {
-          title: "Painel de Regulação",
-          url: createPageUrl("Dashboard"),
-          icon: Activity,
-        },
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+        { title: "Monitor Transportes", url: createPageUrl("MonitorTransportes"), icon: Truck },
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
       ];
     }
 
     // Menu para Unidades de Saúde
     if (equipe === 'unidade_saude') {
       return [
-        ...menuBase,
-        {
-          title: "Painel Assistencial",
-          url: createPageUrl("Historico"),
-          icon: History,
-        },
-        {
-          title: "Trombólise",
-          url: createPageUrl("GestaoTrombolise"),
-          icon: Pill,
-        },
-        {
-          title: "Protocolos",
-          url: createPageUrl("Protocolos"),
-          icon: BookOpen,
-        },
-        {
-          title: "Manual",
-          url: createPageUrl("Manual"),
-          icon: FileText,
-        },
-        {
-          title: "Estratégias e Condutas",
-          url: createPageUrl("ProtocoloEstrategias"),
-          icon: FileText,
-        },
-        {
-          title: "Formulário/Vaga",
-          url: createPageUrl("FormularioVaga"),
-          icon: FileText,
-        },
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+        { title: "Painel Assistencial", url: createPageUrl("Historico"), icon: History },
+        { title: "Trombólise", url: createPageUrl("GestaoTrombolise"), icon: Pill },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+        { title: "Estratégias e Condutas", url: createPageUrl("ProtocoloEstrategias"), icon: FileText },
+        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
       ];
     }
 
     // Menu para CERH
     if (equipe === 'cerh') {
       return [
-        ...menuBase,
-        {
-          title: "Painel de Regulação",
-          url: createPageUrl("Dashboard"),
-          icon: Activity,
-        },
-        {
-          title: "Protocolos",
-          url: createPageUrl("Protocolos"),
-          icon: BookOpen,
-        },
-        {
-          title: "Manual",
-          url: createPageUrl("Manual"),
-          icon: FileText,
-        },
-        {
-          title: "Formulário/Vaga",
-          url: createPageUrl("FormularioVaga"),
-          icon: FileText,
-        },
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
       ];
     }
 
-    // Menu para ASSCARDIO
+    // Menu para ASSCARDIO (via equipe)
     if (equipe === 'asscardio') {
       return [
-        ...menuBase,
-        {
-          title: "Painel de Regulação",
-          url: createPageUrl("Dashboard"),
-          icon: Activity,
-        },
-        {
-          title: "Protocolos",
-          url: createPageUrl("Protocolos"),
-          icon: BookOpen,
-        },
-        {
-          title: "Manual",
-          url: createPageUrl("Manual"),
-          icon: FileText,
-        },
-        {
-          title: "Formulário/Vaga",
-          url: createPageUrl("FormularioVaga"),
-          icon: FileText,
-        },
+        { title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity },
+        { title: "Painel de Regulação", url: createPageUrl("Dashboard"), icon: Activity },
+        { title: "Protocolos", url: createPageUrl("Protocolos"), icon: BookOpen },
+        { title: "Manual", url: createPageUrl("Manual"), icon: FileText },
+        { title: "Formulário/Vaga", url: createPageUrl("FormularioVaga"), icon: FileText },
       ];
     }
 
-    // Retorna menu base para qualquer outro perfil
-    return menuBase;
+    // Menu base para qualquer outro perfil
+    return [{ title: "Painel Inicial", url: createPageUrl("PainelInicial"), icon: Activity }];
   };
 
   const navigationItems = getNavigationItems();

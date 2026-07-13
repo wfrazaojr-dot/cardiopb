@@ -5,11 +5,11 @@
     "role": {
       "type": "string",
       "enum": [
+        "ADMIN_TI_SECRETARIA",
         "DESENVOLVEDOR",
-        "ADMINISTRADOR_MANAGER",
+        "ADMINISTRADOR_MASTER",
         "ADMINISTRADOR_CERH",
-        "ADMINISTRADOR_CARDIOLOGIA",
-        "ADMINISTRADOR_TRANSPORTE",
+        "ADMINISTRADOR_ASSCARDIO",
         "ADMINISTRADOR_FARMACIA",
         "UNIDADE_SAUDE",
         "CERH",
@@ -34,10 +34,10 @@
         "ASSCARDIO",
         "TRANSPORTE",
         "HEMODINAMICA",
-        "ADMINISTRADOR_MANAGER",
+        "ADMIN_TI_SECRETARIA",
+        "ADMINISTRADOR_MASTER",
         "ADMINISTRADOR_CERH",
-        "ADMINISTRADOR_CARDIOLOGIA",
-        "ADMINISTRADOR_TRANSPORTE",
+        "ADMINISTRADOR_ASSCARDIO",
         "ADMINISTRADOR_FARMACIA"
       ],
       "description": "Perfil principal do usu\u00e1rio"
@@ -81,7 +81,7 @@
         "BLOQUEADO"
       ],
       "default": "PENDENTE",
-      "description": "Status de acesso gerenciado pelo Administrador Manager"
+      "description": "Status de acesso gerenciado pelo Administrador TI da Secretaria"
     },
     "equipe": {
       "type": "string",

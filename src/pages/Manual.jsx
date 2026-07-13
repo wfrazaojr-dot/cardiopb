@@ -173,28 +173,67 @@ export default function Manual() {
                   </ul>
                 </div>
 
-                <div className="border-l-4 border-red-500 pl-4">
-                  <h4 className="font-semibold mb-2">🛡️ Administrador Manager</h4>
+                <div className="border-l-4 border-red-600 pl-4">
+                  <h4 className="font-semibold mb-2">🖥️ Administrador TI da Secretaria de Saúde</h4>
                   <p className="text-gray-700 mb-2">
-                    Responsável pela gestão de acessos e supervisão geral do sistema.
+                    Gerência de TI da Secretaria de Saúde. Acesso pleno a todas as funcionalidades e menu de navegação.
                   </p>
                   <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                    <li>Aprovação, inativação ou bloqueio de usuários em <strong>Controle de Acessos</strong></li>
-                    <li>Visualização do Painel de Regulação e Indicadores</li>
-                    <li>Acesso aos Logs de Auditoria</li>
-                    <li>Monitor de Transportes</li>
+                    <li><strong>Controle total:</strong> permite, bloqueia ou exclui o acesso de todos os usuários administradores</li>
+                    <li>Acesso irrestrito a todos os módulos, painéis e relatórios</li>
+                    <li>Gestão completa de acessos em <strong>Controle de Acessos</strong></li>
+                    <li>Visualização de <strong>Logs de Auditoria</strong></li>
+                    <li>Acesso ao <strong>Relatório Farmacêutico</strong></li>
                   </ul>
                 </div>
 
                 <div className="border-l-4 border-purple-500 pl-4">
-                  <h4 className="font-semibold mb-2">🛠️ Desenvolvedor</h4>
+                  <h4 className="font-semibold mb-2">🛠️ Administrador Desenvolvedor</h4>
                   <p className="text-gray-700 mb-2">
-                    Acesso completo a todas as funcionalidades do sistema para fins de desenvolvimento e suporte.
+                    Acesso a todas as páginas e painéis de navegação.
                   </p>
                   <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                    <li>Acesso irrestrito a todos os módulos</li>
+                    <li>Acesso irrestrito a todos os módulos do sistema</li>
                     <li>Gestão de usuários, profissionais e configurações</li>
                     <li>Logs de auditoria, indicadores e administração</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-indigo-500 pl-4">
+                  <h4 className="font-semibold mb-2">🔑 Administrador Master</h4>
+                  <p className="text-gray-700 mb-2">
+                    Acesso a todas as páginas e painéis de navegação, exceto Relatório Farmacêutico.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    <li>Painel Assistencial, Painel de Regulação e Indicadores</li>
+                    <li>Monitor de Transportes, Trombólise e Administração</li>
+                    <li>Controle de Acessos e Logs de Auditoria</li>
+                    <li>Protocolos, Estratégias e Condutas, Manual</li>
+                    <li><strong>Exceção:</strong> sem acesso ao Relatório Farmacêutico</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <h4 className="font-semibold mb-2">📡 Administrador CERH</h4>
+                  <p className="text-gray-700 mb-2">
+                    Acesso a todas as páginas e painéis de navegação, com exceções.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    <li>Painel Assistencial, Painel de Regulação e Indicadores</li>
+                    <li>Trombólise, Administração, Protocolos e Manual</li>
+                    <li><strong>Exceções:</strong> sem acesso a Controle de Acessos, Logs de Auditoria, Relatório Farmacêutico e Monitor de Transporte</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-green-500 pl-4">
+                  <h4 className="font-semibold mb-2">❤️ Administrador ASSCARDIO</h4>
+                  <p className="text-gray-700 mb-2">
+                    Acesso a todas as páginas e painéis de navegação, com exceções.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    <li>Painel Assistencial, Painel de Regulação e Indicadores</li>
+                    <li>Trombólise, Administração, Protocolos e Manual</li>
+                    <li><strong>Exceções:</strong> sem acesso a Controle de Acessos, Logs de Auditoria, Relatório Farmacêutico e Monitor de Transporte</li>
                   </ul>
                 </div>
               </div>
