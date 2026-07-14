@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, UserPlus, Shield, Clock } from "lucide-react";
+import { UserPlus, Shield, Clock } from "lucide-react";
 
 export default function PrimeiroAcesso() {
   const navigate = useNavigate();
@@ -37,15 +37,17 @@ export default function PrimeiroAcesso() {
           {/* Ícone e título */}
           <div className="space-y-4">
             <div className="flex justify-center">
-              <div className="bg-red-600 p-5 rounded-full shadow-lg">
-                <Heart className="w-14 h-14 text-white" />
-              </div>
+              <img
+                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg"
+                alt="CARDIOPB"
+                className="h-24 w-auto object-contain"
+              />
             </div>
             <h1 className="text-4xl font-bold text-gray-900">
               Bem-vindo ao <span className="text-red-600">CARDIOPB</span>
             </h1>
             <p className="text-lg text-gray-600 max-w-xl mx-auto">
-              Sistema integrado de regulação e controle para doenças cardiovasculares do Estado da Paraíba.
+              Sistema de Triagem e Regulação Médica do IAM da Paraíba.
             </p>
           </div>
 
