@@ -9,27 +9,6 @@ export default function PrimeiroAcesso() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-4 shadow-sm">
-        <div className="flex items-center justify-center gap-6 max-w-4xl mx-auto">
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/8e093c8da_logoSecretariadeEstadodaSade.png"
-            alt="Secretaria de Saúde"
-            className="h-12 w-auto object-contain"
-          />
-          <img
-            src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg"
-            alt="CARDIOPB"
-            className="h-12 w-auto object-contain"
-          />
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68fa0edee56f5a67f929da76/873a4a563_logo.png"
-            alt="PBSAÚDE"
-            className="h-12 w-auto object-contain"
-          />
-        </div>
-      </header>
-
       {/* Conteúdo principal */}
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full space-y-8 text-center">
