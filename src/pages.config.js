@@ -66,7 +66,7 @@ import Inicio from './pages/Inicio';
 import Manual from './pages/Manual';
 import MonitorTransportes from './pages/MonitorTransportes';
 import NovaTriagem from './pages/NovaTriagem';
-import PINLogin from './pages/PINLogin';
+
 import PainelInicial from './pages/PainelInicial.jsx';
 import PerfilSelection from './pages/PerfilSelection';
 import ProtocoloEstrategias from './pages/ProtocoloEstrategias';
@@ -96,7 +96,7 @@ export const PAGES = {
     "Manual": Manual,
     "MonitorTransportes": MonitorTransportes,
     "NovaTriagem": NovaTriagem,
-    "PINLogin": PINLogin,
+
     "PainelInicial": PainelInicial,
     "PerfilSelection": PerfilSelection,
     "ProtocoloEstrategias": ProtocoloEstrategias,
