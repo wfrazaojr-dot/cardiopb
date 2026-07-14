@@ -111,15 +111,7 @@ export default function PINLogin() {
               {loading ? "Verificando..." : "Acessar"}
             </Button>
 
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => navigate(createPageUrl("RecuperarPIN"))}
-                className="text-sm text-red-600 hover:text-red-700 hover:underline"
-              >
-                Esqueci meu PIN
-              </button>
-            </div>
+
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-200 text-center">

@@ -71,7 +71,7 @@ import PainelInicial from './pages/PainelInicial.jsx';
 import PerfilSelection from './pages/PerfilSelection';
 import ProtocoloEstrategias from './pages/ProtocoloEstrategias';
 import Protocolos from './pages/Protocolos';
-import RecuperarPIN from './pages/RecuperarPIN';
+
 import TransporteDetalhe from './pages/TransporteDetalhe';
 import __Layout from './Layout.jsx';
 
@@ -101,7 +101,7 @@ export const PAGES = {
     "PerfilSelection": PerfilSelection,
     "ProtocoloEstrategias": ProtocoloEstrategias,
     "Protocolos": Protocolos,
-    "RecuperarPIN": RecuperarPIN,
+
     "TransporteDetalhe": TransporteDetalhe,
 }
 
