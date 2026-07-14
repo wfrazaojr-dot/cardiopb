@@ -8,7 +8,7 @@ export default function PrimeiroAcesso() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Conteúdo principal */}
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full space-y-8 text-center">
