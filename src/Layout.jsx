@@ -40,8 +40,6 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [user, currentPageName, navigate]);
 
-
-
   const isDev = user?.email?.toLowerCase() === "wfrazaojr@gmail.com";
 
   const getNavigationItems = () => {
@@ -197,12 +195,81 @@ export default function Layout({ children, currentPageName }) {
           background-repeat: repeat;
         }
       `}</style>
-      <div className="min-h-screen flex flex-col w-full bg-gray-50 ecg-background">
-        {/* Header */}
+
+      <Sidebar className="border-r border-red-200 bg-white">
+        <SidebarHeader className="border-b border-red-200 p-1.5 bg-white">
+          <div className="flex items-center justify-center">
+            <img 
+              src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
+              alt="CARDIOPB" 
+              className="h-12 w-auto"
+            />
+          </div>
+        </SidebarHeader>
+        
+        <SidebarContent className="p-0">
+          <SidebarGroup className="p-1">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navigationItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild 
+                      className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded mb-1.5 ${
+                        location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
+                      }`}
+                    >
+                      <Link to={item.url} className="flex items-center gap-2 px-3 py-2 text-[12px] leading-tight">
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          {user && (
+            <SidebarGroup className="p-1">
+              <SidebarGroupContent>
+                <div className="space-y-1">
+                  <div className="bg-blue-50 p-1 rounded text-center">
+                    <p className="text-[10px] text-blue-900 font-semibold truncate">{user.full_name}</p>
+                    {(isDev || user.role === 'DESENVOLVEDOR') && (
+                      <p className="text-[9px] text-purple-700 font-bold">DEV</p>
+                    )}
+                  </div>
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    className="w-full text-red-600 hover:bg-red-50 text-[10px] h-6 px-1"
+                    size="sm"
+                  >
+                    <LogOut className="w-3 h-3 mr-1" />
+                    Sair
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
+        </SidebarContent>
+
+        <SidebarFooter className="border-t border-red-200 p-1.5 bg-gray-50">
+          <div className="text-center leading-tight">
+            <p className="text-[9px] font-semibold text-gray-700">Walber A. Frazão Jr.</p>
+            <p className="text-[8px] text-gray-500">COREN 110.238</p>
+            <p className="text-[8px] text-gray-400">© 2025</p>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+
+      <div className="flex-1 flex flex-col min-h-screen bg-gray-50 ecg-background w-full min-w-0">
+        {/* Header desktop — ocupa apenas a área ao lado da sidebar */}
         <header className="bg-white border-b border-gray-200 px-2 md:px-4 py-1.5 md:py-2 shadow-sm">
-          <div className="grid grid-cols-3 items-center justify-items-center gap-1 md:gap-4 h-full w-full">
+          <div className="flex items-center justify-between gap-1 md:gap-4 h-full w-full">
             {/* Logo Secretaria de Estado da Saúde - Esquerda */}
-            <div>
+            <div className="flex justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/0e16b728d_logoSecretariadeEstadodaSade.png" 
                 alt="Secretaria de Estado da Saúde" 
@@ -211,7 +278,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             {/* Logo CARDIOPB - Centro */}
-            <div>
+            <div className="flex justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
@@ -220,7 +287,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             {/* Logo Complexo Regulador - Direita */}
-            <div>
+            <div className="flex justify-center">
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/940dd8bd1_LogoComplexoregulador.jpg" 
                 alt="Complexo Regulador" 
@@ -230,90 +297,17 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </header>
 
-        <div className="flex flex-1 min-h-0">
-        <Sidebar className="border-r border-red-200 bg-white">
-          <SidebarHeader className="border-b border-red-200 p-1.5 bg-white">
-            <div className="flex items-center justify-center">
-              <img 
-                src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
-                alt="CARDIOPB" 
-                className="h-12 w-auto"
-              />
-            </div>
-          </SidebarHeader>
-          
-          <SidebarContent className="p-0">
-            <SidebarGroup className="p-1">
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {navigationItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton 
-                        asChild 
-                        className={`hover:bg-red-50 hover:text-red-700 transition-colors duration-200 rounded mb-1.5 ${
-                          location.pathname === item.url ? 'bg-red-50 text-red-700 font-semibold' : ''
-                        }`}
-                      >
-                        <Link to={item.url} className="flex items-center gap-2 px-3 py-2 text-[12px] leading-tight">
-                          <item.icon className="w-4 h-4 flex-shrink-0" />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+        {/* Header mobile — com botão de menu */}
+        <header className="bg-white border-b border-gray-200 px-4 py-3 md:hidden shadow-sm">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg shadow-lg transition-all duration-200" />
+            <h1 className="text-lg font-bold text-red-600">CARDIOPB</h1>
+          </div>
+        </header>
 
-
-
-            {user && (
-              <SidebarGroup className="p-1">
-                <SidebarGroupContent>
-                  <div className="space-y-1">
-                    <div className="bg-blue-50 p-1 rounded text-center">
-                      <p className="text-[10px] text-blue-900 font-semibold truncate">{user.full_name}</p>
-                      {(isDev || user.role === 'DESENVOLVEDOR') && (
-                        <p className="text-[9px] text-purple-700 font-bold">DEV</p>
-                      )}
-                    </div>
-                    <Button
-                      onClick={handleLogout}
-                      variant="ghost"
-                      className="w-full text-red-600 hover:bg-red-50 text-[10px] h-6 px-1"
-                      size="sm"
-                    >
-                      <LogOut className="w-3 h-3 mr-1" />
-                      Sair
-                    </Button>
-                  </div>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-          </SidebarContent>
-
-          <SidebarFooter className="border-t border-red-200 p-1.5 bg-gray-50">
-            <div className="text-center leading-tight">
-              <p className="text-[9px] font-semibold text-gray-700">Walber A. Frazão Jr.</p>
-              <p className="text-[8px] text-gray-500">COREN 110.238</p>
-              <p className="text-[8px] text-gray-400">© 2025</p>
-            </div>
-          </SidebarFooter>
-        </Sidebar>
-
-          <main className="flex-1 flex flex-col">
-            <header className="bg-white border-b border-gray-200 px-4 py-3 md:hidden shadow-sm">
-              <div className="flex items-center gap-3">
-                <SidebarTrigger className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg shadow-lg transition-all duration-200" />
-                <h1 className="text-lg font-bold text-red-600">CARDIOPB</h1>
-              </div>
-            </header>
-
-            <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{WebkitOverflowScrolling: 'touch'}}>
-              {children}
-            </div>
-          </main>
-        </div>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden" style={{WebkitOverflowScrolling: 'touch'}}>
+          {children}
+        </main>
       </div>
       <NotificacoesCenter />
     </SidebarProvider>
