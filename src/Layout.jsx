@@ -200,9 +200,9 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen flex flex-col w-full bg-gray-50 ecg-background">
         {/* Header */}
         <header className="bg-white border-b border-gray-200 px-2 md:px-4 py-1.5 md:py-2 shadow-sm">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 md:gap-[2cm] h-full">
+          <div className="grid grid-cols-3 items-center justify-items-center gap-1 md:gap-4 h-full w-full">
             {/* Logo Secretaria de Estado da Saúde - Esquerda */}
-            <div className="flex justify-end">
+            <div>
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/0e16b728d_logoSecretariadeEstadodaSade.png" 
                 alt="Secretaria de Estado da Saúde" 
@@ -211,7 +211,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             {/* Logo CARDIOPB - Centro */}
-            <div className="flex justify-center">
+            <div>
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg" 
                 alt="CARDIOPB" 
@@ -220,7 +220,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             {/* Logo Complexo Regulador - Direita */}
-            <div className="flex justify-start">
+            <div>
               <img 
                 src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/940dd8bd1_LogoComplexoregulador.jpg" 
                 alt="Complexo Regulador" 
