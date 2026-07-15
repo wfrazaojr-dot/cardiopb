@@ -608,9 +608,9 @@ export default function CadastroPerfil() {
                   macrorregiao={form.macrorregiao}
                   cidade={form.cidade}
                   unidade={form.unidade_saude}
-                  onMacroChange={(v) => setForm({ ...form, macrorregiao: v, cidade: "", unidade_saude: "" })}
-                  onCidadeChange={(v) => setForm({ ...form, cidade: v, unidade_saude: "" })}
-                  onUnidadeChange={(v) => setForm({ ...form, unidade_saude: v })}
+                  onMacroChange={(v) => setForm(prev => ({ ...prev, macrorregiao: v, cidade: "", unidade_saude: "" }))}
+                  onCidadeChange={(v) => setForm(prev => ({ ...prev, cidade: v, unidade_saude: "" }))}
+                  onUnidadeChange={(v) => setForm(prev => ({ ...prev, unidade_saude: v }))}
                 />
               </div>
             )}
