@@ -1,0 +1,193 @@
+{
+  "name": "ProfissionalAutorizado",
+  "type": "object",
+  "properties": {
+    "cpf": {
+      "type": "string",
+      "description": "CPF do profissional (chave unica de confronto)"
+    },
+    "nome_completo": {
+      "type": "string",
+      "description": "Nome completo conforme planilha enviada pela instituicao"
+    },
+    "data_nascimento": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de nascimento (opcional)"
+    },
+    "email": {
+      "type": "string",
+      "description": "E-mail de contato (opcional)"
+    },
+    "telefone": {
+      "type": "string",
+      "description": "Telefone de contato (opcional)"
+    },
+    "perfil": {
+      "type": "string",
+      "enum": [
+        "UNIDADE_SAUDE",
+        "CERH",
+        "ASSCARDIO",
+        "TRANSPORTE",
+        "HEMODINAMICA",
+        "GESTOR_DE_FARMACIA",
+        "ADMIN_TI_SECRETARIA",
+        "DESENVOLVEDOR",
+        "ADMINISTRADOR_MASTER",
+        "ADMINISTRADOR_CERH",
+        "ADMINISTRADOR_ASSCARDIO"
+      ],
+      "description": "Perfil autorizado pela gerencia"
+    },
+    "funcao": {
+      "type": "string",
+      "enum": [
+        "medico",
+        "enfermeiro",
+        "assistente_social",
+        "operador_frota",
+        "administrativo",
+        "farmaceutico"
+      ],
+      "description": "Funcao do profissional"
+    },
+    "registro_profissional_tipo": {
+      "type": "string",
+      "description": "Tipo: CRM, COREN, CRESS, CRF"
+    },
+    "registro_profissional_numero": {
+      "type": "string",
+      "description": "Numero do registro profissional"
+    },
+    "matricula": {
+      "type": "string",
+      "description": "Matricula (para adm/frota)"
+    },
+    "unidade_saude": {
+      "type": "string",
+      "description": "Unidade de saude de origem"
+    },
+    "macrorregiao": {
+      "type": "string",
+      "enum": [
+        "Macro 1",
+        "Macro 2",
+        "Macro 3"
+      ],
+      "description": "Macrorregiao de saude de origem"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "AGUARDANDO_ACESSO",
+        "ACESSO_SOLICITADO",
+        "ATIVADO",
+        "INATIVO"
+      ],
+      "default": "AGUARDANDO_ACESSO",
+      "description": "Status do pre-autorizado: AGUARDANDO_ACESSO (ainda nao tentou), ACESSO_SOLICITADO (tentou acesso, pendente de confronto), ATIVADO (ja ativado no sistema), INATIVO"
+    },
+    "origem_importacao": {
+      "type": "string",
+      "description": "Origem dos dados (google_sheets, manual)"
+    },
+    "data_importacao": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data da ultima importacao/sincronizacao"
+    },
+    "solicitacao_vinculada_id": {
+      "type": "string",
+      "description": "ID da SolicitacaoAcesso vinculada quando o profissional tenta o primeiro acesso"
+    },
+    "usuario_vinculado_id": {
+      "type": "string",
+      "description": "ID do User vinculado apos ativacao"
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observacoes administrativas"
+    }
+  },
+  "required": [
+    "cpf",
+    "nome_completo",
+    "perfil",
+    "funcao"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMIN_TI_SECRETARIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMIN_TI_SECRETARIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "DESENVOLVEDOR"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMINISTRADOR_MANAGER"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "ADMIN_TI_SECRETARIA"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "DESENVOLVEDOR"
+          }
+        }
+      ]
+    }
+  }
+}
