@@ -21,7 +21,7 @@ export default function CardioPB() {
             className="h-20 w-auto object-contain mb-4"
           />
           <h1 className="text-3xl font-bold text-gray-900">CARDIOPB</h1>
-          <p className="text-gray-600 mt-1">Unidade de Saúde - Triagem de Pacientes Cardíacos</p>
+          <p className="text-gray-600 mt-1">Unidade de Saúde - Triagem e Regulação Médica do IAM da Paraíba</p>
         </div>
       </header>
 
