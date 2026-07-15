@@ -601,20 +601,6 @@ export default function CadastroPerfil() {
               </div>
             )}
 
-            {form.perfil === "UNIDADE_SAUDE" && (
-              <div className="space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <p className="text-sm font-semibold text-gray-700">Localização da Unidade de Saúde</p>
-                <SeletorUnidadeSaude
-                  macrorregiao={form.macrorregiao}
-                  cidade={form.cidade}
-                  unidade={form.unidade_saude}
-                  onMacroChange={(v) => setForm(prev => ({ ...prev, macrorregiao: v, cidade: "", unidade_saude: "" }))}
-                  onCidadeChange={(v) => setForm(prev => ({ ...prev, cidade: v, unidade_saude: "" }))}
-                  onUnidadeChange={(v) => setForm(prev => ({ ...prev, unidade_saude: v }))}
-                />
-              </div>
-            )}
-
             {precisaRegistro && (
               <div>
                 <Label>{REGISTRO_TIPO_MAP[form.funcao]} *</Label>
@@ -635,6 +621,20 @@ export default function CadastroPerfil() {
                   placeholder="Número da matrícula"
                   value={form.matricula}
                   onChange={e => setForm({ ...form, matricula: e.target.value })}
+                />
+              </div>
+            )}
+
+            {form.perfil === "UNIDADE_SAUDE" && (
+              <div className="space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <p className="text-sm font-semibold text-gray-700">Localização da Unidade de Saúde</p>
+                <SeletorUnidadeSaude
+                  macrorregiao={form.macrorregiao}
+                  cidade={form.cidade}
+                  unidade={form.unidade_saude}
+                  onMacroChange={(v) => setForm(prev => ({ ...prev, macrorregiao: v, cidade: "", unidade_saude: "" }))}
+                  onCidadeChange={(v) => setForm(prev => ({ ...prev, cidade: v, unidade_saude: "" }))}
+                  onUnidadeChange={(v) => setForm(prev => ({ ...prev, unidade_saude: v }))}
                 />
               </div>
             )}
