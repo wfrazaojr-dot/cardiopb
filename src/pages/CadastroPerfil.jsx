@@ -497,17 +497,12 @@ export default function CadastroPerfil() {
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-blue-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-xl shadow-xl">
         <CardHeader className="text-center border-b pb-6">
-          <div className="flex justify-center gap-4 mb-3">
+          <div className="flex justify-center mb-2">
             <img
               src="https://media.base44.com/images/public/68fa0edee56f5a67f929da76/d2078127c_LOGOCARDIOPB.jpg"
               alt="CARDIOPB"
-              className="h-12 w-auto object-contain"
+              className="h-16 w-auto object-contain"
             />
-          </div>
-          <div className="flex justify-center mb-2">
-            <div className="bg-red-600 p-3 rounded-full">
-              <ClipboardList className="w-8 h-8 text-white" />
-            </div>
           </div>
           <CardTitle className="text-2xl text-gray-900">Solicitar Acesso</CardTitle>
           <CardDescription className="text-gray-600 mt-2">
