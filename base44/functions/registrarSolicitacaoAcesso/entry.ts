@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
 
     const { email, nome_completo, data_nascimento, cpf, telefone, perfil, funcao,
             registro_profissional_tipo, registro_profissional_numero,
-            matricula, unidade_saude, equipe } = body;
+            matricula, macrorregiao, unidade_saude, equipe } = body;
 
     if (!email || !nome_completo || !perfil || !funcao) {
       return Response.json({ error: 'Campos obrigatórios: email, nome_completo, perfil, funcao' }, { status: 400 });
@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
       registro_profissional_tipo: registro_profissional_tipo || null,
       registro_profissional_numero: registro_profissional_numero || null,
       matricula: matricula || null,
+      macrorregiao: macrorregiao || null,
       unidade_saude: unidade_saude || null,
       status: "PENDENTE",
     });
@@ -57,6 +58,7 @@ Deno.serve(async (req) => {
           registro_profissional_tipo,
           registro_profissional_numero,
           matricula,
+          macrorregiao,
           unidade_saude,
         },
         severidade: "info"
@@ -80,6 +82,7 @@ Deno.serve(async (req) => {
             perfil: perfil,
             funcao: funcao,
             equipe: equipe || "unidade_saude",
+            macrorregiao: macrorregiao || null,
             unidade_saude: unidade_saude?.trim() || null,
             registro_profissional_tipo: registro_profissional_tipo || null,
             registro_profissional_numero: registro_profissional_numero?.trim() || null,

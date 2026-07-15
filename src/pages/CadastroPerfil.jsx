@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { User, ClipboardList, CheckCircle2, Download } from "lucide-react";
 import { jsPDF } from "jspdf";
+import SeletorUnidadeSaude from "@/components/common/SeletorUnidadeSaude";
 
 const PERFIS_OPCOES = [
   { value: "UNIDADE_SAUDE", label: "Unidade de Saúde" },
@@ -117,6 +118,12 @@ function gerarPDFCadastro(form, emailExibido, precisaRegistro, precisaMatricula)
     { label: "Função", valor: FUNCAO_LABELS[form.funcao] || form.funcao },
   ];
   
+  if (form.perfil === "UNIDADE_SAUDE" && form.macrorregiao) {
+    dados.push({ label: "Macrorregião", valor: form.macrorregiao });
+  }
+  if (form.perfil === "UNIDADE_SAUDE" && form.cidade) {
+    dados.push({ label: "Cidade", valor: form.cidade });
+  }
   if (form.perfil === "UNIDADE_SAUDE" && form.unidade_saude) {
     dados.push({ label: "Unidade de Saúde", valor: form.unidade_saude });
   }
@@ -174,6 +181,8 @@ export default function CadastroPerfil() {
     registro_numero: "",
     matricula: "",
     telefone: "",
+    macrorregiao: "",
+    cidade: "",
     unidade_saude: "",
   });
   const [loading, setLoading] = useState(false);
@@ -209,6 +218,10 @@ export default function CadastroPerfil() {
       setErro("Informe a matrícula.");
       return;
     }
+    if (form.perfil === "UNIDADE_SAUDE" && (!form.macrorregiao || !form.cidade || !form.unidade_saude)) {
+      setErro("Selecione a macrorregião, cidade e unidade de saúde.");
+      return;
+    }
 
     setErro("");
     setEtapa("REVISAO");
@@ -231,6 +244,7 @@ export default function CadastroPerfil() {
       registro_profissional_numero: precisaRegistro ? form.registro_numero?.trim() : null,
       matricula: precisaMatricula ? form.matricula?.trim() : null,
       equipe: EQUIPE_MAP[form.perfil] || "unidade_saude",
+      macrorregiao: form.perfil === "UNIDADE_SAUDE" ? form.macrorregiao : null,
       unidade_saude: form.unidade_saude?.trim() || null,
     };
 
@@ -246,6 +260,8 @@ export default function CadastroPerfil() {
         telefone: form.telefone,
         perfil: form.perfil,
         funcao: form.funcao,
+        macrorregiao: form.macrorregiao,
+        cidade: form.cidade,
         unidade_saude: form.unidade_saude,
         registro_numero: form.registro_numero,
         matricula: form.matricula,
@@ -310,6 +326,18 @@ export default function CadastroPerfil() {
                   <span className="font-medium">Função:</span>
                   <span className="font-semibold text-gray-900">{FUNCAO_LABELS[dadosSalvos.funcao] || dadosSalvos.funcao}</span>
                 </div>
+                {dadosSalvos.perfil === "UNIDADE_SAUDE" && dadosSalvos.macrorregiao && (
+                  <div className="flex justify-between border-b pb-2">
+                    <span className="font-medium">Macrorregião:</span>
+                    <span className="text-gray-900">{dadosSalvos.macrorregiao}</span>
+                  </div>
+                )}
+                {dadosSalvos.perfil === "UNIDADE_SAUDE" && dadosSalvos.cidade && (
+                  <div className="flex justify-between border-b pb-2">
+                    <span className="font-medium">Cidade:</span>
+                    <span className="text-gray-900">{dadosSalvos.cidade}</span>
+                  </div>
+                )}
                 {dadosSalvos.perfil === "UNIDADE_SAUDE" && dadosSalvos.unidade_saude && (
                   <div className="flex justify-between border-b pb-2">
                     <span className="font-medium">Unidade de Saúde:</span>
@@ -398,10 +426,20 @@ export default function CadastroPerfil() {
                 <span className="text-gray-900 font-medium">{FUNCAO_LABELS[form.funcao] || form.funcao}</span>
               </div>
               {form.perfil === "UNIDADE_SAUDE" && (
-                <div className="flex justify-between border-b pb-3">
-                  <span className="font-semibold text-gray-700">Unidade de Saúde:</span>
-                  <span className="text-gray-900">{form.unidade_saude || "Não informado"}</span>
-                </div>
+                <>
+                  <div className="flex justify-between border-b pb-3">
+                    <span className="font-semibold text-gray-700">Macrorregião:</span>
+                    <span className="text-gray-900">{form.macrorregiao || "Não informado"}</span>
+                  </div>
+                  <div className="flex justify-between border-b pb-3">
+                    <span className="font-semibold text-gray-700">Cidade:</span>
+                    <span className="text-gray-900">{form.cidade || "Não informado"}</span>
+                  </div>
+                  <div className="flex justify-between border-b pb-3">
+                    <span className="font-semibold text-gray-700">Unidade de Saúde:</span>
+                    <span className="text-gray-900">{form.unidade_saude || "Não informado"}</span>
+                  </div>
+                </>
               )}
               {registroOuMatriculaLabel && (
                 <div className="flex justify-between">
@@ -564,13 +602,15 @@ export default function CadastroPerfil() {
             )}
 
             {form.perfil === "UNIDADE_SAUDE" && (
-              <div>
-                <Label>Unidade de Saúde</Label>
-                <Input
-                  className="mt-1"
-                  placeholder="Digite o nome de sua unidade de saúde"
-                  value={form.unidade_saude}
-                  onChange={e => setForm({ ...form, unidade_saude: e.target.value })}
+              <div className="space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <p className="text-sm font-semibold text-gray-700">Localização da Unidade de Saúde</p>
+                <SeletorUnidadeSaude
+                  macrorregiao={form.macrorregiao}
+                  cidade={form.cidade}
+                  unidade={form.unidade_saude}
+                  onMacroChange={(v) => setForm({ ...form, macrorregiao: v, cidade: "", unidade_saude: "" })}
+                  onCidadeChange={(v) => setForm({ ...form, cidade: v, unidade_saude: "" })}
+                  onUnidadeChange={(v) => setForm({ ...form, unidade_saude: v })}
                 />
               </div>
             )}
