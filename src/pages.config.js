@@ -68,7 +68,6 @@ import MonitorTransportes from './pages/MonitorTransportes';
 import NovaTriagem from './pages/NovaTriagem';
 
 import PainelInicial from './pages/PainelInicial.jsx';
-import PerfilSelection from './pages/PerfilSelection';
 import ProtocoloEstrategias from './pages/ProtocoloEstrategias';
 import Protocolos from './pages/Protocolos';
 
@@ -98,7 +97,6 @@ export const PAGES = {
     "NovaTriagem": NovaTriagem,
 
     "PainelInicial": PainelInicial,
-    "PerfilSelection": PerfilSelection,
     "ProtocoloEstrategias": ProtocoloEstrategias,
     "Protocolos": Protocolos,
 
