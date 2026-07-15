@@ -62,7 +62,6 @@ import Historico from './pages/Historico';
 import HistoricoUnidades from './pages/HistoricoUnidades';
 import Home from './pages/Home';
 import Indicadores from './pages/Indicadores';
-import Inicio from './pages/Inicio';
 import Manual from './pages/Manual';
 import MonitorTransportes from './pages/MonitorTransportes';
 import NovaTriagem from './pages/NovaTriagem';
@@ -91,7 +90,6 @@ export const PAGES = {
     "HistoricoUnidades": HistoricoUnidades,
     "Home": Home,
     "Indicadores": Indicadores,
-    "Inicio": Inicio,
     "Manual": Manual,
     "MonitorTransportes": MonitorTransportes,
     "NovaTriagem": NovaTriagem,
