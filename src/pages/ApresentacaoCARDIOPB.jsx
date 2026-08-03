@@ -193,7 +193,53 @@ export default function ApresentacaoCARDIOPB() {
 
     subtitulo("3.1 Linguagem e Framework");
     paragrafo(
-      "O front-end é desenvolvido em React com a biblioteca Tailwind CSS para um design responsivo, moderno e adaptado para uso clínico intensivo em dispositivos web e mobile."
+      "O front-end é desenvolvido em React com a biblioteca Tailwind CSS para um design responsivo, moderno e adaptado para uso clínico intensivo em dispositivos web e mobile. A pilha de desenvolvimento completa é descrita abaixo para a equipe técnica."
+    );
+    espaco(1);
+
+    subtitulo("3.1.1 JavaScript (ES2020+)");
+    paragrafo(
+      "Linguagem de programação principal do projeto. Toda a lógica de front-end (React) e de back-end (Deno) é escrita em JavaScript moderno. Permite o uso de sintaxe async/await, optional chaining, destructuring e módulos ES, garantindo código conciso e performático. É a base para toda a comunicação assíncrona com o servidor e para o tratamento de respostas JSON da API."
+    );
+
+    subtitulo("3.1.2 React 18");
+    paragrafo(
+      "Biblioteca de interface declarativa baseada em componentes. O CARDIOPB utiliza componentes funcionais com Hooks (useState, useEffect, useMemo) para gerenciar estado e ciclo de vida. Cada tela (triagem, regulação, transporte, hemodinâmica) é um componente isolado e reutilizável. A reatividade do React garante que cada mudança nos dados do paciente (ex: novo parecer, atualização de status) reflita instantaneamente na tela de todos os profissionais conectados, sem recarregar a página."
+    );
+
+    subtitulo("3.1.3 React Native (Publicação Mobile)");
+    paragrafo(
+      "O mesmo código-fonte em React é empacotado e publicado como aplicativo nativo para iOS e Android a partir de uma única base de código. Isso elimina a necessidade de manter dois projetos separados (Swift/Kotlin), reduzindo custo de manutenção. Profissionais podem acessar o sistema via navegador no desktop da unidade de saúde e via app instalado no celular durante o transporte sanitário, com a mesma experiência de usuário."
+    );
+
+    subtitulo("3.1.4 SDK da Base44 (Software Development Kit)");
+    paragrafo(
+      "O SDK é uma camada de abstração que expõe funções prontas para o front-end: leitura, criação, atualização e exclusão de entidades (base44.entities.Paciente.create(), .filter(), .update()), autenticação (base44.auth.me(), .redirectToLogin()), e integrações (base44.integrations.Core.SendEmail, .UploadFile, .InvokeLLM). O SDK encapsula toda a comunicação HTTP com o backend, tratamento de tokens de sessão e Row-Level Security, de forma que o desenvolvedor foca apenas na regra de negócio clínica, não na infraestrutura."
+    );
+
+    subtitulo("3.1.5 JSON (JavaScript Object Notation)");
+    paragrafo(
+      "Formato universal de troca de dados entre front-end e back-end. Cada entidade do sistema (Paciente, SolicitacaoAcesso, RegistroTrombolise, LogAuditoria) é definida e armazenada como um documento JSON. Os schemas JSON também definem validações de tipos (string, number, boolean, date), campos obrigatórios (required) e enumerações (ex: status com valores fixos). Toda resposta de API e todo payload de requisição trafega como JSON, o que facilita integrações futuras com outros sistemas governamentais."
+    );
+
+    subtitulo("3.1.6 Vite (Build e Dev Server)");
+    paragrafo(
+      "Empacotador (bundler) e servidor de desenvolvimento. Compila o código React e Tailwind em arquivos estáticos otimizados para produção. Oferece Hot Module Replacement (HMR) durante o desenvolvimento, recarregando apenas o componente editado. Gera a versão final de produção que é publicada automaticamente na CDN da Base44."
+    );
+
+    subtitulo("3.1.7 Tailwind CSS");
+    paragrafo(
+      "Framework CSS utility-first. Em vez de escrever CSS manual, as classes de estilo são aplicadas diretamente no JSX (ex: bg-red-600, text-white, rounded-lg). Garante consistência visual, design responsivo (mobile-first) e um bundle final otimizado, pois apenas as classes efetivamente usadas são incluídas no build."
+    );
+
+    subtitulo("3.1.8 React Query (@tanstack/react-query)");
+    paragrafo(
+      "Biblioteca de gerenciamento de estado assíncrono e cache de dados do servidor. Responsável por buscar, armazenar em cache e sincronizar dados de pacientes e profissionais. Implementa revalidação automática, refetch em segundo plano e atualização otimista, reduzindo chamadas desnecessárias ao backend e melhorando a percepção de velocidade."
+    );
+
+    subtitulo("3.1.9 jsPDF e xlsx (Exportação de Documentos)");
+    paragrafo(
+      "Bibliotecas de geração de PDF (jsPDF) e planilhas Excel (xlsx) no próprio navegador. Todos os relatórios clínicos (triagem, transporte, hemodinâmica, trombólise) e indicadores epidemiológicos são gerados no front-end, sem custo adicional de servidor, e baixados diretamente pelo profissional."
     );
 
     subtitulo("3.2 Banco de Dados e Backend");
