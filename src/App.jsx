@@ -15,6 +15,7 @@ import ControleAcessos from './pages/ControleAcessos.jsx';
 import PrimeiroAcesso from './pages/PrimeiroAcesso.jsx';
 import VerificarAssinatura from './pages/VerificarAssinatura.jsx';
 import ApresentacaoCARDIOPB from './pages/ApresentacaoCARDIOPB.jsx';
+import ApresentacaoCARDIOPBPPT from './pages/ApresentacaoCARDIOPBPPT.jsx';
 import BoasVindas from './pages/BoasVindas.jsx';
 import CadastroPerfil from './pages/CadastroPerfil.jsx';
 import AcessoPendente from './pages/AcessoPendente.jsx';
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
       <Route path="/PrimeiroAcesso" element={<PrimeiroAcesso />} />
       <Route path="/verificar" element={<VerificarAssinatura />} />
       <Route path="/ApresentacaoCARDIOPB" element={<ApresentacaoCARDIOPB />} />
+      <Route path="/ApresentacaoCARDIOPBPPT" element={<ApresentacaoCARDIOPBPPT />} />
       <Route path="*" element={<PageNotFound />} />
           </Routes>
         </LayoutWrapper>
