@@ -461,63 +461,404 @@ export default function ApresentacaoCARDIOPBPPT() {
     s.addText("Infraestrutura de nuvem certificada (AWS/GCP) com criptografia TLS em trânsito e em repouso.", { x: 1.5, y: 6.1, w: 10, h: 0.5, fontSize: 11, color: GRAY, align: "center" });
     addFooter(s, 35, TOTAL);
 
-    // ═════════════ SLIDE 36 — LINGUAGEM E FRAMEWORK ═════════════
+    // ═════════════ SLIDE 36 — 9.1 INDICADORES DE QUALIDADE — VISÃO GERAL ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
-    addTitleBar(s, pptx, "9.1 Linguagem e Framework");
-    addTextBlock(s, "O front-end é desenvolvido em React com Tailwind CSS para um design responsivo, moderno e adaptado para uso clínico intensivo em dispositivos web e mobile.", 0.6, 1.9, 12, 1, 14);
+    addTitleBar(s, pptx, "9.1 Indicadores de Qualidade — Visão Geral");
+    addTextBlock(s, "O CARDIOPB gera indicadores de qualidade e epidemiológicos em tempo real, exportáveis em PDF e Excel, para a gestão pública da rede cardiovascular.", 0.6, 1.9, 12, 0.8, 14);
+    const indsGeral = [
+      { v: "≤ 10 min", l: "Triagem → ECG" },
+      { v: "≤ 30 min", l: "Porta → Agulha" },
+      { v: "≤ 90 min", l: "Porta → Balão" },
+      { v: "Real-time", l: "Monitor Transportes" }
+    ];
+    indsGeral.forEach((ind, i) => {
+      const x = 0.5 + i * 3.1;
+      s.addShape(pptx.ShapeType.roundRect, { x, y: 3.0, w: 2.9, h: 1.8, fill: { color: RED } });
+      s.addText(ind.v, { x, y: 3.2, w: 2.9, h: 0.9, fontSize: 28, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
+      s.addText(ind.l, { x, y: 4.15, w: 2.9, h: 0.5, fontSize: 12, color: "FECACA", align: "center", valign: "middle" });
+    });
     addBullets(s, [
-      "JavaScript (ES2020+) — lógica de front-end e back-end (Deno)",
-      "React 18 — interface declarativa baseada em componentes",
-      "React Native — publicação mobile nativa (iOS e Android)",
-      "SDK da Base44 — abstração de entidades, auth e integrações",
-      "JSON — formato universal de troca de dados",
-      "Vite — build e dev server otimizado",
-      "Tailwind CSS — framework utility-first responsivo",
-      "React Query — cache e sincronização de dados do servidor",
-      "jsPDF e xlsx — geração de PDF e Excel no navegador"
-    ], 0.8, 3.1, 11.5, 3.5, 13);
+      "Distribuição por classificação de risco e tipo de SCA",
+      "Tempo médio por etapa do fluxo do paciente",
+      "Percentual de pacientes dentro da janela terapêutica",
+      "Taxa de ICP realizadas e reperfusão efetiva",
+      "Envio automático de indicadores ao IAMPBSAUDE"
+    ], 0.8, 5.2, 11.5, 1.5, 12);
     addFooter(s, 36, TOTAL);
 
-    // ═════════════ SLIDES 37-45 — TECNOLOGIAS DETALHADAS ═════════════
-    const techs = [
-      { t: "9.1.1 JavaScript (ES2020+)", desc: "Linguagem principal do projeto. Toda a lógica de front-end (React) e back-end (Deno) é escrita em JavaScript moderno com async/await, optional chaining, destructuring e módulos ES. Base para toda a comunicação assíncrona com o servidor e tratamento de respostas JSON da API." },
-      { t: "9.1.2 React 18", desc: "Biblioteca de interface declarativa baseada em componentes. O CARDIOPB usa componentes funcionais com Hooks (useState, useEffect, useMemo). Cada tela é um componente isolado e reutilizável. A reatividade garante que mudanças nos dados do paciente reflitam instantaneamente na tela de todos os profissionais, sem recarregar a página." },
-      { t: "9.1.3 React Native (Publicação Mobile)", desc: "O mesmo código-fonte em React é publicado como app nativo para iOS e Android a partir de uma única base de código. Elimina a necessidade de manter dois projetos separados (Swift/Kotlin). Profissionais acessam via navegador no desktop da unidade e via app no celular durante o transporte, com a mesma experiência." },
-      { t: "9.1.4 SDK da Base44", desc: "Camada de abstração com funções prontas: entidades (create, filter, update), autenticação (me, redirectToLogin) e integrações (SendEmail, UploadFile, InvokeLLM). Encapsula comunicação HTTP, tokens de sessão e Row-Level Security, permitindo que o desenvolvedor foque na regra de negócio clínica." },
-      { t: "9.1.5 JSON (JavaScript Object Notation)", desc: "Formato universal de troca de dados. Cada entidade (Paciente, SolicitacaoAcesso, RegistroTrombolise, LogAuditoria) é armazenada como documento JSON. Schemas definem validações de tipos, campos obrigatórios e enumerações. Facilita integrações futuras com sistemas governamentais." },
-      { t: "9.1.6 Vite (Build e Dev Server)", desc: "Empacotador e servidor de desenvolvimento. Compila React e Tailwind em arquivos estáticos otimizados. Oferece Hot Module Replacement (HMR) durante o desenvolvimento. Gera a versão final de produção publicada automaticamente na CDN da Base44." },
-      { t: "9.1.7 Tailwind CSS", desc: "Framework CSS utility-first. Classes de estilo aplicadas diretamente no JSX (bg-red-600, text-white, rounded-lg). Garante consistência visual, design responsivo (mobile-first) e bundle otimizado — apenas as classes usadas são incluídas no build final." },
-      { t: "9.1.8 React Query (@tanstack/react-query)", desc: "Gerenciamento de estado assíncrono e cache de dados do servidor. Busca, armazena em cache e sincroniza dados de pacientes e profissionais. Implementa revalidação automática, refetch em segundo plano e atualização otimista, reduzindo chamadas ao backend." },
-      { t: "9.1.9 jsPDF e xlsx (Exportação)", desc: "Bibliotecas de geração de PDF (jsPDF) e planilhas Excel (xlsx) no próprio navegador. Todos os relatórios clínicos (triagem, transporte, hemodinâmica, trombólise) e indicadores epidemiológicos são gerados no front-end, sem custo adicional de servidor, e baixados diretamente pelo profissional." }
-    ];
-    techs.forEach((tech, i) => {
-      s = pptx.addSlide();
-      addHeader(s, pptx);
-      addTitleBar(s, pptx, tech.t);
-      s.addShape(pptx.ShapeType.roundRect, { x: 0.8, y: 2.1, w: 11.5, h: 4.2, fill: { color: LIGHT_BG }, line: { color: RED, width: 0.5 } });
-      s.addText(tech.desc, { x: 1.1, y: 2.4, w: 10.9, h: 3.6, fontSize: 14, color: DARK, valign: "top", lineSpacingMultiple: 1.4 });
-      addFooter(s, 37 + i, TOTAL);
-    });
-
-    // ═════════════ SLIDE 46 — BANCO DE DADOS ═════════════
+    // ═════════════ SLIDE 37 — 9.2 TEMPO-CORAÇÃO (GRÁFICO) ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
-    addTitleBar(s, pptx, "9.2 Banco de Dados e Backend");
-    addTextBlock(s, "Os dados são armazenados em um banco de dados NoSQL gerenciado (MongoDB) hospedado na infraestrutura da plataforma Base44.", 0.6, 1.9, 12, 0.8, 14);
+    addTitleBar(s, pptx, "9.2 Indicadores Operacionais — Tempo-Coração");
+    addTextBlock(s, "Comparativo entre a meta estabelecida pelo protocolo e o tempo médio realizado pela rede (em minutos).", 0.6, 1.9, 12, 0.7, 13);
+    const chartTempo = [
+      { name: "Meta (min)", labels: ["Triagem-ECG", "Porta-Agulha", "Porta-Balão", "FMC-Device"], values: [10, 30, 90, 120] },
+      { name: "Realizado (min)", labels: ["Triagem-ECG", "Porta-Agulha", "Porta-Balão", "FMC-Device"], values: [8, 27, 82, 105] }
+    ];
+    s.addChart(pptx.ChartType.bar, chartTempo, {
+      x: 0.5, y: 2.7, w: 12, h: 4.0,
+      barDir: "col", showLegend: true, legendPos: "b",
+      showValue: true, valueFontSize: 10,
+      chartColors: ["C11528", "8B0E20"],
+      catAxisLabelFontSize: 11, valAxisLabelFontSize: 10,
+      title: "Tempo-Coração: Meta vs Realizado (minutos)",
+      titleFontSize: 13
+    });
+    addFooter(s, 37, TOTAL);
+
+    // ═════════════ SLIDE 38 — 9.3 CLASSIFICAÇÃO DE RISCO ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.3 Distribuição por Classificação de Risco");
+    addTextBlock(s, "Distribuição dos pacientes triados por nível de classificação de risco da enfermagem.", 0.6, 1.9, 12, 0.7, 13);
+    const chartRisco = [{ name: "Classificação", labels: ["Vermelha", "Laranja", "Amarela", "Verde"], values: [35, 28, 22, 15] }];
+    s.addChart(pptx.ChartType.pie, chartRisco, {
+      x: 0.5, y: 2.7, w: 6, h: 4.0,
+      showLegend: true, legendPos: "r", showPercent: true,
+      chartColors: ["DC2626", "F97316", "EAB308", "16A34A"],
+      showValue: true, valueFontSize: 12,
+      title: "Classificação de Risco (%)",
+      titleFontSize: 12
+    });
+    s.addText([
+      { text: "Vermelha: Emergência — imediato\n", options: { fontSize: 13, color: "DC2626", bold: true } },
+      { text: "Laranja: Muito urgente — ≤ 10 min\n", options: { fontSize: 13, color: "F97316", bold: true } },
+      { text: "Amarela: Urgente — ≤ 60 min\n", options: { fontSize: 13, color: "CA8A04", bold: true } },
+      { text: "Verde: Pouco urgente — ≤ 120 min", options: { fontSize: 13, color: "16A34A", bold: true } }
+    ], { x: 7, y: 3.2, w: 5.5, h: 3, lineSpacingMultiple: 1.8, valign: "middle" });
+    addFooter(s, 38, TOTAL);
+
+    // ═════════════ SLIDE 39 — 9.4 TIPO DE SCA ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.4 Indicadores Epidemiológicos — Tipo de SCA");
+    addTextBlock(s, "Distribuição dos casos confirmados por tipo de Síndrome Coronariana Aguda.", 0.6, 1.9, 12, 0.7, 13);
+    const chartSCA = [{ name: "Casos", labels: ["SCACEST", "SCASEST c/ Troponina", "SCASEST s/ Troponina"], values: [45, 35, 20] }];
+    s.addChart(pptx.ChartType.bar, chartSCA, {
+      x: 0.5, y: 2.7, w: 12, h: 4.0,
+      barDir: "col", showLegend: false, showValue: true,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 12, valueFontSize: 12,
+      title: "Distribuição por Tipo de SCA (%)",
+      titleFontSize: 13
+    });
+    addFooter(s, 39, TOTAL);
+
+    // ═════════════ SLIDE 40 — 9.5 TEMPO POR ETAPA ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.5 Tempo Médio por Etapa do Fluxo");
+    addTextBlock(s, "Tempo médio gasto em cada etapa do fluxo do paciente, do início da triagem ao desfecho na hemodinâmica (em minutos).", 0.6, 1.9, 12, 0.7, 13);
+    const chartEtapas = [{ name: "Tempo (min)", labels: ["Triagem", "Triagem Méd.", "Assessoria", "Regulação", "Transporte", "Hemodinâmica"], values: [15, 20, 25, 30, 45, 60] }];
+    s.addChart(pptx.ChartType.bar, chartEtapas, {
+      x: 0.5, y: 2.7, w: 12, h: 4.0,
+      barDir: "col", showLegend: false, showValue: true,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 11, valueFontSize: 11,
+      title: "Tempo Médio por Etapa (minutos)",
+      titleFontSize: 13
+    });
+    addFooter(s, 40, TOTAL);
+
+    // ═════════════ SLIDE 41 — 9.6 JANELA TERAPÊUTICA ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.6 Percentual na Janela Terapêutica");
+    addTextBlock(s, "Percentual de pacientes atendidos dentro da janela terapêutica ideal para cada indicador.", 0.6, 1.9, 12, 0.7, 13);
+    const chartJanela = [{ name: "Janela", labels: ["Dentro da Meta", "Fora da Meta"], values: [78, 22] }];
+    s.addChart(pptx.ChartType.doughnut, chartJanela, {
+      x: 0.5, y: 2.7, w: 6, h: 4.0,
+      showLegend: true, legendPos: "r", showPercent: true,
+      chartColors: ["16A34A", "DC2626"],
+      holeSize: 50,
+      title: "Aderência à Janela Terapêutica",
+      titleFontSize: 12
+    });
+    s.addText([
+      { text: "78% dentro da meta\n", options: { fontSize: 16, bold: true, color: "16A34A" } },
+      { text: "22% fora da meta\n\n", options: { fontSize: 16, bold: true, color: "DC2626" } },
+      { text: "Identificação em tempo real de gargalos permite intervenção imediata da gestão para correção de fluxo.", options: { fontSize: 13, color: DARK } }
+    ], { x: 7, y: 3.2, w: 5.5, h: 3.5, valign: "middle", lineSpacingMultiple: 1.4 });
+    addFooter(s, 41, TOTAL);
+
+    // ═════════════ SLIDE 42 — 9.7 ICP E REPERFUSÃO ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.7 Taxa de ICP e Reperfusão Efetiva");
+    addTextBlock(s, "Indicadores de resultado: ICP realizadas, reperfusão efetiva e desfechos clínicos.", 0.6, 1.9, 12, 0.7, 13);
+    const chartICP = [{ name: "Percentual", labels: ["ICP Realizada", "Reperfusão Efetiva", "Trombólise", "Complicações", "Óbito"], values: [88, 82, 45, 12, 6] }];
+    s.addChart(pptx.ChartType.bar, chartICP, {
+      x: 0.5, y: 2.7, w: 12, h: 4.0,
+      barDir: "col", showLegend: false, showValue: true,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 11, valueFontSize: 12,
+      title: "Indicadores de Desfecho (%)",
+      titleFontSize: 13
+    });
+    addFooter(s, 42, TOTAL);
+
+    // ═════════════ SLIDE 43 — 9.8 MACRORREGIÕES ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.8 Distribuição por Macrorregião");
+    addTextBlock(s, "Distribuição dos atendimentos por macrorregião de saúde do estado da Paraíba.", 0.6, 1.9, 12, 0.7, 13);
+    const chartMacro = [{ name: "Casos", labels: ["Macro 1", "Macro 2", "Macro 3"], values: [120, 85, 65] }];
+    s.addChart(pptx.ChartType.bar, chartMacro, {
+      x: 0.5, y: 2.7, w: 7, h: 4.0,
+      barDir: "col", showLegend: false, showValue: true,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 13, valueFontSize: 12,
+      title: "Atendimentos por Macrorregião",
+      titleFontSize: 12
+    });
+    s.addText([
+      { text: "Macro 1 — João Pessoa e litoral\n", options: { fontSize: 14, bold: true, color: RED } },
+      { text: "Macro 2 — Campina Grande e região\n", options: { fontSize: 14, bold: true, color: RED } },
+      { text: "Macro 3 — Patos, Sousa e sertão\n\n", options: { fontSize: 14, bold: true, color: RED } },
+      { text: "Permite identificar gargalos regionais e direcionar investimentos em infraestrutura e capacitação.", options: { fontSize: 12, color: DARK } }
+    ], { x: 7.8, y: 3.0, w: 5, h: 3.5, valign: "top", lineSpacingMultiple: 1.4 });
+    addFooter(s, 43, TOTAL);
+
+    // ═════════════ SLIDE 44 — 9.9 DASHBOARD CONSOLIDADO ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.9 Dashboard Consolidado da Rede");
+    addTextBlock(s, "Visão executiva consolidada para a Secretaria de Estado da Saúde, com indicadores-chave em tempo real.", 0.6, 1.9, 12, 0.7, 13);
+    const dashItems = [
+      { v: "270", l: "Pacientes triados" },
+      { v: "88%", l: "ICP realizadas" },
+      { v: "82%", l: "Reperfusão efetiva" },
+      { v: "78%", l: "Dentro da janela" }
+    ];
+    dashItems.forEach((d, i) => {
+      const x = 0.5 + i * 3.1;
+      s.addShape(pptx.ShapeType.roundRect, { x, y: 2.8, w: 2.9, h: 1.4, fill: { color: LIGHT_BG }, line: { color: RED, width: 1 } });
+      s.addText(d.v, { x, y: 2.9, w: 2.9, h: 0.7, fontSize: 30, bold: true, color: RED, align: "center", valign: "middle" });
+      s.addText(d.l, { x, y: 3.6, w: 2.9, h: 0.5, fontSize: 11, color: GRAY, align: "center", valign: "middle" });
+    });
+    const chartDash = [{ name: "Casos", labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"], values: [35, 42, 38, 48, 52, 55] }];
+    s.addChart(pptx.ChartType.line, chartDash, {
+      x: 0.5, y: 4.5, w: 7, h: 2.2,
+      showLegend: false, showValue: false,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 10, valAxisLabelFontSize: 9,
+      title: "Evolução de Atendimentos (6 meses)",
+      titleFontSize: 11
+    });
+    s.addText([
+      { text: "Tendência mensal de atendimentos\n", options: { fontSize: 13, bold: true, color: DARK } },
+      { text: "Crescimento de 57% no semestre\n", options: { fontSize: 12, color: GRAY } },
+      { text: "Indicadores exportáveis em PDF e Excel\n", options: { fontSize: 12, color: GRAY } },
+      { text: "Filtros por período, unidade e macrorregião", options: { fontSize: 12, color: GRAY } }
+    ], { x: 7.8, y: 4.6, w: 5, h: 2, valign: "top", lineSpacingMultiple: 1.5 });
+    addFooter(s, 44, TOTAL);
+
+    // ═════════════ SLIDE 45 — 9.10 PAINEL CERH ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.10 Painel de Regulação — Visão CERH");
+    addTextBlock(s, "Painel da Central de Regulação de Hipocorrendência (CERH) para processamento e destino dos casos.", 0.6, 1.9, 12, 0.8, 13);
     addBullets(s, [
-      "Cada entidade corresponde a uma coleção no banco",
-      "Paciente — registros clínicos completos do fluxo",
-      "SolicitacaoAcesso — solicitações de acesso ao sistema",
-      "RegistroTrombolise — prescrições e administrações de trombolíticos",
-      "LogAuditoria — trilha completa de auditoria",
-      "AssinaturaDigital — assinaturas com hash de confirmação",
-      "ProfissionalAutorizado — whitelist de profissionais pré-cadastrados",
-      "Mensagem — comunicação interna entre equipes"
+      "Estatísticas de pacientes por status e prioridade clínica",
+      "Identificação automática de janela terapêutica e prioridade",
+      "Filtros por macrorregião e unidade de saúde",
+      "Ações: parecer do regulador, liberação de vaga, conduta final",
+      "Senha SES para transporte sanitário gerada no painel",
+      "Solicitação de reavaliação de conduta pela unidade de origem",
+      "Histórico de pareceres retificados documentado",
+      "Indicadores de performance da regulação em tempo real"
+    ], 0.8, 2.9, 11.5, 3.8, 13);
+    addFooter(s, 45, TOTAL);
+
+    // ═════════════ SLIDE 46 — 9.11 PAINEL ASSCARDIO ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.11 Painel ASSCARDIO — Assessoria Cardiológica");
+    addTextBlock(s, "Painel da equipe de assessoria cardiológica (ASSCARDIO) para emissão de pareceres especializados à distância.", 0.6, 1.9, 12, 0.8, 13);
+    addBullets(s, [
+      "Parecer do cardiologista: diagnóstico e estratégia definida",
+      "Indicação de hemodinâmica (sim/não) e classificação de urgência",
+      "Cálculo do HEART Score pela assessoria (0-10 pontos)",
+      "Análise de ECG com e sem supra de ST",
+      "Recomendação de estratégia: ICP primária, trombólise ou conservador",
+      "Confirmação ou retificação da triagem da unidade de origem",
+      "Pré-parecer e rascunho salvos automaticamente",
+      "Conexão remota com unidades de saúde de toda a rede"
     ], 0.8, 2.9, 11.5, 3.8, 13);
     addFooter(s, 46, TOTAL);
 
-    // ═════════════ SLIDE 47 — SEGURANÇA (RLS) ═════════════
+    // ═════════════ SLIDE 47 — 9.12 MONITOR DE TRANSPORTE ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.12 Monitor de Transporte em Tempo Real");
+    addTextBlock(s, "Painel em tempo real para equipes de transporte e centrais (SAMU/COFIH) acompanharem cada deslocamento.", 0.6, 1.9, 12, 0.8, 13);
+    const transpStats = [
+      { v: "12", l: "Em Deslocamento" },
+      { v: "5", l: "Aguardando" },
+      { v: "28", l: "Concluídos (dia)" },
+      { v: "2", l: "Com Intercorrência" }
+    ];
+    transpStats.forEach((st, i) => {
+      const x = 0.5 + i * 3.1;
+      s.addShape(pptx.ShapeType.roundRect, { x, y: 2.8, w: 2.9, h: 1.3, fill: { color: i === 3 ? "DC2626" : RED } });
+      s.addText(st.v, { x, y: 2.9, w: 2.9, h: 0.7, fontSize: 26, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
+      s.addText(st.l, { x, y: 3.55, w: 2.9, h: 0.5, fontSize: 11, color: "FECACA", align: "center", valign: "middle" });
+    });
+    addBullets(s, [
+      "Status de cada transporte: Aguardando, Em Deslocamento, Concluído, Intercorrência",
+      "Alertas de transportes parados ou com tempo excedido",
+      "Equipe responsável, tipo de transporte e central de origem",
+      "Origem e destino de cada paciente em tempo real",
+      "Registro de intercorrências com relatório em PDF assinado",
+      "Histórico completo de cada transporte documentado"
+    ], 0.8, 4.4, 11.5, 2.5, 12);
+    addFooter(s, 47, TOTAL);
+
+    // ═════════════ SLIDE 48 — 9.13 INTERCORRÊNCIAS ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.13 Gestão de Intercorrências de Transportes");
+    addTextBlock(s, "Registro e acompanhamento de intercorrências durante o transporte sanitário de pacientes.", 0.6, 1.9, 12, 0.8, 13);
+    const chartInter = [{ name: "Ocorrências", labels: ["Sem intercorrência", "Atraso", "Instabilidade clínica", "Falha veicular", "Outros"], values: [75, 10, 8, 4, 3] }];
+    s.addChart(pptx.ChartType.pie, chartInter, {
+      x: 0.5, y: 2.8, w: 6.5, h: 4.0,
+      showLegend: true, legendPos: "r", showPercent: true,
+      chartColors: ["16A34A", "F59E0B", "DC2626", "6B7280", "8B5CF6"],
+      showValue: true, valueFontSize: 11,
+      title: "Tipos de Intercorrências (%)",
+      titleFontSize: 12
+    });
+    s.addText([
+      { text: "Registro detalhado\n", options: { fontSize: 14, bold: true, color: RED } },
+      { text: "• Data/hora e motivo da intercorrência\n", options: { fontSize: 12, color: DARK } },
+      { text: "• Descrição detalhada do evento\n", options: { fontSize: 12, color: DARK } },
+      { text: "• Ações tomadas pela equipe\n", options: { fontSize: 12, color: DARK } },
+      { text: "• Relatório em PDF com assinatura digital\n", options: { fontSize: 12, color: DARK } },
+      { text: "• Histórico por paciente documentado", options: { fontSize: 12, color: DARK } }
+    ], { x: 7.3, y: 3.0, w: 5.5, h: 3.5, valign: "top", lineSpacingMultiple: 1.5 });
+    addFooter(s, 48, TOTAL);
+
+    // ═════════════ SLIDE 49 — 9.14 HEMODINÂMICA ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.14 Painel de Hemodinâmica — ICP");
+    addTextBlock(s, "Painel das equipes de hemodinâmica para registro e acompanhamento das Intervenções Coronarianas Percutâneas.", 0.6, 1.9, 12, 0.8, 13);
+    addBullets(s, [
+      "Tipo de ICP: imediata, até 24h, até 72h, trombólise-ICP de resgate",
+      "Data/hora de chegada, início e fim do procedimento",
+      "Tempo FMC-to-Device (First Medical Contact) calculado",
+      "Procedimento realizado e ICP realizada (sim/não)",
+      "Reperfusão efetiva registrada",
+      "Intercorrências durante o procedimento documentadas",
+      "Desfecho: Sucesso, Complicações ou Óbito",
+      "Tempo Porta-Balão calculado automaticamente"
+    ], 0.8, 2.9, 11.5, 3.8, 13);
+    addFooter(s, 49, TOTAL);
+
+    // ═════════════ SLIDE 50 — 9.15 FMC-TO-DEVICE E DESFECHOS ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.15 Tempo FMC-to-Device e Desfechos Clínicos");
+    addTextBlock(s, "Evolução do tempo FMC-to-Device e distribuição dos desfechos clínicos dos procedimentos.", 0.6, 1.9, 12, 0.7, 13);
+    const chartFMC = [{ name: "Tempo (min)", labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"], values: [115, 108, 98, 95, 88, 82] }];
+    s.addChart(pptx.ChartType.line, chartFMC, {
+      x: 0.5, y: 2.6, w: 7, h: 2.2,
+      showLegend: false, showValue: true, valueFontSize: 9,
+      chartColors: ["C11528"],
+      catAxisLabelFontSize: 9, valAxisLabelFontSize: 9,
+      title: "Evolução do Tempo FMC-to-Device (min)",
+      titleFontSize: 11
+    });
+    const chartDesf = [{ name: "Desfecho", labels: ["Sucesso", "Complicações", "Óbito"], values: [82, 12, 6] }];
+    s.addChart(pptx.ChartType.pie, chartDesf, {
+      x: 7.8, y: 2.6, w: 5, h: 2.5,
+      showLegend: true, legendPos: "b", showPercent: true,
+      chartColors: ["16A34A", "F59E0B", "DC2626"],
+      showValue: true, valueFontSize: 10,
+      title: "Desfechos Clínicos (%)",
+      titleFontSize: 11
+    });
+    s.addText("Redução de 28% no tempo FMC-to-Device no semestre, demonstrando a melhoria contínua da rede com o uso do CARDIOPB.", { x: 0.8, y: 5.2, w: 11.5, h: 1, fontSize: 13, color: DARK, valign: "middle", lineSpacingMultiple: 1.3 });
+    addFooter(s, 50, TOTAL);
+
+    // ═════════════ SLIDE 51 — 9.16 PAINEL ASSISTENCIAL ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.16 Painel Assistencial — Filtros e Exportação");
+    addTextBlock(s, "Registro completo dos pacientes atendidos pela unidade de saúde, com filtros e exportação.", 0.6, 1.9, 12, 0.8, 13);
+    addBullets(s, [
+      "Busca por nome do paciente",
+      "Filtro por unidade de saúde, período (data inicial/final) e status",
+      "Contadores de pacientes por status atualizados em tempo real",
+      "Exportação para Excel e PDF com um clique",
+      "Reabertura de triagem (re-triagem) quando necessário",
+      "Acesso ao detalhamento completo de cada caso",
+      "Envio de formulário/vaga para a regulação central",
+      "Visualização do histórico de etapas e pareceres"
+    ], 0.8, 2.9, 11.5, 3.8, 13);
+    addFooter(s, 51, TOTAL);
+
+    // ═════════════ SLIDE 52 — 9.17 PAINEL DE REGULAÇÃO — FILTROS ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.17 Painel de Regulação — Filtros e Prioridades");
+    addTextBlock(s, "Visão consolidada para CERH, ASSCARDIO, Hemodinâmica e Transporte filtrarem e processarem casos por perfil.", 0.6, 1.9, 12, 0.8, 13);
+    addBullets(s, [
+      "Estatísticas de pacientes por status e prioridade clínica",
+      "Filtros por macrorregião e unidade de saúde",
+      "Identificação automática de janela terapêutica e prioridade",
+      "Ações específicas por equipe (parecer, transporte, ICP)",
+      "Download de relatórios de triagem em PDF",
+      "Indicadores de performance da rede em tempo real",
+      "Identificação de pacientes fora da janela terapêutica ideal",
+      "Direcionamento de recursos para onde a vida está em maior risco"
+    ], 0.8, 2.9, 11.5, 3.8, 13);
+    addFooter(s, 52, TOTAL);
+
+    // ═════════════ SLIDE 53 — 9.18 ENVIO AO IAMPBSAUDE ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.18 Envio Automático de Indicadores ao IAMPBSAUDE");
+    addTextBlock(s, "O CARDIOPB envia automaticamente indicadores epidemiológicos e operacionais ao sistema IAMPBSAUDE do estado.", 0.6, 1.9, 12, 0.8, 13);
+    addBullets(s, [
+      "Envio automatizado via função de backend (backend function)",
+      "Indicadores de qualidade: tempo triagem-ECG, porta-agulha, porta-balão",
+      "Indicadores epidemiológicos: tipo de SCA, classificação de risco, desfechos",
+      "Frequência programada (agendada) sem intervenção manual",
+      "Integração via API com URL de ingestão segura",
+      "Autenticação via chave de API dedicada",
+      "Redução de retrabalho e erro manual no repasse de dados",
+      "Padronização dos dados enviados ao sistema estadual"
+    ], 0.8, 2.9, 11.5, 3.8, 13);
+    addFooter(s, 53, TOTAL);
+
+    // ═════════════ SLIDE 54 — 9.19 RELATÓRIOS EXPORTÁVEIS ═════════════
+    s = pptx.addSlide();
+    addHeader(s, pptx);
+    addTitleBar(s, pptx, "9.19 Relatórios Exportáveis (PDF e Excel)");
+    addTextBlock(s, "Todos os relatórios e indicadores são exportáveis em PDF e Excel, gerados no navegador sem custo de servidor.", 0.6, 1.9, 12, 0.8, 13);
+    const relatorios = [
+      { t: "Relatório de Triagem", d: "Dados completos do paciente, triagem e classificação" },
+      { t: "Relatório de Transporte", d: "Intercorrências e histórico do deslocamento" },
+      { t: "Relatório de Hemodinâmica", d: "ICP, tempos e desfecho clínico" },
+      { t: "Relatório de Trombólise", d: "Prescrição, administração e lotes" },
+      { t: "Indicadores Epidemiológicos", d: "Gráficos e tabelas em PDF e Excel" },
+      { t: "Relatório Farmacêutico", d: "Consumo de trombolíticos por unidade" }
+    ];
+    relatorios.forEach((r, i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = 0.8 + col * 6;
+      const y = 2.9 + row * 1.2;
+      s.addShape(pptx.ShapeType.roundRect, { x, y, w: 5.5, h: 1, fill: { color: LIGHT_BG }, line: { color: RED, width: 0.5 } });
+      s.addShape(pptx.ShapeType.rect, { x, y, w: 0.08, h: 1, fill: { color: RED } });
+      s.addText(r.t, { x: x + 0.2, y, w: 5.2, h: 0.5, fontSize: 13, bold: true, color: DARK, valign: "bottom" });
+      s.addText(r.d, { x: x + 0.2, y: y + 0.5, w: 5.2, h: 0.4, fontSize: 10, color: GRAY, valign: "top" });
+    });
+    addFooter(s, 54, TOTAL);
+
+    // ═════════════ SLIDE 55 — SEGURANÇA (RLS) ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
     addTitleBar(s, pptx, "9.3 Segurança e Controle de Acesso (RLS)");
@@ -532,9 +873,9 @@ export default function ApresentacaoCARDIOPBPPT() {
       "ADMINISTRADOR_MASTER — acesso pleno administrativo",
       "Garantia de que cada profissional acessa apenas o pertinente ao seu papel"
     ], 0.8, 3.0, 11.5, 3.5, 13);
-    addFooter(s, 47, TOTAL);
+    addFooter(s, 55, TOTAL);
 
-    // ═════════════ SLIDE 48 — AUDITORIA ═════════════
+    // ═════════════ SLIDE 56 — AUDITORIA ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
     addTitleBar(s, pptx, "9.4 Auditoria");
@@ -549,9 +890,9 @@ export default function ApresentacaoCARDIOPBPPT() {
       "Nível de severidade: info, aviso, crítico",
       "Retenção de registros EXCLUÍDOS para fins de auditoria (LGPD)"
     ], 0.8, 2.9, 11.5, 3.8, 13);
-    addFooter(s, 48, TOTAL);
+    addFooter(s, 56, TOTAL);
 
-    // ═════════════ SLIDE 49 — CRIPTOGRAFIA ═════════════
+    // ═════════════ SLIDE 57 — CRIPTOGRAFIA ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
     addTitleBar(s, pptx, "9.5 Criptografia");
@@ -565,9 +906,9 @@ export default function ApresentacaoCARDIOPBPPT() {
       "Autenticação federal via GOV.BR (identidade validada)",
       "Row-Level Security em todas as entidades"
     ], 0.8, 2.7, 11.5, 4, 14);
-    addFooter(s, 49, TOTAL);
+    addFooter(s, 57, TOTAL);
 
-    // ═════════════ SLIDE 50 — LGPD ═════════════
+    // ═════════════ SLIDE 58 — LGPD ═════════════
     s = pptx.addSlide();
     addHeader(s, pptx);
     addTitleBar(s, pptx, "10. Conformidade com a LGPD");
@@ -580,115 +921,6 @@ export default function ApresentacaoCARDIOPBPPT() {
       "Status EXCLUÍDO para retenção de registros para fins de auditoria",
       "Recomendação: formalização de DPA (Data Processing Agreement) entre o órgão e a Base44"
     ], 0.8, 3.0, 11.5, 3.5, 14);
-    addFooter(s, 50, TOTAL);
-
-    // ═════════════ SLIDE 51 — RESIDÊNCIA DE DADOS ═════════════
-    s = pptx.addSlide();
-    addHeader(s, pptx);
-    addTitleBar(s, pptx, "10.1 Residência de Dados (Data Residency)");
-    addTextBlock(s, "A plataforma Base44 oferece, nos planos Elite e Enterprise, a escolha da região geográfica de armazenamento dos dados:", 0.6, 1.9, 12, 0.9, 14);
-    const regioes = [
-      { r: "Estados Unidos (EUA)", d: "Região padrão" },
-      { r: "União Europeia (UE)", d: "Conformidade com GDPR" },
-      { r: "Reino Unido (UK)", d: "Opção adicional" }
-    ];
-    regioes.forEach((rg, i) => {
-      const x = 0.8 + i * 4;
-      s.addShape(pptx.ShapeType.roundRect, { x, y: 3.1, w: 3.6, h: 1.8, fill: { color: LIGHT_BG }, line: { color: RED, width: 1 } });
-      s.addText(rg.r, { x, y: 3.3, w: 3.6, h: 0.6, fontSize: 15, bold: true, color: RED, align: "center" });
-      s.addText(rg.d, { x, y: 3.95, w: 3.6, h: 0.7, fontSize: 12, color: GRAY, align: "center", valign: "top" });
-    });
-    s.addShape(pptx.ShapeType.roundRect, { x: 0.8, y: 5.3, w: 11.5, h: 0.9, fill: { color: "FEF3C7" }, line: { color: "D97706", width: 1 } });
-    s.addText("Importante: Atualmente NÃO há opção de data center governamental brasileiro próprio na plataforma Base44.", { x: 1, y: 5.4, w: 11.1, h: 0.7, fontSize: 12, bold: true, color: "92400E", align: "center", valign: "middle" });
-    addFooter(s, 51, TOTAL);
-
-    // ═════════════ SLIDES 52-54 — OPÇÕES DE HOSPEDAGEM ═════════════
-    const opcoes = [
-      { t: "10.2 Opção A — Permanecer na Base44 com DPA", badge: "Recomendada", desc: "Mantém-se o app na plataforma Base44, com a assinatura de um Acordo de Tratamento de Dados (DPA).", v: ["Zero reescrita de código", "Segurança, backups e atualizações gerenciados", "Conformidade LGPD já parcialmente implementada", "Disponibilidade imediata"], d: ["Dados não ficam em data center governamental", "Dependência de terceiro"] },
-      { t: "10.3 Opção B — Replicação Híbrida para Banco Governamental", badge: "Intermediária", desc: "Mantém o app na Base44 como fonte primária, mas cria funções de backend que replicam os dados para um banco no data center do governo.", v: ["Cópia dos dados sob controle do governo", "Baixo esforço de implementação", "Sistema principal sem mudanças"], d: ["Dados primários ainda na Base44", "Necessidade de sincronização contínua"] },
-      { t: "10.4 Opção C — Migração Completa para Infraestrutura Governamental", badge: "Longo prazo", desc: "Exporta-se todo o código e reescreve-se a camada de dados e autenticação para rodar em servidores próprios do governo.", v: ["Dados 100% sob controle governamental", "Independência de terceiros", "Soberania total de dados"], d: ["Reescrita completa da camada de dados", "Autenticação GOV.BR/LDAP própria", "Provisionamento de servidores, CI/CD, SSL e monitoramento", "Estimativa: semanas a meses de desenvolvimento"] }
-    ];
-    opcoes.forEach((o, i) => {
-      s = pptx.addSlide();
-      addHeader(s, pptx);
-      addTitleBar(s, pptx, o.t);
-      s.addShape(pptx.ShapeType.roundRect, { x: 10.8, y: 1.05, w: 2.3, h: 0.5, fill: { color: "16A34A" } });
-      s.addText(o.badge, { x: 10.8, y: 1.05, w: 2.3, h: 0.5, fontSize: 11, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
-      addTextBlock(s, o.desc, 0.6, 1.9, 12, 1, 14);
-      addSectionLabel(s, "Vantagens", 0.6, 2.9);
-      addBullets(s, o.v, 0.8, 3.2, 5.8, 2.5, 12);
-      addSectionLabel(s, "Desvantagens", 6.8, 2.9);
-      addBullets(s, o.d, 7.0, 3.2, 5.8, 2.5, 12);
-      addFooter(s, 52 + i, TOTAL);
-    });
-
-    // ═════════════ SLIDE 55 — EXPORTÁVEL ═════════════
-    s = pptx.addSlide();
-    addHeader(s, pptx);
-    addTitleBar(s, pptx, "10.5 O que Pode Ser Exportado");
-    addTextBlock(s, "Caso seja necessária a migração futura, os seguintes componentes do sistema são exportáveis:", 0.6, 1.9, 12, 0.8, 14);
-    const expItems = [
-      { t: "Código Front-end", d: "React/Vite — pasta src/" },
-      { t: "Funções de Back-end", d: "Deno — pasta base44/functions/" },
-      { t: "Schemas das Entidades", d: "JSON — pasta base44/entities/" }
-    ];
-    expItems.forEach((e, i) => {
-      const y = 3.0 + i * 1.1;
-      s.addShape(pptx.ShapeType.roundRect, { x: 1, y, w: 11, h: 0.9, fill: { color: "DCFCE7" }, line: { color: "16A34A", width: 1 } });
-      s.addText("✓ " + e.t, { x: 1.3, y, w: 4, h: 0.9, fontSize: 15, bold: true, color: "166534", valign: "middle" });
-      s.addText(e.d, { x: 5.5, y, w: 6, h: 0.9, fontSize: 13, color: DARK, valign: "middle" });
-    });
-    addFooter(s, 55, TOTAL);
-
-    // ═════════════ SLIDE 56 — NÃO EXPORTÁVEL ═════════════
-    s = pptx.addSlide();
-    addHeader(s, pptx);
-    addTitleBar(s, pptx, "10.6 O que NÃO Pode Ser Exportado");
-    addTextBlock(s, "Componentes atrelados à infraestrutura da plataforma que não são transferíveis:", 0.6, 1.9, 12, 0.8, 14);
-    const naoExp = [
-      { t: "Banco de dados gerenciado (MongoDB)", d: "Infraestrutura da Base44" },
-      { t: "SDK de entidades (base44.entities)", d: "Camada proprietária" },
-      { t: "Sistema de autenticação", d: "Gerenciado pela plataforma" },
-      { t: "Runtime Deno e infraestrutura de deploy", d: "CDN e servidores Base44" }
-    ];
-    naoExp.forEach((e, i) => {
-      const y = 2.9 + i * 0.95;
-      s.addShape(pptx.ShapeType.roundRect, { x: 1, y, w: 11, h: 0.8, fill: { color: "FEE2E2" }, line: { color: "DC2626", width: 1 } });
-      s.addText("✗ " + e.t, { x: 1.3, y, w: 6, h: 0.8, fontSize: 14, bold: true, color: "991B1B", valign: "middle" });
-      s.addText(e.d, { x: 7.5, y, w: 4, h: 0.8, fontSize: 12, color: GRAY, valign: "middle" });
-    });
-    addFooter(s, 56, TOTAL);
-
-    // ═════════════ SLIDE 57 — O FATOR DE GRANDE IMPORTÂNCIA ═════════════
-    s = pptx.addSlide();
-    addHeader(s, pptx);
-    addTitleBar(s, pptx, "11. O Fator de Grande Importância");
-    addSectionLabel(s, "Transparência de Gestão em Tempo Real para o Tempo-Coração", 0.6, 1.9);
-    addTextBlock(s, "O que torna o CARDIOPB fundamental para a saúde pública na Paraíba é o conceito de transformar cada minuto de espera em um dado mensurável.", 0.6, 2.3, 12, 1, 14);
-    addTextBlock(s, "Ao integrar o tempo de chegada, ECG, prescrição da trombólise e transporte, o aplicativo não apenas organiza o fluxo — ele gera inteligência epidemiológica.", 0.6, 3.5, 12, 1.2, 14);
-    addTextBlock(s, "Isso permite que a SES-PB não trabalhe apenas por percepção, mas com evidências científicas e operacionais para identificar gargalos em tempo real, garantindo que o recurso público seja alocado onde a vida está em maior risco no exato momento da emergência.", 0.6, 4.9, 12, 1.5, 13);
-    s.addShape(pptx.ShapeType.roundRect, { x: 2, y: 6.3, w: 9.3, h: 0.5, fill: { color: RED } });
-    s.addText("Transição definitiva da regulação analógica para a regulação digital de precisão.", { x: 2, y: 6.3, w: 9.3, h: 0.5, fontSize: 13, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
-    addFooter(s, 57, TOTAL);
-
-    // ═════════════ SLIDE 58 — RECOMENDAÇÃO TÉCNICA ═════════════
-    s = pptx.addSlide();
-    addHeader(s, pptx);
-    addTitleBar(s, pptx, "12. Recomendação Técnica");
-    addTextBlock(s, "Para um órgão público estadual de saúde, a recomendação técnica escalonada:", 0.6, 1.9, 12, 0.7, 14);
-    const recs = [
-      { n: "A", t: "Permanecer na Base44 com DPA", d: "Recomendado como solução imediata — zero reescrita, segurança gerenciada, LGPD parcialmente implementada.", cor: "16A34A" },
-      { n: "B", t: "Replicação Híbrida", d: "Meio-termo viável se exigência de cópia em data center próprio for necessária.", cor: "D97706" },
-      { n: "C", t: "Migração Completa", d: "Projeto de longo prazo, com reescrita completa e provisionamento de infraestrutura própria.", cor: "DC2626" }
-    ];
-    recs.forEach((r, i) => {
-      const y = 2.7 + i * 1.3;
-      s.addShape(pptx.ShapeType.ellipse, { x: 0.8, y, w: 0.7, h: 0.7, fill: { color: r.cor } });
-      s.addText(r.n, { x: 0.8, y, w: 0.7, h: 0.7, fontSize: 22, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
-      s.addShape(pptx.ShapeType.roundRect, { x: 1.8, y, w: 11, h: 1.1, fill: { color: LIGHT_BG }, line: { color: r.cor, width: 1 } });
-      s.addText(r.t, { x: 2.1, y: y + 0.1, w: 4.5, h: 0.4, fontSize: 15, bold: true, color: DARK, valign: "middle" });
-      s.addText(r.d, { x: 2.1, y: y + 0.5, w: 10.4, h: 0.5, fontSize: 12, color: GRAY, valign: "top" });
-    });
     addFooter(s, 58, TOTAL);
 
     // ═════════════ SLIDE 59 — DESENVOLVEDOR ═════════════
@@ -740,9 +972,10 @@ export default function ApresentacaoCARDIOPBPPT() {
             <p>✓ Cabeçalho com logos institucionais (SES, CARDIOPB, CRE)</p>
             <p>✓ Imagens ilustrativas dos 7 perfis de usuários</p>
             <p>✓ Fluxo completo do paciente (7 etapas)</p>
-            <p>✓ Arquitetura tecnológica e LGPD</p>
-            <p>✓ Opções de hospedagem governamental</p>
-            <p>✓ Recomendação técnica e encerramento</p>
+            <p>✓ Indicadores de qualidade e epidemiológicos com gráficos</p>
+            <p>✓ Dashboards e painéis (CERH, ASSCARDIO, Transporte, Hemodinâmica)</p>
+            <p>✓ Segurança, auditoria, criptografia e LGPD</p>
+            <p>✓ Envio automático ao IAMPBSAUDE e relatórios exportáveis</p>
           </div>
           <Button onClick={gerarPPT} className="w-full bg-red-600 hover:bg-red-700 text-white">
             <Download className="w-4 h-4 mr-2" />
